@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 function App() {
     return (
         <div className="App">
-            <div style={{color: "red"}}> {/* pls no inline, stylesheets sind viel performanter */}
+            <div style={{color: "red", width: "70vw", marginLeft: "15vw"}}> {/* pls no inline, stylesheets sind viel performanter */}
                 <FullCalendar
                     plugins={[dayGridPlugin]}
                     initialView="dayGridMonth"
