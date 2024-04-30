@@ -14,9 +14,7 @@ jobs:
 
     runs-on: ubuntu-latest
     
-    defaults:
-      run: 
-        working-directory: Frontend/my-app
+
 
     strategy:
       matrix:
