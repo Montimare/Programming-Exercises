@@ -33,9 +33,7 @@ jobs:
         echo "Workspace directory: ${{ github.workspace }}"
         pwd
         ls -la ${{ github.workspace }}
-        
-    - name: Initialize npm
-      run: npm init
+
     - name: Install dependencies
       run: npm install
 
