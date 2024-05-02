@@ -29,6 +29,7 @@ jobs:
     - run: pwd
     - run: cd "Frontend/"
     - run: pwd
+    - run: cd "my-app/"
     - name: DEBUG
       run: |
         echo "Workspace directory: ${{ github.workspace }}"
