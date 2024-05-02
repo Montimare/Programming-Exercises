@@ -27,21 +27,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: DEBUG
-      run: |
-        echo "Workspace directory: ${{ github.workspace }}"
-        pwd
-        ls -la ${{ github.workspace }}
-    - name: Set working directory
-      run: |
-        cd "FrontEnd/my-app"
-
     - name: Verify Frontend directory exists
       run: |
         if [ ! -d "./Frontend/my-app" ]; then
           echo "Error: Frontend directory does not exist"
           exit 1
         fi
+    - name: DEBUG
+      run: |
+        echo "Workspace directory: ${{ github.workspace }}"
+        pwd
+        ls -la ${{ github.workspace }}
+
     - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
