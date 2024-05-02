@@ -24,6 +24,9 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Set working directory
       run: |
         cd "./FrontEnd/my-app"
