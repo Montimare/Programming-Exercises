@@ -26,13 +26,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: Verify Frontend directory exists
-      run: |
-        if [ ! -d "./Frontend/my-app" ]; then
-          echo "Error: Frontend directory does not exist"
-          exit 1
-        fi
+      
     - name: DEBUG
       run: |
         echo "Workspace directory: ${{ github.workspace }}"
