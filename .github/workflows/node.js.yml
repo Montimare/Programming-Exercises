@@ -32,7 +32,11 @@ jobs:
         echo "Workspace directory: ${{ github.workspace }}"
         pwd
         ls -la ${{ github.workspace }}
-
+    - name: DEBUG
+      run: |
+        echo "Workspace directory: ${{ github.workspace }}"
+        pwd
+        ls -la ${{ github.workspace }}
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
