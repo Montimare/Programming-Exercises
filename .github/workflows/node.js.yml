@@ -14,9 +14,9 @@ jobs:
 
     runs-on: ubuntu-latest
     
-    defaults:
-      run: 
-        working-directory: ./Frontend/my-app
+    # defaults:
+    #   run: 
+    #     working-directory: ./Frontend/my-app
 
     strategy:
       matrix:
@@ -26,7 +26,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
+    - run: cd "Frontend/my-app"
     - name: DEBUG
       run: |
         echo "Workspace directory: ${{ github.workspace }}"
