@@ -27,10 +27,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     - run: pwd
-    - run: cd "Frontend/"
     - run: pwd
     - run: ls -la
-    - run: cd "my-app/"
     - name: DEBUG
       run: |
         echo "Workspace directory: ${{ github.workspace }}"
