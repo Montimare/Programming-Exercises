@@ -29,7 +29,7 @@ jobs:
 
     - name: Set working directory
       run: |
-        cd "./FrontEnd/my-app"
+        cd "FrontEnd/my-app"
 
     - name: Verify Frontend directory exists
       run: |
