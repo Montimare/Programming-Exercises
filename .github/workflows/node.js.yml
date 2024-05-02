@@ -24,6 +24,10 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+    - name: Set working directory
+      run: |
+        cd "./FrontEnd/my-app"
+
     - name: Verify Frontend directory exists
       run: |
         if [ ! -d "./Frontend/my-app" ]; then
