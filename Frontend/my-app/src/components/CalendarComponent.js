@@ -15,8 +15,9 @@ const CalendarComponent  = ()=>{
             <body>
                 <div className="CalendarOverview">
                     <FullCalendar
-                        plugins={[dayGridPlugin]}
-                        initialView="dayGridMonth"
+                        plugins = {[dayGridPlugin]}
+                        initialView = "dayGridMonth"
+                        contentHeight = {650}
                     />
                 </div>
             </body>
