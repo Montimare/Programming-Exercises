@@ -1,8 +1,8 @@
 .venv/
 .idea/
 bin/
-lib/
+lib/*
 lib64/
-include/
+include/*
 
 pyvenv.cfg
