@@ -3,7 +3,7 @@ import './App.css';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
-function App() {
+const App = ()=>{
     return (
         <div className="App">
             <div style={{color: "red", width: "70vw", marginLeft: "15vw"}}> {/* pls no inline, stylesheets sind viel performanter */}
@@ -28,6 +28,6 @@ function App() {
             </header>
         </div>
     );
-}
+};
 
 export default App;

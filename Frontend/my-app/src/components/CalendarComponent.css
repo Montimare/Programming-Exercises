@@ -1,0 +1,17 @@
+.CalendarTitle {
+    text-align: center;
+    color: white;
+    font-size: 2vw;
+    background-color: lightseagreen;
+}
+
+.CalendarOverview {
+    width: 70vw;
+    margin-left: 15vw;
+}
+
+.CalendarFooter {
+    text-align: center;
+    margin-top: 2vw;
+    margin-bottom: 2vw;
+}

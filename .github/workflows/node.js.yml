@@ -5,31 +5,45 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main, dev, frontend" ]
+    branches: [ "main", "dev", "frontend" ]
   pull_request:
-    branches: [ "main, dev, frontend" ]
+    branches: [ "main", "dev", "frontend" ]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
     
+    env:
+      CI: false
+
     defaults:
       run: 
-        working-directory: "frontend"
+        working-directory: ./Frontend/my-app
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [20]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - run: pwd
+    - run: ls -la
+    - name: DEBUG
+      run: |
+        echo "Workspace directory: ${{ github.workspace }}"
+        pwd
+        ls -la ${{ github.workspace }}
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: ./Frontend/my-app/package-lock.json
+        # doesn't work without this
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
