@@ -8,8 +8,13 @@ on:
 
 jobs:
   build:
-        
+
     runs-on: ubuntu-latest
+    
+    defaults:
+      run: 
+        working-directory: ./Frontend/my-app
+  
     strategy:
       max-parallel: 4
       matrix:
