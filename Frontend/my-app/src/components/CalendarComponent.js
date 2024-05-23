@@ -19,20 +19,48 @@ const CalendarComponent  = ()=>{
                         initialView = "dayGridMonth"
                         aspectRatio={2}
                         firstDay={1}
+                        dayMaxEventRows = {true}
                         events={[
                             {
-                              title  : 'Learning Session',
-                              start  : '2024-05-08'
+                                title  : 'Learning Session',
+                                start  : '2024-05-08'
                             },
                             {
-                              title  : 'Thing I Need To Do',
-                              start  : '2024-05-09',
-                              end    : '2024-05-10'
+                                title  : 'Learning Session 2',
+                                start  : '2024-05-08'
                             },
                             {
-                              title  : 'Hello',
-                              start  : '2024-05-11T12:30:00',
-                              allDay : false // will make the time show
+                                title  : 'Learning Session 3',
+                                start  : '2024-05-08'
+                            },
+                            {
+                                title  : 'Learning Session 4',
+                                start  : '2024-05-08'
+                            },
+                            {
+                                title  : 'Thing I Need To Do',
+                                start  : '2024-05-09',
+                                end    : '2024-05-10'
+                            },
+                            {
+                                title  : 'Hello',
+                                start  : '2024-05-11T12:30:00',
+                                allDay : false // will make the time show
+                            },
+                            {
+                                title  : 'Hi',
+                                start  : '2024-05-11T12:30:00',
+                                allDay : false // will make the time show
+                            },
+                            {
+                                title  : 'Prog',
+                                start  : '2024-05-11T12:30:00',
+                                allDay : false // will make the time show
+                            },
+                            {
+                                title  : 'ProgEx',
+                                start  : '2024-05-11T12:30:00',
+                                allDay : false // will make the time show
                             }
                         ]}
 
