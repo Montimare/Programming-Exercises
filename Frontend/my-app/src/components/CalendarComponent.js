@@ -1,7 +1,9 @@
 import './CalendarComponent.css'
+import React, {useRef} from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+
 /*
 https://fullcalendar.io/docs/event-display -> Event Display
 */
@@ -20,10 +22,12 @@ const CalendarComponent  = ()=>{
                         aspectRatio={2}
                         firstDay={1}
                         dayMaxEventRows = {true}
+                        editable = {true}
+                        selectable = {true}
                         events={[
                             {
                                 title  : 'Learning Session',
-                                start  : '2024-05-08'
+                                start  : '2024-05-08',
                             },
                             {
                                 title  : 'Learning Session 2',
@@ -61,16 +65,17 @@ const CalendarComponent  = ()=>{
                                 title  : 'ProgEx',
                                 start  : '2024-05-11T12:30:00',
                                 allDay : false // will make the time show
-                            }
+                            },
                         ]}
 
+                        // using the eventClick function to modify an event
+                        // uses deprecated setProp method, needs fix
                         eventClick={function(info) {
-                        alert('Event: ' + info.event.title);
-                        alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-                        alert('View: ' + info.view.type);
-                    
-                        // change the border color just for fun
-                        info.el.style.borderColor = 'red';
+                            let title = prompt("Enter new title:");
+                            if(title) {
+                                info.event.setProp('title', title);
+                            }
+                            info.el.style.borderColor = 'red';
                         }}
                     />
                 </div>
