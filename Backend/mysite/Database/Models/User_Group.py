@@ -6,8 +6,8 @@ class User_EventList(Base):
     __tablename__ = 'user_event_list'
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-
     event_list_id = Column(Integer, ForeignKey('event_list.id'), nullable=False)
+
     user = relationship("User", back_populates="event_lists")
     event_list = relationship("EventList", back_populates="users")
 

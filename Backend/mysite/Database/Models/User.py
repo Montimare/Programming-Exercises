@@ -11,7 +11,7 @@ class User(Base):
     phone = Column(String(256), unique=True, nullable=False)
 
     owned_groups = relationship("EventList", back_populates="admin")
-    event_lists = relationship("User_EventList", back_populates="user")
+    groups = relationship("User_Group", back_populates="user")
 
     def __init__(self, name, email, phone=None, **kw):
         super().__init__(**kw)

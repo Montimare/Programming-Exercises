@@ -19,3 +19,6 @@ class Event(Base):
         self.description = description
         self.starttime = starttime
         self.endtime = endtime
+
+    def __repr__(self):
+        return f"<Event('{self.name}', '{self.description}', '{self.starttime}', '{self.endtime}')>"

@@ -9,6 +9,7 @@ class Group(Base):
     name = Column(String(256))
 
     event_lists = relationship("Group_EventList", back_populates="group")
+    members = relationship("User_Group", back_populates="group")
 
     def __init__(self, name, **kw):
         super().__init__(**kw)

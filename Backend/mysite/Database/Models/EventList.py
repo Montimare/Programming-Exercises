@@ -12,7 +12,6 @@ class EventList(Base):
     admin = relationship("User", back_populates="owned_groups")
     groups = relationship("Group_EventList", back_populates="event_list")
     events = relationship("Event_EventList", back_populates="event_list")
-    users = relationship("User_EventList", back_populates="event_list")
 
     def __init__(self, name, **kw):
         super().__init__(**kw)
