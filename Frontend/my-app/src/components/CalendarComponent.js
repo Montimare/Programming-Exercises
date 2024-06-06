@@ -11,17 +11,23 @@ import interactionPlugin from "@fullcalendar/interaction";
     USEFUL LINKS
     =========================================================================
     Event Display - https://fullcalendar.io/docs/event-display
+    
     Awesome React - https://github.com/enaqx/awesome-react?tab=readme-ov-file
     React Summary - https://www.youtube.com/watch?v=Tn6-PIqc4UM
+    
+    COMPONENTS
+    MUI - https://mui.com/material-ui/
+    Bootstrap - https://getbootstrap.com/docs/5.3/getting-started/introduction/
 */
 
 const CalendarComponent = () => {
     return (
         <>
             <header className="CalendarTitle">
-                <h1>Team Calendar</h1>
+                <h1 className="TitleText">Team Calendar</h1>
+                <div className="UserText">User</div>
             </header>
-            <body>
+            <body className="CalendarBody">
                 <div className="CalendarOverview">
                     <FullCalendar
                         plugins={[dayGridPlugin, interactionPlugin]}
@@ -92,8 +98,8 @@ const CalendarComponent = () => {
                     />
                 </div>
             </body>
-            <footer className="CalendarFooter">
-                Created by Prog.EXTRAORDINAIRE ©
+            <footer className="CalendarFooter1">
+                © 2024 ProgExTRAORDINAIRE
             </footer>
         </>
     );
