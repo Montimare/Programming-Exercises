@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Fedora 40) (preloaded format=pdflatex 2024.6.6)  10 JUN 2024 16:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Fedora 40) (preloaded format=pdflatex 2024.6.6)  10 JUN 2024 21:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -234,42 +234,51 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 2.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 2.
-)
-\tf@toc=\write4
-\openout4 = `Pflichtenheft.toc'.
-
 
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.25 	\newpage
-               [1] [2]
-Overfull \vbox (157.51328pt too high) has occurred while \output is active []
+l.35 ...n}{\numberline {15}Sources}{7}{section.15}
+                                                  % [1])
+\tf@toc=\write4
+\openout4 = `Pflichtenheft.toc'.
 
+ [2] [3{/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
+}] [4] [5]
+Overfull \hbox (0.8896pt too wide) in paragraph at lines 100--100
+[]\OT1/cmr/bx/n/14.4 Special re-quire-ments for the de-vel-op-ment en-
+ []
 
-[3] (./Pflichtenheft.aux)
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 134--137
+
+ []
+
+[7] (./Pflichtenheft.aux)
 Package rerunfilecheck Info: File `Pflichtenheft.out' has not changed.
-(rerunfilecheck)             Checksum: 4B5586C454247A1E3853756F3D45D92D;3934.
+(rerunfilecheck)             Checksum: 5F68840425692D548C226AEBAF687B53;4640.
  ) 
 Here is how much of TeX's memory you used:
- 7894 strings out of 476041
- 124936 string characters out of 5793165
- 1861388 words of memory out of 6000000
- 28258 multiletter control sequences out of 15000+600000
- 515360 words of font info for 42 fonts, out of 8000000 for 9000
+ 7920 strings out of 476041
+ 125276 string characters out of 5793165
+ 1863388 words of memory out of 6000000
+ 28266 multiletter control sequences out of 15000+600000
+ 515863 words of font info for 44 fonts, out of 8000000 for 9000
  1137 hyphenation exceptions out of 8191
- 75i,5n,76p,361b,467s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,5n,76p,369b,486s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/te
 xmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on Pflichtenheft.pdf (4 pages, 97222 bytes).
+t/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/cm-super/sfrm1000.pfb>
+Output written on Pflichtenheft.pdf (8 pages, 129429 bytes).
 PDF statistics:
- 238 PDF objects out of 1000 (max. 8388607)
- 217 compressed objects within 3 object streams
- 34 named destinations out of 1000 (max. 500000)
- 233 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 313 PDF objects out of 1000 (max. 8388607)
+ 284 compressed objects within 3 object streams
+ 49 named destinations out of 1000 (max. 500000)
+ 281 words of extra memory for PDF output out of 10000 (max. 10000000)
 
