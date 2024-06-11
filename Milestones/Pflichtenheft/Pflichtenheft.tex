@@ -7,7 +7,8 @@
 	linktoc=all,
 	linkcolor=black
 }
-%Fehlt: 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14
+%Fehlt: 3, 4, 8, 14
+% 3+4+8 mit klejdi besprechen
 \begin{document}
 	\begin{titlepage}
 		\centering
@@ -27,13 +28,35 @@
 \section{Target determination}
 	\subsection{Mandatory criteria}
 		\begin{itemize}
-			\item Big readable text
+			\item Program consists of front end, back end and database
+			\item Users can be changed once chosen
+			\item Calendars can be shared
+			\item Calendars have an owner
+			\item Calendar ownership can be transferred
+			\item Calendar events can be added, edited and removed
+			\item Calendar events have a start and end time
+			\item User will get notified at a custom time and at the start of the event
 		\end{itemize}
 	\subsection{Target criteria}
+		\begin{itemize}
+			\item Readable text
+			\item Multiple custom notifications
+		\end{itemize}
 	\subsection{Optional criteria}
+		\begin{itemize}
+			\item Exclusive calendar events, that reserve a certain time slot so that calendar events can not overlap
+			\item Warn user if creating a calendar event will result in overlapping calendar events
+			\item Show next available time slot when creating a new calendar event
+			\item Add users in the front end
+			\item Delete users in the front end
+			\item Email notifications
+			\item Change calendar event color
+		\end{itemize}
 	\subsection{Exclusion criteria}
+		Viewing the calendar of other users will not be implemented as changing a user is possible.
 \section{Product deployment}
 	\subsection{Application area}
+		This tool should be used by teams or individuals to organize themselves by providing a timetable. For this purpose team calendars can be shared and each user will get shown an overview of all calendars they and their team is responsible for.
 	\subsection{Target groups}
 		The target groups for this tool are:
 		\begin{itemize}
@@ -44,6 +67,7 @@
 		\end{itemize}
 		Based on this it is assumed that the frontend needs to be readable by people of all age groups.
 	\subsection{Operating conditions}
+		The Program should be deployed on a single server that is running 24/7 in the cloud or on premises for each company. The program should not need be to administrated once deployed.
 	\subsection{Development setup}
 		\begin{enumerate}
 			\item Create a venv in \texttt{./Backend} using \texttt{requirements.txt} with \texttt{pip install --upgrade -r requirements.txt}
@@ -53,22 +77,38 @@
 			\item Navigate to \texttt{my-app} and run development server with \texttt{npm start}
 		\end{enumerate}
 \section{Product overview}
+	Upon first opening the website a user selection will be shown where a user can be selected. Upon choosing an user a calendar will be generated with all of the calendar events that the user has access to. User can be changed at the top right. There also exists a group windows for managing groups.
 \section{Product functions}
+	In the calendar view:
+	\begin{itemize}
+		\item Calendar events can be moved by dragging the events with the mouse.
+		\item Calendar events can be created by clicking on an empty part of a day grid.
+		\item Calendar events can be deleted
+		\item Reminder times can be modified after clicking on an calendar event
+		% Klejdi muss mehr input geben wie genau die website geht
+	\end{itemize}
 \section{Product data}
 	To be saved Data will include:
 	\begin{itemize}
-		\item Username
+		\item Users
+			\subitem Name
+			\subitem Email
+		\item Group name
 		\item Calendar events consisting of:
 			\subitem Title
+			\subitem Description
 			\subitem Start Time
 			\subitem End Time
-			\subitem Reminder Time
+			\subitem Reminder Times
 		\item Users with access to calendar
 	\end{itemize}
 \section{Product services}
+	The program should generate the calendar view in a reasonable time and all calendar events have to be correct.
 \section{Quality requirements}
+	It is required that the software implements all Mandatory criteria, and responds to the user in a reasonable time. The software should be easy to understand, maneuverable and text should be big enough to be read. Once deployed it should work without needed intervention from a software developer. If needed the server should be able to be scaled up vertically to accommodate more traffic and data. The client side should be accessible for all users with an up to date web browser that is able to run react 18.3.0 web apps or newer.
 \section{User interface}
 \section{Non-functional requirements}
+	The saved data shall not be accessible for 3rd parties. The data shall only be used for the intended purposes of providing a timetable and reminders. It shall not be used by anyone that has access to them for any purpose other than what the user consented to. The data shall not be sold or be used for personalized advertisements. The data shall be persistent and encrypted.
 \section{Technical product environment}
 	\subsection{Software}
 		\subsubsection{Client}
@@ -91,7 +131,7 @@
 		\subsubsection{Client}
 			Any device capable of running a browser that supports react 18.3.0 web apps or newer with internet access.
 	\subsection{Orgware}
-		The deployed code needs to be documented to make servicing it possible. Intended documentation is the GitHub project where developers made comments for their decisions, Mask Draft and an Entity-relationship diagram for the database.
+		The deployed code needs to be documented to make servicing it possible. Intended documentation is the GitHub project where developers made comments for their decisions, Mask Draft and an Entity-relationship diagram for the database. Once deployed the tool should not need to be administrated.
 	\subsection{Product interfaces}
 		The frontend and backend need to be connected via their ip adresses in a network.\\
 		The backend and database need to be connected via their ip adresses in a network.\\
@@ -128,7 +168,7 @@
 			\item MySQL
 		\end{itemize}
 	\subsection{Hardware}
-		Windows or Linux computer capable of running all software outlined in 11.1 Software.\\
+		Windows or Linux computer capable of running all software outlined in 11.1 Software with internet access.\\
 		Mac not tested.
 	\subsection{Orgware}
 		The agile software development method will be used. GitHub will provide all tools necessary for agile development. Sprints last a week and end on Thursdays in the lecture.\\
@@ -145,12 +185,19 @@
 			\item Task management (GitHub projects)
 		\end{itemize}
 	\subsection{Development interfaces}
-%eventuell noch ausformulieren wie genau das geht?-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		The frontend and backend need to be connected via their ip adresses in a development environment.\\
-		The backend and database need to be connected via their ip adresses in a development environment.\\
-		External development interfaces are not needed.
+		The front end and back end need to be connected via their ip addresses in a development environment.\\
+		The back end and database need to be connected via their ip addresses in a development environment.\\
+		The database is hosted externally at \texttt{http://descus.de}.
 \section{Division into sub-products}
+	The product is layered and divided into 3 parts according to a layered architecture. The top layer is the front end providing an interface to the end user. The second layer is a back end that provides an endpoint for the front end to access data. The third and last layer is the database where the data is persistently saved. It is connected to the back end via ip address and password.\\
+	The front end is written in react with nodejs and javascript.\\
+	The back end is written in django using python3.
+	The database is written using SQLAlchemy and MySQL.
 \section{Additions}
+	The Functional Specification Document shall be delivered by 12.06.2024\\
+	The Mask draft shall be delivered by 19.06.2024 at the latest\\
+	The database concept diagram shall be delivered by 26.06.2024 at the latest.\\
+	The final product shall be delivered by 10.07.2024 at the latest.
 \section{Glossary}
 \section{Sources}
 	\begin{itemize}
