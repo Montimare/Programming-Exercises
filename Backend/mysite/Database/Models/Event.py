@@ -12,6 +12,7 @@ class Event(Base):
     endtime = Column(DateTime(timezone=True), nullable=False)
 
     event_lists = relationship("Event_EventList", back_populates="event")
+    notifications = relationship("Notification", back_populates="event")
 
     def __init__(self, name, description, starttime, endtime, **kw):
         super().__init__(**kw)
