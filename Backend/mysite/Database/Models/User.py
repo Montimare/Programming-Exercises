@@ -8,7 +8,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(256), unique=True, nullable=False, index=True)
     email = Column(String(256), unique=True, nullable=False)
-    phone = Column(String(256), unique=True, nullable=False)
+    phone = Column(String(256), unique=True, nullable=True)
 
     owned_groups = relationship("EventList", back_populates="admin")
     groups = relationship("User_Group", back_populates="user")
