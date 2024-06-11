@@ -20,7 +20,54 @@ import interactionPlugin from "@fullcalendar/interaction";
     Bootstrap - https://getbootstrap.com/docs/5.3/getting-started/introduction/
 */
 
+// Temporarily storing event list in frontend
+const eventList = [
+    {
+        title: 'Learning Session',
+        start: '2024-05-08',
+    },
+    {
+        title: 'Learning Session 2',
+        start: '2024-05-08'
+    },
+    {
+        title: 'Learning Session 3',
+        start: '2024-05-08'
+    },
+    {
+        title: 'Learning Session 4',
+        start: '2024-05-08'
+    },
+    {
+        title: 'Thing I Need To Do',
+        start: '2024-05-09',
+        end: '2024-05-10'
+    },
+    {
+        title: 'Hello',
+        start: '2024-05-11T12:30:00',
+        allDay: false // will make the time show
+    },
+    {
+        title: 'Hi',
+        start: '2024-05-11T12:30:00',
+        allDay: false // will make the time show
+    },
+    {
+        title: 'Prog',
+        start: '2024-05-11T12:30:00',
+        allDay: false // will make the time show
+    },
+    {
+        title: 'ProgEx',
+        start: '2024-05-11T12:30:00',
+        allDay: false // will make the time show
+    }
+]
+
 const CalendarComponent = () => {
+    const calendarRef = useRef(null);
+
     return (
         <>
             <header className="CalendarTitle">
@@ -37,49 +84,8 @@ const CalendarComponent = () => {
                         dayMaxEventRows={true}
                         editable={true}
                         selectable={true}
-                        events={[
-                            {
-                                title: 'Learning Session',
-                                start: '2024-05-08',
-                            },
-                            {
-                                title: 'Learning Session 2',
-                                start: '2024-05-08'
-                            },
-                            {
-                                title: 'Learning Session 3',
-                                start: '2024-05-08'
-                            },
-                            {
-                                title: 'Learning Session 4',
-                                start: '2024-05-08'
-                            },
-                            {
-                                title: 'Thing I Need To Do',
-                                start: '2024-05-09',
-                                end: '2024-05-10'
-                            },
-                            {
-                                title: 'Hello',
-                                start: '2024-05-11T12:30:00',
-                                allDay: false // will make the time show
-                            },
-                            {
-                                title: 'Hi',
-                                start: '2024-05-11T12:30:00',
-                                allDay: false // will make the time show
-                            },
-                            {
-                                title: 'Prog',
-                                start: '2024-05-11T12:30:00',
-                                allDay: false // will make the time show
-                            },
-                            {
-                                title: 'ProgEx',
-                                start: '2024-05-11T12:30:00',
-                                allDay: false // will make the time show
-                            },
-                        ]}
+                        events={eventList}
+                        ref={calendarRef}
 
                         /* 
                             Using the eventClick function to modify an event
@@ -94,6 +100,14 @@ const CalendarComponent = () => {
                                 info.event.setProp('title', title);
                             }
                             info.el.style.borderColor = 'red';
+                        }}
+
+                        dateClick={function(info) {
+                            const calendarAPI = calendarRef.current.getApi();
+                            calendarAPI.addEvent({
+                                title: 'hello',
+                                start: info.date
+                            })
                         }}
                     />
                 </div>
