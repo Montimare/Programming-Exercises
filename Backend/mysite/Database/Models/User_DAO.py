@@ -2,8 +2,8 @@ from ..Database import db_session
 from User import User
 
 
-def save_user(name, email, phone):
-    user = User(name=name, email=email, phone=phone)
+def save_user(name, email):
+    user = User(name=name, email=email)
     db_session.add(user)
     db_session.commit()
     return user
