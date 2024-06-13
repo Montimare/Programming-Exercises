@@ -5,10 +5,14 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-import { DialogActions, DialogContent, DialogContentText, FormControl, InputLabel, MenuItem, TextField } from '@mui/material';
+import { Checkbox, DialogActions, DialogContent, FormControl, InputLabel, ListItem, ListItemText, MenuItem, OutlinedInput, TextField } from '@mui/material';
 import Button from "@mui/material/Button";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Select from "@mui/material/Select"
+import { TimePicker } from "@mui/x-date-pickers/TimePicker"
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import List from "@mui/material/List";
 
 /*
     CalendarComponent
@@ -81,6 +85,12 @@ const eventList = [
     }
 ]
 
+const groupNames = [
+    "The Gang",
+    "The Gang 2",
+    "The Gang 3"
+]
+
 const CalendarComponent = () => {
     const calendarRef = useRef(null);
 
@@ -94,11 +104,25 @@ const CalendarComponent = () => {
         setOpen(false);
     }
 
-    const [group, setGroup] = React.useState('');
-
-    const handleChange = () => {
-        setGroup(1);
+    const handleSave = () => {
+        setOpen(false);
+        const calendarAPI = calendarRef.current.getApi();
+        calendarAPI.addEvent({
+            title: 'hello',
+            start: '2024-06-11T12:30:00'
+        });
     }
+
+    const [group, setGroup] = React.useState([]);
+
+    const handleChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setGroup(
+            typeof value === "string" ? value.split(',') : value,
+        );
+    };
 
     return (
         <>
@@ -156,25 +180,41 @@ const CalendarComponent = () => {
                                 fullWidth
                                 variant="standard"
                             />
-                            <FormControl>
-                                <InputLabel id="demo-simple-select-label">Group</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={group}
-                                    label="Choose event list"
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value={10}>The Gang</MenuItem>
-                                    <MenuItem value={20}>The Gang 2</MenuItem>
-                                    <MenuItem value={20}>The Gang 3</MenuItem>
-                                    <MenuItem></MenuItem>
-                                </Select>
-                            </FormControl>
+                            <List>
+                                <ListItem>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <TimePicker label="Start time" />
+                                    </LocalizationProvider>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <TimePicker label="End time" />
+                                    </LocalizationProvider>
+                                </ListItem>
+                                <ListItem>
+                                    <FormControl sx={{ minWidth: 200 }}>
+                                        <InputLabel id="demo-multiple-checkbox-label">Choose group</InputLabel>
+                                        <Select
+                                            labelId="demo-multiple-checkbox-label"
+                                            id="demo-multiple-checkbox"
+                                            value={group}
+                                            onChange={handleChange}
+                                            input={<OutlinedInput label="Choose group" />}
+                                            renderValue={(selected) => selected.join(',')}
+                                            MenuProps={[]}
+                                        >
+                                            {groupNames.map((name) => (
+                                                <MenuItem key={name} value={name}>
+                                                    <Checkbox checked={group.indexOf(name) > -1} />
+                                                    <ListItemText primary={name} />
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </ListItem>
+                            </List>
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleClose}>Cancel</Button>
-                            <Button variant="contained" onClick={handleClose} autoFocus>OK</Button>
+                            <Button variant="contained" onClick={handleSave} autoFocus>OK</Button>
                         </DialogActions>
                     </Dialog>
                 </div>
