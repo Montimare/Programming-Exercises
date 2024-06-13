@@ -9,8 +9,9 @@ class User(Base):
     name = Column(String(256), unique=True, nullable=False, index=True)
     email = Column(String(256), unique=True, nullable=False)
 
-    owned_groups = relationship("EventList", back_populates="admin")
+    owned_lists = relationship("EventList", back_populates="admin")
     groups = relationship("User_Group", back_populates="user")
+    owned_groups = relationship("Group", back_populates="admin")
 
     def __init__(self, name, email, **kw):
         super().__init__(**kw)
@@ -18,4 +19,4 @@ class User(Base):
         self.email = email
 
     def __repr__(self):
-        return '<User %r>' % self.name
+        return '<User id: %r, name: %s>' % (self.id, self.name)
