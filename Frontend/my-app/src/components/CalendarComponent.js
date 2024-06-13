@@ -3,6 +3,12 @@ import React, { useRef } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import { DialogActions, DialogContent, DialogContentText, FormControl, InputLabel, MenuItem, TextField } from '@mui/material';
+import Button from "@mui/material/Button";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import Select from "@mui/material/Select"
 
 /*
     CalendarComponent
@@ -18,6 +24,16 @@ import interactionPlugin from "@fullcalendar/interaction";
     COMPONENTS
     MUI - https://mui.com/material-ui/
     Bootstrap - https://getbootstrap.com/docs/5.3/getting-started/introduction/
+*/
+
+/*
+    function (info) {
+        const calendarAPI = calendarRef.current.getApi();
+        calendarAPI.addEvent({
+            title: 'hello',
+            start: info.date
+        })
+    }
 */
 
 // Temporarily storing event list in frontend
@@ -68,9 +84,26 @@ const eventList = [
 const CalendarComponent = () => {
     const calendarRef = useRef(null);
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const [group, setGroup] = React.useState('');
+
+    const handleChange = () => {
+        setGroup(1);
+    }
+
     return (
         <>
             <header className="CalendarTitle">
+                <CalendarMonthIcon />
                 <h1 className="TitleText">Team Calendar</h1>
                 <div className="UserText">User</div>
             </header>
@@ -102,14 +135,48 @@ const CalendarComponent = () => {
                             info.el.style.borderColor = 'red';
                         }}
 
-                        dateClick={function(info) {
-                            const calendarAPI = calendarRef.current.getApi();
-                            calendarAPI.addEvent({
-                                title: 'hello',
-                                start: info.date
-                            })
-                        }}
+                        dateClick={handleClickOpen}
                     />
+
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="event-dialog-title"
+                        aria-describedby="event-dialog-description"
+                    >
+                        <DialogTitle id="event-dialog-title">
+                            {"Add new event"}
+                        </DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                autoFocus
+                                required
+                                margin="dense"
+                                label="Event name"
+                                fullWidth
+                                variant="standard"
+                            />
+                            <FormControl>
+                                <InputLabel id="demo-simple-select-label">Group</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={group}
+                                    label="Choose event list"
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value={10}>The Gang</MenuItem>
+                                    <MenuItem value={20}>The Gang 2</MenuItem>
+                                    <MenuItem value={20}>The Gang 3</MenuItem>
+                                    <MenuItem></MenuItem>
+                                </Select>
+                            </FormControl>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose}>Cancel</Button>
+                            <Button variant="contained" onClick={handleClose} autoFocus>OK</Button>
+                        </DialogActions>
+                    </Dialog>
                 </div>
             </body>
             <footer className="CalendarFooter1">
