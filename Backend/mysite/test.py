@@ -5,6 +5,7 @@ from Database.Models.Group_DAO import save_group, get_group_by_id, get_group_lis
 from Database.Models.Event_List_DAO import save_event_list, get_event_list_by_id, get_event_list_list, delete_event_list_by_id, modify_event_list
 from Database.Models.Notification_DAO import save_notification, get_notification_by_id, get_notifications_by_user_id, get_notification_list, get_notifications_by_event_id, delete_notification_by_id, modify_notification
 
+
 def fill_db():
     felix = save_user('Felix', 'felix@felix.felix')
     klejdi = save_user('Klejdi', 'klejdi@klejdi.klejdi')
@@ -18,7 +19,7 @@ def fill_db():
 if __name__ == '__main__':
     init_db()
 
-    print(modify_user(2, 'Felix', 'felix.felix@felix'))
+    fill_db()
 
     print(get_event_list_list())
     print(get_group_list())
