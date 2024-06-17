@@ -6,8 +6,8 @@ from ..Database import Base
 class User_Group(Base):
     __tablename__ = 'user_group'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    group_id = Column(Integer, ForeignKey('group.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    group_id = Column(Integer, ForeignKey('group.id', ondelete='CASCADE'), nullable=False)
 
     user = relationship("User", back_populates="groups")
     group = relationship("Group", back_populates="users")

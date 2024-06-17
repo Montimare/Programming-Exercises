@@ -6,8 +6,8 @@ from ..Database import Base
 class Group_EventList(Base):
     __tablename__ = 'group_event_list'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    group_id = Column(Integer, ForeignKey('group.id'), nullable=False)
-    event_list_id = Column(Integer, ForeignKey('event_list.id'), nullable=False)
+    group_id = Column(Integer, ForeignKey('group.id', ondelete='CASCADE'), nullable=False)
+    event_list_id = Column(Integer, ForeignKey('event_list.id', ondelete='CASCADE'), nullable=False)
 
     group = relationship("Group", back_populates="event_lists")
     event_list = relationship("EventList", back_populates="groups")

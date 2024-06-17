@@ -6,7 +6,7 @@ from ..Database import Base
 class Notification(Base):
     __tablename__ = 'notifications'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    event_id = Column(Integer, ForeignKey('event.id'), nullable=False)
+    event_id = Column(Integer, ForeignKey('event.id',ondelete='CASCADE'), nullable=False)
     time = Column(DateTime, nullable=False)
 
     event = relationship("Event", back_populates="notifications")

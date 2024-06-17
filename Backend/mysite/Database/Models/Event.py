@@ -10,7 +10,7 @@ class Event(Base):
     description = Column(String(256))
     startTime = Column(DateTime(timezone=True), nullable=False)
     endTime = Column(DateTime(timezone=True), nullable=False)
-    list_id = Column(Integer, ForeignKey('event_list.id'), nullable=False)
+    list_id = Column(Integer, ForeignKey('event_list.id',ondelete='CASCADE'), nullable=False)
 
     notifications = relationship("Notification", back_populates="event")
     list = relationship("EventList", back_populates="events")

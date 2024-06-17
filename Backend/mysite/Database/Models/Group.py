@@ -6,8 +6,8 @@ from ..Database import Base
 class Group(Base):
     __tablename__ = 'group'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(256))
-    admin_id = Column(Integer, ForeignKey('users.id'))
+    name = Column(String(256), unique=True, nullable=False)
+    admin_id = Column(Integer, ForeignKey('users.id'), nullable=False)
 
     admin = relationship("User", back_populates="owned_groups")
     event_lists = relationship("Group_EventList", back_populates="group")
