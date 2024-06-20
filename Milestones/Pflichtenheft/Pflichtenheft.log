@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Fedora 40) (preloaded format=pdflatex 2024.6.6)  11 JUN 2024 18:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Fedora 40) (preloaded format=pdflatex 2024.6.6)  12 JUN 2024 00:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -167,7 +167,10 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip50
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 9.
+(/usr/share/texlive/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2022/12/04 v6.7b set line spacing
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 10.
 
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
@@ -177,24 +180,24 @@ File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
 (./Pflichtenheft.aux)
 \openout1 = `Pflichtenheft.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2022/01/06 v1.3d Standard LaTeX Color (DPC)
@@ -221,7 +224,7 @@ File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
 \makeMPintoPDFobject=\count276
 \everyMPtoPDFconversion=\toks18
 )) (/usr/share/texlive/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-Package hyperref Info: Link coloring ON on input line 12.
+Package hyperref Info: Link coloring ON on input line 11.
 
 (./Pflichtenheft.out) (./Pflichtenheft.out)
 \@outlinefile=\write3
@@ -234,51 +237,76 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 2.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 2.
+)
+\tf@toc=\write4
+\openout4 = `Pflichtenheft.toc'.
+
 
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.35 ...}{\numberline {15}Sources}{10}{section.15}
-                                                  % [1])
-\tf@toc=\write4
-\openout4 = `Pflichtenheft.toc'.
+l.27 	\newpage
+               [1] [2{/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm
+-super-ts1.enc}] [3]
+LaTeX Font Info:    Trying to load font information for OML+cmr on input line 8
+8.
+ (/usr/share/texlive/texmf-dist/tex/latex/base/omlcmr.fd
+File: omlcmr.fd 2022/07/10 v2.5l Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 88.
 
- [2] [3{/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
-}] [4] [5] [6] [7]
-Overfull \hbox (0.8896pt too wide) in paragraph at lines 140--140
+[4] [5] [6]
+Underfull \hbox (badness 10000) in paragraph at lines 153--156
+
+ []
+
+[7] [8]
+Overfull \hbox (0.8896pt too wide) in paragraph at lines 186--186
 []\OT1/cmr/bx/n/14.4 Special re-quire-ments for the de-vel-op-ment en-
  []
 
-[8]
-Underfull \hbox (badness 10000) in paragraph at lines 174--177
+[9]
+Underfull \hbox (badness 10000) in paragraph at lines 220--223
 
  []
 
-[9] [10] (./Pflichtenheft.aux)
+[10]
+Underfull \hbox (badness 10000) in paragraph at lines 248--253
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 248--253
+
+ []
+
+[11] (./Pflichtenheft.aux)
 Package rerunfilecheck Info: File `Pflichtenheft.out' has not changed.
-(rerunfilecheck)             Checksum: 5F68840425692D548C226AEBAF687B53;4640.
+(rerunfilecheck)             Checksum: 921085623D364902142021CEFF498539;4686.
  ) 
 Here is how much of TeX's memory you used:
- 7923 strings out of 476041
- 125295 string characters out of 5793165
+ 7995 strings out of 476041
+ 126719 string characters out of 5793165
  1863388 words of memory out of 6000000
- 28266 multiletter control sequences out of 15000+600000
+ 28327 multiletter control sequences out of 15000+600000
  515863 words of font info for 44 fonts, out of 8000000 for 9000
  1137 hyphenation exceptions out of 8191
- 75i,5n,76p,571b,486s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,76p,571b,523s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/font
-s/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type
-1/public/cm-super/sfrm1000.pfb>
-Output written on Pflichtenheft.pdf (11 pages, 134505 bytes).
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/cm-super/sfrm1000.pfb>
+Output written on Pflichtenheft.pdf (12 pages, 148328 bytes).
 PDF statistics:
- 325 PDF objects out of 1000 (max. 8388607)
- 293 compressed objects within 3 object streams
- 52 named destinations out of 1000 (max. 500000)
+ 339 PDF objects out of 1000 (max. 8388607)
+ 303 compressed objects within 4 object streams
+ 56 named destinations out of 1000 (max. 500000)
  281 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -2,13 +2,12 @@
 
 %opening
 \usepackage{hyperref}
+\usepackage{setspace}
 \hypersetup{
 	colorlinks=true,
 	linktoc=all,
 	linkcolor=black
 }
-%Fehlt: 3, 4, 8, 14
-% 3+4+8 mit klejdi besprechen
 \begin{document}
 	\begin{titlepage}
 		\centering
@@ -22,7 +21,9 @@
 		{\large \today}
 	\end{titlepage}
 	\newpage
-	\tableofcontents
+	\begin{spacing}{0.95}
+		\tableofcontents
+	\end{spacing}
 	\newpage
 	
 \section{Target determination}
@@ -77,15 +78,28 @@
 			\item Navigate to \texttt{my-app} and run development server with \texttt{npm start}
 		\end{enumerate}
 \section{Product overview}
-	Upon first opening the website a user selection will be shown where a user can be selected. Upon choosing an user a calendar will be generated with all of the calendar events that the user has access to. User can be changed at the top right. There also exists a group windows for managing groups.
+	Upon first visiting the website, a user selection interface will be shown where a user can be selected. After selecting a user, a calendar will be dynamically generated, displaying all of the calendar events that the user has access to. User can be changed through the Sidebar. Additionally, the site offers a dedicated group management window for managing groups.
 \section{Product functions}
-	In the calendar view:
 	\begin{itemize}
-		\item Calendar events can be moved by dragging the events with the mouse.
-		\item Calendar events can be created by clicking on an empty part of a day grid.
-		\item Calendar events can be deleted
-		\item Reminder times can be modified after clicking on an calendar event
-		% Klejdi muss mehr input geben wie genau die website geht
+		\item User Selection
+			\subitem The website starts with a user selection page, where the user can choose an user out of a list of users.
+			\subitem After the user selection, the user will gain access to their own instance of the calendar.
+		\item Calendar Interface
+			\subitem The user can change the displayed calendar month by clicking the "\textless" or "\textgreater" button.
+			\subitem Alternatively, the user can go back to the current month by clicking on the "today" button.
+		\item Event Handling
+			\subitem Calendar events can be created by clicking on an empty part of a day grid.
+			\subitem When clicking on an event, a popup window will show, where the user can modify the title name, start time, end time, choose a group and add/remove reminders. The changes will be applied after pressing OK.
+			\subitem Calendar events can be moved by clicking and dragging them with the mouse.
+			\subitem Calendar events can be deleted by clicking on the "DELETE" button in the popup window.
+		\item Menu Sidebar
+			\subitem The user can open a menu sidebar by clicking on a button on the top left of the page.
+			\subitem In the menu sidebar, the user will be able to see their username, the groups they are in and an option to log out.
+		\item Group Handling
+			\subitem The user can create a group after clicking on "Create Group" below the group names on the menu sidebar.
+			\subitem After clicking on a group name in the menu sidebar, the admin can modify the group name, add/delete group members or leave the group, whereas other group members can only view the group or have the option to leave.
+		\item Reminders
+			\subitem When an event's reminder time is reached, the user will get a notification from the website.
 	\end{itemize}
 \section{Product data}
 	To be saved Data will include:
@@ -106,7 +120,39 @@
 	The program should generate the calendar view in a reasonable time and all calendar events have to be correct.
 \section{Quality requirements}
 	It is required that the software implements all Mandatory criteria, and responds to the user in a reasonable time. The software should be easy to understand, maneuverable and text should be big enough to be read. Once deployed it should work without needed intervention from a software developer. If needed the server should be able to be scaled up vertically to accommodate more traffic and data. The client side should be accessible for all users with an up to date web browser that is able to run react 18.3.0 web apps or newer.
+\newpage
 \section{User interface}
+	The user interface contains three main views:
+	\begin{enumerate}
+		\item The user selection page
+			\subitem This is the page the user first sees when opening the website.
+			\subitem In the middle, they can see the website's logo, a drop-down list and a "select" button which allows them access to the website.
+			\subitem If the user clicks on the drop-down list, all available usernames will be shown.
+			\subitem By default, the "select" button will be grayed out, but after choosing an username, it will switch colors, signaling the user that they are ready to access the calendar page.
+		\item The calendar page
+			\subitem This is the main page of the website.
+			\subitem On the top, from left to right, the user can find:
+				\subsubitem A button to activate the menu sidebar
+				\subsubitem The website's logo
+				\subsubitem A text welcoming the user (e.g. "Welcome, user!")
+			\subitem The calendar is located in the middle of the website, where the user can interact with it to create/modify/delete events and change which calendar month they would like to display.
+			\subitem By default, the calendar displays the current month and the current day will have a yellow background.
+			\subitem If the user decides to create an event, a pop-up window will show up, containing:
+				\subsubitem Text boxes for the event name and start and end time
+				\subsubitem A checkbox list for choosing groups
+				\subsubitem A dynamic list for adding/removing reminders
+			\subitem The bottom side of the website only contains the year of creation and our team's name.
+		\item The menu sidebar
+			\subitem When clicking on the top-left button in the calendar page, the calendar page will fade out and a column will appear on the left hand side of the website.
+			\subitem From top to bottom, this sidebar contains:
+				\subsubitem The username of the current user
+				\subsubitem The list of groups the user has joined/created. By clicking any group name, the website will show a pop-up window with the group name, members and options depending on whether the user is an admin or not.
+				\subsubitem A log-out option, where the user can log out and leave the calendar page, going back to the user selection page.
+	\end{enumerate}
+	\subsection{Access rights}
+	After selecting a user on the user list, the user has access on their own instance of the calendar and no other instances. However, the user's events can be shared among the groups they have joined.\\
+	\\
+	Inside groups, users with the admin role have exclusive rights to modify the group name and add/remove members.
 \section{Non-functional requirements}
 	The saved data shall not be accessible for 3rd parties. The data shall only be used for the intended purposes of providing a timetable and reminders. It shall not be used by anyone that has access to them for any purpose other than what the user consented to. The data shall not be sold or be used for personalized advertisements. The data shall be persistent and encrypted.
 \section{Technical product environment}
@@ -199,10 +245,9 @@
 	The database concept diagram shall be delivered by 26.06.2024 at the latest.\\
 	The final product shall be delivered by 10.07.2024 at the latest.
 \section{Glossary}
-\section{Sources}
-	\begin{itemize}
-		\item https://en.wikipedia.org/wiki/GitHub | viewed: 10.06.2024
-	\end{itemize}
-
-
+	\textbf{Front end:} A front end is the part of the software that the user interacts with, providing all of the functionality of the program.\\
+	\\
+	\textbf{Back end:} A back end is the server side component of the program, it is enabling all of the functionality. In this case by connecting to the database and providing the data to the front end to be displayed in the right format.\\
+	\\
+	\textbf{venv:} A venv is a virtual environment provided by python. It is needed so that all required packages and dependencies are installed for the project after setting it up, rather than installing all packages system wide by hand.
 \end{document}
