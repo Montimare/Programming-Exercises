@@ -6,6 +6,8 @@ import interactionPlugin from "@fullcalendar/interaction";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import EventPopupComponent from "./EventPopupComponent";
 import EventEditComponent from './EventEditComponent';
+import MenuIcon from '@mui/icons-material/Menu';
+import IconButton from "@mui/material/IconButton";
 
 /*
     CalendarComponent
@@ -95,18 +97,13 @@ const CalendarComponent = () => {
     // TODO: Can't reflect event edit changes to the calendar
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
         const calendarAPI = calendarRef.current.getApi();
+        // TODO: Get event from event list
         // TODO: Add error handling when start or end time are undefined
-        for(event in calendarAPI.getEvents) {
-            if(event.title === text && event.start === startDate.toString() + "T" + startTime.toString("HH:mm:ss tt")
-            && event.end === endDate.toString() + "T" + endTime.toString("HH:mm:ss tt")) {
-                alert("Yes?");
-                calendarAPI.addEvent({
-                    title: text,
-                    start: startDate.toString() + "T" + startTime.toString("HH:mm:ss tt"),
-                    end: endDate.toString() + "T" + endTime.toString("HH:mm:ss tt")
-                });
-            }
-        }
+        calendarAPI.addEvent({
+            title: text,
+            start: startDate.toString() + "T" + startTime.toString("HH:mm:ss tt"),
+            end: endDate.toString() + "T" + endTime.toString("HH:mm:ss tt")
+        });
     }
 
     const handleEventClick = (info) => {
@@ -117,8 +114,12 @@ const CalendarComponent = () => {
     return (
         <>
             <header className="CalendarTitle">
-                <CalendarMonthIcon/>
-                <h1 className="TitleText">Team Calendar</h1>
+                <h1 className="TitleText">
+                    <IconButton aria-label="menu">
+                        <MenuIcon sx={{ color: 'white' }} />
+                    </IconButton>
+                    Team Calendar  <CalendarMonthIcon />
+                </h1>
                 <div className="UserText">User</div>
             </header>
             <body className="CalendarBody">
