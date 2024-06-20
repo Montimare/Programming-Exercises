@@ -3,7 +3,9 @@
 bin/
 lib/*
 lib64/*
+lib64
 include/*
 mysite/test.py
+myenv/
 
 pyvenv.cfg
