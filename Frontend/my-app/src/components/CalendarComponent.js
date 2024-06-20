@@ -12,6 +12,7 @@ import Select from "@mui/material/Select"
 import { TimePicker } from "@mui/x-date-pickers/TimePicker"
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from 'dayjs';
 import List from "@mui/material/List";
 
 /*
@@ -45,6 +46,7 @@ const eventList = [
     {
         title: 'Learning Session',
         start: '2024-05-08',
+        end: '2024-05-12'
     },
     {
         title: 'Learning Session 2',
@@ -100,6 +102,10 @@ const CalendarComponent = () => {
         setOpen(true);
     }
 
+    const [text, setText] = React.useState([]);
+    const [startTime, setStartTime] = React.useState([]);
+    const [endTime, setEndTime] = React.useState([]);
+
     const handleClose = () => {
         setOpen(false);
     }
@@ -108,8 +114,9 @@ const CalendarComponent = () => {
         setOpen(false);
         const calendarAPI = calendarRef.current.getApi();
         calendarAPI.addEvent({
-            title: 'hello',
-            start: '2024-06-11T12:30:00'
+            title: text,
+            start: startTime.toISOString(),
+            end: endTime.toISOString()
         });
     }
 
@@ -179,14 +186,24 @@ const CalendarComponent = () => {
                                 label="Event name"
                                 fullWidth
                                 variant="standard"
+                                value={text}
+                                onChange={(event) => setText(event.target.value)}
                             />
                             <List>
                                 <ListItem>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <TimePicker label="Start time" />
+                                        <TimePicker 
+                                            label="Start time"
+                                            value={new dayjs(startTime)}
+                                            onChange={(newValue) => setStartTime(newValue)}
+                                        />
                                     </LocalizationProvider>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <TimePicker label="End time" />
+                                        <TimePicker 
+                                            label="End time"
+                                            value={new dayjs(endTime)}
+                                            onChange={(newValue) => setEndTime(newValue)}
+                                        />
                                     </LocalizationProvider>
                                 </ListItem>
                                 <ListItem>
