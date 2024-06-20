@@ -19,7 +19,8 @@ def fill_db():
 if __name__ == '__main__':
     init_db()
 
-    fill_db()
+    event = get_event_by_id(1)
+    print(event.notifications)
 
     print(get_event_list_list())
     print(get_group_list())
