@@ -73,24 +73,24 @@ const EventPopupComponent = ({ open, setOpen, sendEventData }) => {
                 />
                 <List>
                     <ListItem>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker 
-                            label="Choose start date..."
-                            onChange={(newValue) => setStartDate(newValue.format("YYYY-MM-DD"))}
-                        />
-                    </LocalizationProvider>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker 
-                            label="Choose end date..."
-                            onChange={(newValue) => setEndDate(newValue.format("YYYY-MM-DD"))}
-                        />
-                    </LocalizationProvider>
-                    </ListItem>
-                    <ListItem>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Choose start date..."
+                                onChange={(newValue) => setStartDate(newValue.format("YYYY-MM-DD"))}
+                            />
+                        </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose start time..."
                                 onChange={(newValue) => setStartTime(newValue.format("HH:mm:ss"))}
+                            />
+                        </LocalizationProvider>
+                    </ListItem>
+                    <ListItem>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Choose end date..."
+                                onChange={(newValue) => setEndDate(newValue.format("YYYY-MM-DD"))}
                             />
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -108,7 +108,7 @@ const EventPopupComponent = ({ open, setOpen, sendEventData }) => {
                                 id="demo-multiple-checkbox"
                                 value={group}
                                 onChange={handleChange}
-                                input={<OutlinedInput label="Group"/>}
+                                input={<OutlinedInput label="Group" />}
                                 renderValue={(selected) => selected.join(',')}
                                 MenuProps={[]}
                             >

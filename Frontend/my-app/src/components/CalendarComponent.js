@@ -21,6 +21,8 @@ import EventEditComponent from './EventEditComponent';
     COMPONENTS
     MUI - https://mui.com/material-ui/
     Bootstrap - https://getbootstrap.com/docs/5.3/getting-started/introduction/
+
+    TODO: Is useLocation useful?
 */
 
 // Temporarily storing event list in frontend
@@ -90,14 +92,21 @@ const CalendarComponent = () => {
         });
     }
 
+    // TODO: Can't reflect event edit changes to the calendar
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
         const calendarAPI = calendarRef.current.getApi();
         // TODO: Add error handling when start or end time are undefined
-        calendarAPI.addEvent({
-            title: text,
-            start: startTime.toString("HH:mm:ss tt"),
-            end: endTime.toString("HH:mm:ss tt")
-        });
+        for(event in calendarAPI.getEvents) {
+            if(event.title === text && event.start === startDate.toString() + "T" + startTime.toString("HH:mm:ss tt")
+            && event.end === endDate.toString() + "T" + endTime.toString("HH:mm:ss tt")) {
+                alert("Yes?");
+                calendarAPI.addEvent({
+                    title: text,
+                    start: startDate.toString() + "T" + startTime.toString("HH:mm:ss tt"),
+                    end: endDate.toString() + "T" + endTime.toString("HH:mm:ss tt")
+                });
+            }
+        }
     }
 
     const handleEventClick = (info) => {
