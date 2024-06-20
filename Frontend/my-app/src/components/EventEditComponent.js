@@ -7,6 +7,7 @@ import Select from "@mui/material/Select";
 import { TimePicker, DatePicker } from "@mui/x-date-pickers"
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs"
 import List from "@mui/material/List";
 
 const EventEditComponent = ({ open, setOpen, sendEventData, event }) => {
@@ -26,18 +27,9 @@ const EventEditComponent = ({ open, setOpen, sendEventData, event }) => {
         setOpen(false);
     }
 
-    function emptyLocalData() {
-        setText('');
-        setStartTime(null);
-        setEndTime(null);
-        setStartDate(null);
-        setEndDate(null);
-    }
-
     const handleSave = () => {
         setOpen(false);
         sendEventData(text, startTime, endTime, startDate, endDate);
-        emptyLocalData();
     }
 
     const [group, setGroup] = React.useState([]);
@@ -69,38 +61,38 @@ const EventEditComponent = ({ open, setOpen, sendEventData, event }) => {
                     label="Event name"
                     fullWidth
                     variant="standard"
-                    value={event.title}
-                    onChange={(event) => setText(event.target.value)}
+                    defaultValue={event.title}
+                    onChange={(newEvent) => setText(newEvent.target.value)}
                 />
                 <List>
                     <ListItem>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker 
-                            label="Choose start date..."
-                            value={event.start}
-                            onChange={(newValue) => setStartDate(newValue)}
-                        />
-                    </LocalizationProvider>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker 
-                            label="Choose end date..."
-                            value={event.end}
-                            onChange={(newValue) => setEndDate(newValue)}
-                        />
-                    </LocalizationProvider>
-                    </ListItem>
-                    <ListItem>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Choose start date..."
+                                value={dayjs(event.start)}
+                                onChange={(newValue) => setStartDate(newValue)}
+                            />
+                        </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose start time..."
-                                value={event.start}
+                                value={dayjs(event.start)}
                                 onChange={(newValue) => setStartTime(newValue)}
+                            />
+                        </LocalizationProvider>
+                    </ListItem>
+                    <ListItem>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Choose end date..."
+                                value={dayjs(event.end)}
+                                onChange={(newValue) => setEndDate(newValue)}
                             />
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose end time..."
-                                value={event.end}
+                                value={dayjs(event.end)}
                                 onChange={(newValue) => setEndTime(newValue)}
                             />
                         </LocalizationProvider>
@@ -113,7 +105,7 @@ const EventEditComponent = ({ open, setOpen, sendEventData, event }) => {
                                 id="demo-multiple-checkbox"
                                 value={group}
                                 onChange={handleChange}
-                                input={<OutlinedInput label="Group"/>}
+                                input={<OutlinedInput label="Group" />}
                                 renderValue={(selected) => selected.join(',')}
                                 MenuProps={[]}
                             >
