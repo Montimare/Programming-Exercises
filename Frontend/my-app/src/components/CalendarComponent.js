@@ -3,17 +3,9 @@ import React, { useRef } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Checkbox, DialogActions, DialogContent, FormControl, InputLabel, ListItem, ListItemText, MenuItem, OutlinedInput, TextField } from '@mui/material';
-import Button from "@mui/material/Button";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import Select from "@mui/material/Select"
-import { TimePicker } from "@mui/x-date-pickers/TimePicker"
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from 'dayjs';
-import List from "@mui/material/List";
+import EventPopupComponent from "./EventPopupComponent";
+import EventEditComponent from './EventEditComponent';
 
 /*
     CalendarComponent
@@ -29,16 +21,6 @@ import List from "@mui/material/List";
     COMPONENTS
     MUI - https://mui.com/material-ui/
     Bootstrap - https://getbootstrap.com/docs/5.3/getting-started/introduction/
-*/
-
-/*
-    function (info) {
-        const calendarAPI = calendarRef.current.getApi();
-        calendarAPI.addEvent({
-            title: 'hello',
-            start: info.date
-        })
-    }
 */
 
 // Temporarily storing event list in frontend
@@ -87,54 +69,46 @@ const eventList = [
     }
 ]
 
-const groupNames = [
-    "The Gang",
-    "The Gang 2",
-    "The Gang 3"
-]
-
 const CalendarComponent = () => {
     const calendarRef = useRef(null);
 
-    const [open, setOpen] = React.useState(false);
+    const [openAddEvent, setOpenAddEvent] = React.useState(false);
+    const [openEditEvent, setOpenEditEvent] = React.useState(false);
+    const [event, setEvent] = React.useState(false);
 
-    const handleClickOpen = () => {
-        setOpen(true);
+    const handleDateClick = () => {
+        setOpenAddEvent(true);
     }
 
-    const [text, setText] = React.useState([]);
-    const [startTime, setStartTime] = React.useState([]);
-    const [endTime, setEndTime] = React.useState([]);
-
-    const handleClose = () => {
-        setOpen(false);
-    }
-
-    const handleSave = () => {
-        setOpen(false);
+    const handleAddEvent = (text, startTime, endTime, startDate, endDate) => {
         const calendarAPI = calendarRef.current.getApi();
+        // TODO: Add error handling when start or end time are undefined
         calendarAPI.addEvent({
             title: text,
-            start: startTime.toISOString(),
-            end: endTime.toISOString()
+            start: startDate.toString() + "T" + startTime.toString("HH:mm:ss tt"),
+            end: endDate.toString() + "T" + endTime.toString("HH:mm:ss tt")
         });
     }
 
-    const [group, setGroup] = React.useState([]);
+    const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
+        const calendarAPI = calendarRef.current.getApi();
+        // TODO: Add error handling when start or end time are undefined
+        calendarAPI.addEvent({
+            title: text,
+            start: startTime.toString("HH:mm:ss tt"),
+            end: endTime.toString("HH:mm:ss tt")
+        });
+    }
 
-    const handleChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setGroup(
-            typeof value === "string" ? value.split(',') : value,
-        );
-    };
+    const handleEventClick = (info) => {
+        setEvent(info.event);
+        setOpenEditEvent(true);
+    }
 
     return (
         <>
             <header className="CalendarTitle">
-                <CalendarMonthIcon />
+                <CalendarMonthIcon/>
                 <h1 className="TitleText">Team Calendar</h1>
                 <div className="UserText">User</div>
             </header>
@@ -150,93 +124,23 @@ const CalendarComponent = () => {
                         selectable={true}
                         events={eventList}
                         ref={calendarRef}
-
-                        /* 
-                            Using the eventClick function to modify an event
-                            uses deprecated setProp method
-
-                            TODO: Improve modifying events
-                            (Event name, date, time, etc.)
-                        */
-                        eventClick={function (info) {
-                            let title = prompt("Enter new title:");
-                            if (title) {
-                                info.event.setProp('title', title);
-                            }
-                            info.el.style.borderColor = 'red';
-                        }}
-
-                        dateClick={handleClickOpen}
+                        eventClick={handleEventClick}
+                        dateClick={handleDateClick}
                     />
-
-                    <Dialog
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="event-dialog-title"
-                        aria-describedby="event-dialog-description"
-                    >
-                        <DialogTitle id="event-dialog-title">
-                            {"Add new event"}
-                        </DialogTitle>
-                        <DialogContent>
-                            <TextField
-                                autoFocus
-                                required
-                                margin="dense"
-                                label="Event name"
-                                fullWidth
-                                variant="standard"
-                                value={text}
-                                onChange={(event) => setText(event.target.value)}
-                            />
-                            <List>
-                                <ListItem>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <TimePicker 
-                                            label="Start time"
-                                            value={new dayjs(startTime)}
-                                            onChange={(newValue) => setStartTime(newValue)}
-                                        />
-                                    </LocalizationProvider>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <TimePicker 
-                                            label="End time"
-                                            value={new dayjs(endTime)}
-                                            onChange={(newValue) => setEndTime(newValue)}
-                                        />
-                                    </LocalizationProvider>
-                                </ListItem>
-                                <ListItem>
-                                    <FormControl sx={{ minWidth: 200 }}>
-                                        <InputLabel id="demo-multiple-checkbox-label">Choose group</InputLabel>
-                                        <Select
-                                            labelId="demo-multiple-checkbox-label"
-                                            id="demo-multiple-checkbox"
-                                            value={group}
-                                            onChange={handleChange}
-                                            input={<OutlinedInput label="Choose group" />}
-                                            renderValue={(selected) => selected.join(',')}
-                                            MenuProps={[]}
-                                        >
-                                            {groupNames.map((name) => (
-                                                <MenuItem key={name} value={name}>
-                                                    <Checkbox checked={group.indexOf(name) > -1} />
-                                                    <ListItemText primary={name} />
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </ListItem>
-                            </List>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleClose}>Cancel</Button>
-                            <Button variant="contained" onClick={handleSave} autoFocus>OK</Button>
-                        </DialogActions>
-                    </Dialog>
+                    <EventPopupComponent
+                        open={openAddEvent}
+                        setOpen={setOpenAddEvent}
+                        sendEventData={handleAddEvent}
+                    />
+                    <EventEditComponent
+                        open={openEditEvent}
+                        setOpen={setOpenEditEvent}
+                        sendEventData={handleEditEvent}
+                        event={event}
+                    />
                 </div>
             </body>
-            <footer className="CalendarFooter1">
+            <footer className="CalendarFooter">
                 © 2024 ProgExTRAORDINAIRE
             </footer>
         </>
