@@ -122,6 +122,7 @@ const EventEditComponent = ({ open, setOpen, sendEventData, event }) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
+                <Button variant="text" color="error">Delete</Button>
                 <Button variant="contained" onClick={handleSave} autoFocus>Apply</Button>
             </DialogActions>
         </Dialog>

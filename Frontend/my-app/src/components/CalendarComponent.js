@@ -8,6 +8,8 @@ import EventPopupComponent from "./EventPopupComponent";
 import EventEditComponent from './EventEditComponent';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from "@mui/material/IconButton";
+import Drawer from "@mui/material/Drawer"
+import MenuSidebarComponent from './MenuSidebarComponent';
 
 /*
     CalendarComponent
@@ -78,7 +80,9 @@ const CalendarComponent = () => {
 
     const [openAddEvent, setOpenAddEvent] = React.useState(false);
     const [openEditEvent, setOpenEditEvent] = React.useState(false);
+    const [openDrawer, setOpenDrawer] = React.useState(false);
     const [event, setEvent] = React.useState(false);
+    const [eventID, setEventID] = React.useState(false);
 
     const handleDateClick = () => {
         setOpenAddEvent(true);
@@ -92,30 +96,45 @@ const CalendarComponent = () => {
             start: startDate.toString() + "T" + startTime.toString("HH:mm:ss tt"),
             end: endDate.toString() + "T" + endTime.toString("HH:mm:ss tt")
         });
+        eventList.push({
+            title: text,
+            start: startDate.toString() + "T" + startTime.toString("HH:mm:ss tt"),
+            end: endDate.toString() + "T" + endTime.toString("HH:mm:ss tt")
+        })
     }
 
-    // TODO: Can't reflect event edit changes to the calendar
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
         const calendarAPI = calendarRef.current.getApi();
         // TODO: Get event from event list
         // TODO: Add error handling when start or end time are undefined
-        calendarAPI.addEvent({
-            title: text,
-            start: startDate.toString() + "T" + startTime.toString("HH:mm:ss tt"),
-            end: endDate.toString() + "T" + endTime.toString("HH:mm:ss tt")
-        });
+        let editedEvent = calendarAPI.getEventById(eventID);
+        if(editedEvent) {
+            alert(startDate.toString());
+            alert(endDate.toString());
+            event.setProp('title', text);
+            // TODO: Set start and end date
+            event.setStart(startDate);
+            event.setEnd(endDate);
+        } else {
+            alert("Event not found!");
+        }
     }
 
     const handleEventClick = (info) => {
         setEvent(info.event);
+        setEventID(info.event.id);
         setOpenEditEvent(true);
+    }
+
+    const toggleDrawer = (newOpen) => {
+        setOpenDrawer(newOpen);
     }
 
     return (
         <>
             <header className="CalendarTitle">
                 <h1 className="TitleText">
-                    <IconButton aria-label="menu">
+                    <IconButton aria-label="menu" onClick={() => toggleDrawer(true)}>
                         <MenuIcon sx={{ color: 'white' }} />
                     </IconButton>
                     Team Calendar  <CalendarMonthIcon />
@@ -149,6 +168,9 @@ const CalendarComponent = () => {
                         event={event}
                     />
                 </div>
+                <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
+                    <MenuSidebarComponent/>
+                </Drawer>
             </body>
             <footer className="CalendarFooter">
                 © 2024 ProgExTRAORDINAIRE
