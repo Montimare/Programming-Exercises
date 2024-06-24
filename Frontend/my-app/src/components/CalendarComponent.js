@@ -56,22 +56,19 @@ const eventList = [
     {
         title: 'Hello',
         start: '2024-05-11T12:30:00',
-        allDay: false // will make the time show
+        end: '2024-05-12T14:30:00'
     },
     {
         title: 'Hi',
-        start: '2024-05-11T12:30:00',
-        allDay: false // will make the time show
+        start: '2024-05-11T12:30:00'
     },
     {
         title: 'Prog',
-        start: '2024-05-11T12:30:00',
-        allDay: false // will make the time show
+        start: '2024-05-11T12:30:00'
     },
     {
         title: 'ProgEx',
-        start: '2024-05-11T12:30:00',
-        allDay: false // will make the time show
+        start: '2024-05-11T12:30:00'
     }
 ]
 
