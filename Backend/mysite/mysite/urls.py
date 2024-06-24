@@ -14,25 +14,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
-from django.contrib.auth.models import User
-from rest_framework import routers, serializers, viewsets
-
-# Serializers define the API representation.
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'is_staff']
-
-# ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+from rest_framework import routers
+from mysite.views import UserViewSet, GroupViewSet, EventViewSet, EventListViewSet, NotificationViewSet
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
+router.register(r'users', UserViewSet, basename='user')
+router.register(r'groups', GroupViewSet, basename='group')
+router.register(r'events', EventViewSet, basename='event')
+router.register(r'eventlists', EventListViewSet, basename='eventlist')
+router.register(r'notifications', NotificationViewSet, basename='notification')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
@@ -43,5 +35,4 @@ urlpatterns = [
         'rest_framework.urls',
         namespace='rest_framework'
         )),
-    path('test', include(router.urls)),
 ]
