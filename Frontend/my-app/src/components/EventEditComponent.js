@@ -10,12 +10,14 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import List from "@mui/material/List";
 
+// TODO: Make sure that text doesn't return "undefined"
+
 const EventEditComponent = ({ open, setOpen, sendEventData, requestDelete, event }) => {
-    const [text, setText] = React.useState([]);
-    const [startTime, setStartTime] = React.useState(null);
-    const [endTime, setEndTime] = React.useState(null);
-    const [startDate, setStartDate] = React.useState(null);
-    const [endDate, setEndDate] = React.useState(null);
+    const [text, setText] = React.useState(event.title);
+    const [startTime, setStartTime] = React.useState(dayjs(event.start));
+    const [endTime, setEndTime] = React.useState(dayjs(event.end));
+    const [startDate, setStartDate] = React.useState(dayjs(event.start));
+    const [endDate, setEndDate] = React.useState(dayjs(event.end));
 
     const groupNames = [
         "The Gang",

@@ -15,12 +15,12 @@ const MenuSidebarComponent = () => {
             <List>
                 <ListItem>
                     <List>
-                        <ListItem><b>User</b><PersonIcon /></ListItem>
+                        <ListItem><PersonIcon /><b>User</b></ListItem>
                         <ListItem>user@user.user</ListItem>
                     </List>
                 </ListItem>
                 <Divider />
-                <ListItem><b>Groups</b><GroupsIcon /></ListItem>
+                <ListItem><GroupsIcon /><b>Groups</b></ListItem>
                 <Divider variant="middle"/>
                 <ListItem>
                     <List>

@@ -159,7 +159,6 @@ const CalendarComponent = () => {
             let formattedStart = startDate.toString() + "T" + startTime.toString("HH:mm:ssZ");
             let formattedEnd = endDate.toString() + "T" + endTime.toString("HH:mm:ssZ");
             event.setProp('title', text);
-            // TODO: Set start and end time
             event.setStart(formattedStart);
             event.setEnd(formattedEnd);
         } else {
