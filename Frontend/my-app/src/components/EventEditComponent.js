@@ -10,12 +10,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import List from "@mui/material/List";
 
-const EventEditComponent = ({ open, setOpen, sendEventData, event }) => {
+const EventEditComponent = ({ open, setOpen, sendEventData, requestDelete, event }) => {
     const [text, setText] = React.useState([]);
-    const [startTime, setStartTime] = React.useState([]);
-    const [endTime, setEndTime] = React.useState([]);
-    const [startDate, setStartDate] = React.useState([]);
-    const [endDate, setEndDate] = React.useState([]);
+    const [startTime, setStartTime] = React.useState(null);
+    const [endTime, setEndTime] = React.useState(null);
+    const [startDate, setStartDate] = React.useState(null);
+    const [endDate, setEndDate] = React.useState(null);
 
     const groupNames = [
         "The Gang",
@@ -30,6 +30,11 @@ const EventEditComponent = ({ open, setOpen, sendEventData, event }) => {
     const handleSave = () => {
         setOpen(false);
         sendEventData(text, startTime, endTime, startDate, endDate);
+    }
+
+    const handleDelete = () => {
+        setOpen(false);
+        requestDelete();
     }
 
     const [group, setGroup] = React.useState([]);
@@ -70,14 +75,14 @@ const EventEditComponent = ({ open, setOpen, sendEventData, event }) => {
                             <DatePicker
                                 label="Choose start date..."
                                 value={dayjs(event.start)}
-                                onChange={(newValue) => setStartDate(newValue)}
+                                onChange={(newValue) => setStartDate(newValue.format("YYYY-MM-DD"))}
                             />
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose start time..."
                                 value={dayjs(event.start)}
-                                onChange={(newValue) => setStartTime(newValue)}
+                                onChange={(newValue) => setStartTime(newValue.format("HH:mm:ssZ"))}
                             />
                         </LocalizationProvider>
                     </ListItem>
@@ -86,14 +91,14 @@ const EventEditComponent = ({ open, setOpen, sendEventData, event }) => {
                             <DatePicker
                                 label="Choose end date..."
                                 value={dayjs(event.end)}
-                                onChange={(newValue) => setEndDate(newValue)}
+                                onChange={(newValue) => setEndDate(newValue.format("YYYY-MM-DD"))}
                             />
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose end time..."
                                 value={dayjs(event.end)}
-                                onChange={(newValue) => setEndTime(newValue)}
+                                onChange={(newValue) => setEndTime(newValue.format("HH:mm:ssZ"))}
                             />
                         </LocalizationProvider>
                     </ListItem>
@@ -122,7 +127,7 @@ const EventEditComponent = ({ open, setOpen, sendEventData, event }) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button variant="text" color="error">Delete</Button>
+                <Button variant="text" color="error" onClick={handleDelete}>Delete</Button>
                 <Button variant="contained" onClick={handleSave} autoFocus>Apply</Button>
             </DialogActions>
         </Dialog>

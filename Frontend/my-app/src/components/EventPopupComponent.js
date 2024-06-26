@@ -7,14 +7,15 @@ import Select from "@mui/material/Select";
 import { TimePicker, DatePicker } from "@mui/x-date-pickers"
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs"
 import List from "@mui/material/List";
 
-const EventPopupComponent = ({ open, setOpen, sendEventData }) => {
+const EventPopupComponent = ({ open, setOpen, sendEventData, clickedDate }) => {
     const [text, setText] = React.useState([]);
-    const [startTime, setStartTime] = React.useState([]);
-    const [endTime, setEndTime] = React.useState([]);
-    const [startDate, setStartDate] = React.useState([]);
-    const [endDate, setEndDate] = React.useState([]);
+    const [startTime, setStartTime] = React.useState(null);
+    const [endTime, setEndTime] = React.useState(null);
+    const [startDate, setStartDate] = React.useState(null);
+    const [endDate, setEndDate] = React.useState(null);
 
     const groupNames = [
         "The Gang",
@@ -36,7 +37,11 @@ const EventPopupComponent = ({ open, setOpen, sendEventData }) => {
 
     const handleSave = () => {
         setOpen(false);
-        sendEventData(text, startTime, endTime, startDate, endDate);
+        if(startDate === null) {
+            sendEventData(text, startTime, endTime, dayjs(clickedDate).format("YYYY-MM-DD"), endDate);
+        } else {
+            sendEventData(text, startTime, endTime, startDate, endDate);
+        }
         emptyLocalData();
     }
 
@@ -51,6 +56,7 @@ const EventPopupComponent = ({ open, setOpen, sendEventData }) => {
         );
     };
 
+    //TODO: Change "Group" section to "Event List"
     return (
         <Dialog
             open={open}
@@ -76,13 +82,14 @@ const EventPopupComponent = ({ open, setOpen, sendEventData }) => {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                                 label="Choose start date..."
+                                value={dayjs(clickedDate)}
                                 onChange={(newValue) => setStartDate(newValue.format("YYYY-MM-DD"))}
                             />
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose start time..."
-                                onChange={(newValue) => setStartTime(newValue.format("HH:mm:ss"))}
+                                onChange={(newValue) => setStartTime(newValue.format("HH:mm:ssZ"))}
                             />
                         </LocalizationProvider>
                     </ListItem>
@@ -96,7 +103,7 @@ const EventPopupComponent = ({ open, setOpen, sendEventData }) => {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose end time..."
-                                onChange={(newValue) => setEndTime(newValue.format("HH:mm:ss"))}
+                                onChange={(newValue) => setEndTime(newValue.format("HH:mm:ssZ"))}
                             />
                         </LocalizationProvider>
                     </ListItem>

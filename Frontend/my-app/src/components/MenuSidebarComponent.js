@@ -10,13 +10,26 @@ const MenuSidebarComponent = () => {
             sx={{
                 width: 250
             }}
-            role="presentation" 
+            role="presentation"
         >
             <List>
-                <ListItem>User<PersonIcon/></ListItem>
-                <Divider/>
-                <ListItem>Groups<GroupsIcon/></ListItem>
-                <Divider/>
+                <ListItem>
+                    <List>
+                        <ListItem><b>User</b><PersonIcon /></ListItem>
+                        <ListItem>user@user.user</ListItem>
+                    </List>
+                </ListItem>
+                <Divider />
+                <ListItem><b>Groups</b><GroupsIcon /></ListItem>
+                <Divider variant="middle"/>
+                <ListItem>
+                    <List>
+                        <ListItem>Group1</ListItem>
+                        <ListItem>Group2</ListItem>
+                        <ListItem>Group3</ListItem>
+                    </List>
+                </ListItem>
+                <Divider />
                 <ListItem>
                     <Button variant="text" color="error">Log out</Button>
                 </ListItem>
