@@ -25,8 +25,10 @@ import MenuSidebarComponent from './MenuSidebarComponent';
     COMPONENTS
     MUI - https://mui.com/material-ui/
     Bootstrap - https://getbootstrap.com/docs/5.3/getting-started/introduction/
+    Axios - https://axios-http.com/docs/intro
 
     TODO: Is useLocation useful?
+    TODO: Implement Axios
 */
 
 // Temporarily storing event list in frontend
@@ -79,48 +81,98 @@ const CalendarComponent = () => {
     const [openEditEvent, setOpenEditEvent] = React.useState(false);
     const [openDrawer, setOpenDrawer] = React.useState(false);
     const [event, setEvent] = React.useState(false);
-    const [eventID, setEventID] = React.useState(false);
+    const [clickedDate, setClickedDate] = React.useState(false);
 
-    const handleDateClick = () => {
+    const handleDateClick = (info) => {
+        setClickedDate(info.date);
         setOpenAddEvent(true);
+    }
+
+    const handleEventClick = (info) => {
+        setEvent(info.event);
+        setOpenEditEvent(true);
     }
 
     const handleAddEvent = (text, startTime, endTime, startDate, endDate) => {
         const calendarAPI = calendarRef.current.getApi();
-        // TODO: Add error handling when start or end time are undefined
-        calendarAPI.addEvent({
-            title: text,
-            start: startDate.toString() + "T" + startTime.toString("HH:mm:ss tt"),
-            end: endDate.toString() + "T" + endTime.toString("HH:mm:ss tt")
-        });
-        eventList.push({
-            title: text,
-            start: startDate.toString() + "T" + startTime.toString("HH:mm:ss tt"),
-            end: endDate.toString() + "T" + endTime.toString("HH:mm:ss tt")
-        })
+        let newEvent = null;
+        if (startTime === null && endTime === null) {
+            if(endDate === null) {
+                newEvent = {
+                    title: text,
+                    start: startDate.toString()
+                };
+            } else {
+                newEvent = {
+                    title: text,
+                    start: startDate.toString(),
+                    end: endDate.toString()
+                };
+            }
+        } else if(startTime === null && endTime !== null) {
+            if(endDate === null) {
+                newEvent = {
+                    title: text,
+                    start: startDate.toString()
+                };
+            } else {
+                newEvent = {
+                    title: text,
+                    start: startDate.toString(),
+                    end: endDate.toString() + "T" + endTime.toString("HH:mm:ssZ")
+                };
+            }
+        } else if(startTime !== null && endTime === null) {
+            if(endDate === null) {
+                newEvent = {
+                    title: text,
+                    start: startDate.toString() + "T" + startTime.toString("HH:mm:ssZ")
+                };
+            } else {
+                newEvent = {
+                    title: text,
+                    start: startDate.toString() + "T" + startTime.toString("HH:mm:ssZ"),
+                    end: endDate.toString()
+                };
+            }
+        } else {
+            if(endDate === null) {
+                newEvent = {
+                    title: text,
+                    start: startDate.toString() + "T" + startTime.toString("HH:mm:ssZ")
+                };
+            } else {
+                newEvent = {
+                    title: text,
+                    start: startDate.toString() + "T" + startTime.toString("HH:mm:ssZ"),
+                    end: endDate.toString() + "T" + endTime.toString("HH:mm:ssZ")
+                };
+            }
+        }
+        calendarAPI.addEvent(newEvent);
+        eventList.push(newEvent);
     }
 
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
-        const calendarAPI = calendarRef.current.getApi();
-        // TODO: Get event from event list
         // TODO: Add error handling when start or end time are undefined
-        let editedEvent = calendarAPI.getEventById(eventID);
-        if(editedEvent) {
-            alert(startDate.toString());
-            alert(endDate.toString());
+        if (event) {
+            let formattedStart = startDate.toString() + "T" + startTime.toString("HH:mm:ssZ");
+            let formattedEnd = endDate.toString() + "T" + endTime.toString("HH:mm:ssZ");
             event.setProp('title', text);
-            // TODO: Set start and end date
-            event.setStart(startDate);
-            event.setEnd(endDate);
+            // TODO: Set start and end time
+            event.setStart(formattedStart);
+            event.setEnd(formattedEnd);
         } else {
             alert("Event not found!");
         }
     }
 
-    const handleEventClick = (info) => {
-        setEvent(info.event);
-        setEventID(info.event.id);
-        setOpenEditEvent(true);
+    const handleDeleteEvent = () => {
+        if (event) {
+            event.remove();
+        } else {
+            alert("Event not found!");
+        }
     }
 
     const toggleDrawer = (newOpen) => {
@@ -156,17 +208,19 @@ const CalendarComponent = () => {
                     <EventPopupComponent
                         open={openAddEvent}
                         setOpen={setOpenAddEvent}
+                        clickedDate={clickedDate}
                         sendEventData={handleAddEvent}
                     />
                     <EventEditComponent
                         open={openEditEvent}
                         setOpen={setOpenEditEvent}
                         sendEventData={handleEditEvent}
+                        requestDelete={handleDeleteEvent}
                         event={event}
                     />
                 </div>
                 <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
-                    <MenuSidebarComponent/>
+                    <MenuSidebarComponent />
                 </Drawer>
             </body>
             <footer className="CalendarFooter">
