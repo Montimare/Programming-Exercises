@@ -48,7 +48,7 @@ class Notification(models.Model):
 
 
 class User(models.Model):
-    name = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256)
     email = models.EmailField(unique=True)
     groups = models.ManyToManyField('Group', through='User_Group')
 
