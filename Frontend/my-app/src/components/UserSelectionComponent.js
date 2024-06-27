@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const UserSelectionComponent = () => {
     return (
         <>
-            <header>User Selection</header>
+            <h>User Selection</h>
             <Link to={"/calendar"}>
                 <Button>Select</Button>
             </Link>
