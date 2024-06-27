@@ -4,6 +4,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import UserSelectionComponent from './components/UserSelectionComponent';
+import UserRegistrationComponent from './components/UserRegistrationComponent';
 import CalendarComponent from "./components/CalendarComponent";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -12,6 +13,7 @@ root.render(
     <Router>
       <Routes>
         <Route path="/" element={<UserSelectionComponent />} />
+        <Route path="/register" element={<UserRegistrationComponent />} />
         <Route path="/calendar" element={<CalendarComponent />} />
       </Routes>
     </Router>
