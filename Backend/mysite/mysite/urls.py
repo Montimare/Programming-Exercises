@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.urls import path, include
 from rest_framework import routers
-from mysite.views import UserViewSet, GroupViewSet, EventViewSet, EventListViewSet, NotificationViewSet
+from mysite.views import UserViewSet, GroupViewSet, EventViewSet, EventListViewSet, NotificationViewSet, User_GroupViewSet, Group_EventListViewSet
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
@@ -25,6 +25,8 @@ router.register(r'groups', GroupViewSet, basename='group')
 router.register(r'events', EventViewSet, basename='event')
 router.register(r'eventlists', EventListViewSet, basename='eventlist')
 router.register(r'notifications', NotificationViewSet, basename='notification')
+router.register(r'user_groups', User_GroupViewSet, basename='user_group')
+router.register(r'group_eventlists', Group_EventListViewSet, basename='group_eventlist')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

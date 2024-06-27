@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..Models import User, Group, Event, EventList, Notification
+from ..Models import User, Group, Event, EventList, Notification, User_Group, Group_EventList
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,3 +31,14 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = Notification
         fields = ('__all__')
 
+
+class User_GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User_Group
+        fields = ('__all__')
+
+
+class Group_EventListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group_EventList
+        fields = ('__all__')
