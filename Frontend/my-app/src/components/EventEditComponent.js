@@ -106,13 +106,13 @@ const EventEditComponent = ({ open, setOpen, sendEventData, requestDelete, event
                     </ListItem>
                     <ListItem>
                         <FormControl sx={{ minWidth: 200 }}>
-                            <InputLabel id="demo-multiple-checkbox-label">Group</InputLabel>
+                            <InputLabel id="demo-multiple-checkbox-label">Choose event list...</InputLabel>
                             <Select
                                 labelId="demo-multiple-checkbox-label"
                                 id="demo-multiple-checkbox"
                                 value={group}
                                 onChange={handleChange}
-                                input={<OutlinedInput label="Group" />}
+                                input={<OutlinedInput label="Choose event list..." />}
                                 renderValue={(selected) => selected.join(',')}
                                 MenuProps={[]}
                             >
