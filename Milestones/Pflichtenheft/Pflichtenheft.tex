@@ -1,0 +1,253 @@
+\documentclass[]{article}
+
+%opening
+\usepackage{hyperref}
+\usepackage{setspace}
+\hypersetup{
+	colorlinks=true,
+	linktoc=all,
+	linkcolor=black
+}
+\begin{document}
+	\begin{titlepage}
+		\centering
+		\vspace*{0cm}
+		{\scshape\Large Frankfurt University of Applied Sciences}\\[3cm]
+		{\huge\bfseries TeamCalendar}\\[8cm]
+		{\Large\itshape Team ProgExTRAORDINAIRE:}\\
+		{\Large\itshape Klejdi Galushi, Marc Roemer, Felix Schneider}\\[3cm]
+		Supervisor:\\
+		Salvatore Sabba\\[1cm]
+		{\large \today}
+	\end{titlepage}
+	\newpage
+	\begin{spacing}{0.95}
+		\tableofcontents
+	\end{spacing}
+	\newpage
+	
+\section{Target determination}
+	\subsection{Mandatory criteria}
+		\begin{itemize}
+			\item Program consists of front end, back end and database
+			\item Users can be changed once chosen
+			\item Calendars can be shared
+			\item Calendars have an owner
+			\item Calendar ownership can be transferred
+			\item Calendar events can be added, edited and removed
+			\item Calendar events have a start and end time
+			\item User will get notified at a custom time and at the start of the event
+		\end{itemize}
+	\subsection{Target criteria}
+		\begin{itemize}
+			\item Readable text
+			\item Multiple custom notifications
+		\end{itemize}
+	\subsection{Optional criteria}
+		\begin{itemize}
+			\item Exclusive calendar events, that reserve a certain time slot so that calendar events can not overlap
+			\item Warn user if creating a calendar event will result in overlapping calendar events
+			\item Show next available time slot when creating a new calendar event
+			\item Add users in the front end
+			\item Delete users in the front end
+			\item Email notifications
+			\item Change calendar event color
+		\end{itemize}
+	\subsection{Exclusion criteria}
+		Viewing the calendar of other users will not be implemented as changing a user is possible.
+\section{Product deployment}
+	\subsection{Application area}
+		This tool should be used by teams or individuals to organize themselves by providing a timetable. For this purpose team calendars can be shared and each user will get shown an overview of all calendars they and their team is responsible for.
+	\subsection{Target groups}
+		The target groups for this tool are:
+		\begin{itemize}
+			\item Students
+			\item Companies
+			\item Sport clubs
+			\item Institutions
+		\end{itemize}
+		Based on this it is assumed that the frontend needs to be readable by people of all age groups.
+	\subsection{Operating conditions}
+		The Program should be deployed on a single server that is running 24/7 in the cloud or on premises for each company. The program should not need be to administrated once deployed.
+	\subsection{Development setup}
+		\begin{enumerate}
+			\item Create a venv in \texttt{./Backend} using \texttt{requirements.txt} with \texttt{pip install --upgrade -r requirements.txt}
+			\item Activate venv
+			\item Navigate to \texttt{mysite} and run development server with \texttt{python manage.py runserver}
+			\item Execute \texttt{npm install} in \texttt{./Frontend}
+			\item Navigate to \texttt{my-app} and run development server with \texttt{npm start}
+		\end{enumerate}
+\section{Product overview}
+	Upon first visiting the website, a user selection interface will be shown where a user can be selected. After selecting a user, a calendar will be dynamically generated, displaying all of the calendar events that the user has access to. User can be changed through the Sidebar. Additionally, the site offers a dedicated group management window for managing groups.
+\section{Product functions}
+	\begin{itemize}
+		\item User Selection
+			\subitem The website starts with a user selection page, where the user can choose an user out of a list of users.
+			\subitem After the user selection, the user will gain access to their own instance of the calendar.
+		\item Calendar Interface
+			\subitem The user can change the displayed calendar month by clicking the "\textless" or "\textgreater" button.
+			\subitem Alternatively, the user can go back to the current month by clicking on the "today" button.
+		\item Event Handling
+			\subitem Calendar events can be created by clicking on an empty part of a day grid.
+			\subitem When clicking on an event, a popup window will show, where the user can modify the title name, start time, end time, choose a group and add/remove reminders. The changes will be applied after pressing OK.
+			\subitem Calendar events can be moved by clicking and dragging them with the mouse.
+			\subitem Calendar events can be deleted by clicking on the "DELETE" button in the popup window.
+		\item Menu Sidebar
+			\subitem The user can open a menu sidebar by clicking on a button on the top left of the page.
+			\subitem In the menu sidebar, the user will be able to see their username, the groups they are in and an option to log out.
+		\item Group Handling
+			\subitem The user can create a group after clicking on "Create Group" below the group names on the menu sidebar.
+			\subitem After clicking on a group name in the menu sidebar, the admin can modify the group name, add/delete group members or leave the group, whereas other group members can only view the group or have the option to leave.
+		\item Reminders
+			\subitem When an event's reminder time is reached, the user will get a notification from the website.
+	\end{itemize}
+\section{Product data}
+	To be saved Data will include:
+	\begin{itemize}
+		\item Users
+			\subitem Name
+			\subitem Email
+		\item Group name
+		\item Calendar events consisting of:
+			\subitem Title
+			\subitem Description
+			\subitem Start Time
+			\subitem End Time
+			\subitem Reminder Times
+		\item Users with access to calendar
+	\end{itemize}
+\section{Product services}
+	The program should generate the calendar view in a reasonable time and all calendar events have to be correct.
+\section{Quality requirements}
+	It is required that the software implements all Mandatory criteria, and responds to the user in a reasonable time. The software should be easy to understand, maneuverable and text should be big enough to be read. Once deployed it should work without needed intervention from a software developer. If needed the server should be able to be scaled up vertically to accommodate more traffic and data. The client side should be accessible for all users with an up to date web browser that is able to run react 18.3.0 web apps or newer.
+\newpage
+\section{User interface}
+	The user interface contains three main views:
+	\begin{enumerate}
+		\item The user selection page
+			\subitem This is the page the user first sees when opening the website.
+			\subitem In the middle, they can see the website's logo, a drop-down list and a "select" button which allows them access to the website.
+			\subitem If the user clicks on the drop-down list, all available usernames will be shown.
+			\subitem By default, the "select" button will be grayed out, but after choosing an username, it will switch colors, signaling the user that they are ready to access the calendar page.
+		\item The calendar page
+			\subitem This is the main page of the website.
+			\subitem On the top, from left to right, the user can find:
+				\subsubitem A button to activate the menu sidebar
+				\subsubitem The website's logo
+				\subsubitem A text welcoming the user (e.g. "Welcome, user!")
+			\subitem The calendar is located in the middle of the website, where the user can interact with it to create/modify/delete events and change which calendar month they would like to display.
+			\subitem By default, the calendar displays the current month and the current day will have a yellow background.
+			\subitem If the user decides to create an event, a pop-up window will show up, containing:
+				\subsubitem Text boxes for the event name and start and end time
+				\subsubitem A checkbox list for choosing groups
+				\subsubitem A dynamic list for adding/removing reminders
+			\subitem The bottom side of the website only contains the year of creation and our team's name.
+		\item The menu sidebar
+			\subitem When clicking on the top-left button in the calendar page, the calendar page will fade out and a column will appear on the left hand side of the website.
+			\subitem From top to bottom, this sidebar contains:
+				\subsubitem The username of the current user
+				\subsubitem The list of groups the user has joined/created. By clicking any group name, the website will show a pop-up window with the group name, members and options depending on whether the user is an admin or not.
+				\subsubitem A log-out option, where the user can log out and leave the calendar page, going back to the user selection page.
+	\end{enumerate}
+	\subsection{Access rights}
+	After selecting a user on the user list, the user has access on their own instance of the calendar and no other instances. However, the user's events can be shared among the groups they have joined.\\
+	\\
+	Inside groups, users with the admin role have exclusive rights to modify the group name and add/remove members.
+\section{Non-functional requirements}
+	The saved data shall not be accessible for 3rd parties. The data shall only be used for the intended purposes of providing a timetable and reminders. It shall not be used by anyone that has access to them for any purpose other than what the user consented to. The data shall not be sold or be used for personalized advertisements. The data shall be persistent and encrypted.
+\section{Technical product environment}
+	\subsection{Software}
+		\subsubsection{Client}
+			\begin{itemize}
+				\item Any browser that supports react 18.3.0 web apps or newer
+			\end{itemize}
+		\subsubsection{Server}
+			\begin{itemize}
+				\item python (\texttt{3.12.2})
+				\item Django (\texttt{5.0.4})
+				\item django-filter (\texttt{24.2})
+				\item djangorestframework (\texttt{3.15.1})
+				\item SQLAlchemy (\texttt{2.0.30})
+				\item MySQL
+			\end{itemize}
+	\subsection{Hardware}
+		\subsubsection{Server}
+			Linux or Windows server with internet access.\\
+			Mac not tested.
+		\subsubsection{Client}
+			Any device capable of running a browser that supports react 18.3.0 web apps or newer with internet access.
+	\subsection{Orgware}
+		The deployed code needs to be documented to make servicing it possible. Intended documentation is the GitHub project where developers made comments for their decisions, Mask Draft and an Entity-relationship diagram for the database. Once deployed the tool should not need to be administrated.
+	\subsection{Product interfaces}
+		The frontend and backend need to be connected via their ip adresses in a network.\\
+		The backend and database need to be connected via their ip adresses in a network.\\
+		External interfaces are not needed.
+\newpage
+\section{Special requirements for the development environment}
+	\subsection{Software}
+		\begin{itemize}
+			\item Git for downloading the project
+			\item GitHub for accessing the project
+			\item PyCharm for editing the backend and database
+			\item Visual Studio Code for editing the frontend and backend
+			\item python (\texttt{3.12.2})
+			\item nodejs (\texttt{20.12.2})
+			\item @fullcalendar/core (\texttt{6.1.11 or newer}) 
+			\item @fullcalendar/daygrid (\texttt{6.1.11 or newer}) 
+			\item @fullcalendar/interaction (\texttt{6.1.11 or newer}) 
+			\item @fullcalendar/react (\texttt{6.1.11 or newer}) 
+			\item @testing-library/jest-dom (\texttt{5.17.0 or newer}) 
+			\item @testing-library/react (\texttt{13.4.0 or newer}) 
+			\item @testing-library/user-event (\texttt{13.5.0 or newer}) 
+			\item axios (\texttt{1.6.8 or newer}) 
+			\item react (\texttt{18.3.0 or newer}) 
+			\item react-dom (\texttt{18.3.0 or newer}) 
+			\item react-scripts (\texttt{5.0.1 or newer}) 
+			\item web-vitals (\texttt{2.1.4 or newer})
+			\item asgiref (\texttt{3.8.1})
+			\item Django (\texttt{5.0.4})
+			\item django-filter (\texttt{24.2})
+			\item djangorestframework (\texttt{3.15.1})
+			\item Markdown (\texttt{3.6})
+			\item sqlparse (\texttt{0.5.0})
+			\item SQLAlchemy (\texttt{2.0.30})
+			\item MySQL
+		\end{itemize}
+	\subsection{Hardware}
+		Windows or Linux computer capable of running all software outlined in 11.1 Software with internet access.\\
+		Mac not tested.
+	\subsection{Orgware}
+		The agile software development method will be used. GitHub will provide all tools necessary for agile development. Sprints last a week and end on Thursdays in the lecture.\\
+		\\
+		GitHub is used for:
+		\begin{itemize}
+			\item Storing code
+			\item Managing code
+			\item Sharing code
+			\item Version control
+			\item Continuous Integration/Testing (GitHub actions)
+			\item Access control
+			\item Bug tracking (Issues)
+			\item Task management (GitHub projects)
+		\end{itemize}
+	\subsection{Development interfaces}
+		The front end and back end need to be connected via their ip addresses in a development environment.\\
+		The back end and database need to be connected via their ip addresses in a development environment.\\
+		The database is hosted externally at \texttt{http://descus.de}.
+\section{Division into sub-products}
+	The product is layered and divided into 3 parts according to a layered architecture. The top layer is the front end providing an interface to the end user. The second layer is a back end that provides an endpoint for the front end to access data. The third and last layer is the database where the data is persistently saved. It is connected to the back end via ip address and password.\\
+	The front end is written in react with nodejs and javascript.\\
+	The back end is written in django using python3.
+	The database is written using SQLAlchemy and MySQL.
+\section{Additions}
+	The Functional Specification Document shall be delivered by 12.06.2024\\
+	The Mask draft shall be delivered by 19.06.2024 at the latest\\
+	The database concept diagram shall be delivered by 26.06.2024 at the latest.\\
+	The final product shall be delivered by 10.07.2024 at the latest.
+\section{Glossary}
+	\textbf{Front end:} A front end is the part of the software that the user interacts with, providing all of the functionality of the program.\\
+	\\
+	\textbf{Back end:} A back end is the server side component of the program, it is enabling all of the functionality. In this case by connecting to the database and providing the data to the front end to be displayed in the right format.\\
+	\\
+	\textbf{venv:} A venv is a virtual environment provided by python. It is needed so that all required packages and dependencies are installed for the project after setting it up, rather than installing all packages system wide by hand.
+\end{document}
