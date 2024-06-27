@@ -11,7 +11,7 @@ import dayjs from "dayjs"
 import List from "@mui/material/List";
 
 const EventPopupComponent = ({ open, setOpen, sendEventData, clickedDate }) => {
-    const [text, setText] = React.useState([]);
+    const [text, setText] = React.useState("My Event");
     const [startTime, setStartTime] = React.useState(null);
     const [endTime, setEndTime] = React.useState(null);
     const [startDate, setStartDate] = React.useState(null);
@@ -28,7 +28,7 @@ const EventPopupComponent = ({ open, setOpen, sendEventData, clickedDate }) => {
     }
 
     function emptyLocalData() {
-        setText('');
+        setText("My Event");
         setStartTime(null);
         setEndTime(null);
         setStartDate(null);
@@ -109,13 +109,13 @@ const EventPopupComponent = ({ open, setOpen, sendEventData, clickedDate }) => {
                     </ListItem>
                     <ListItem>
                         <FormControl sx={{ minWidth: 200 }}>
-                            <InputLabel id="demo-multiple-checkbox-label">Group</InputLabel>
+                            <InputLabel id="demo-multiple-checkbox-label">Choose event list...</InputLabel>
                             <Select
                                 labelId="demo-multiple-checkbox-label"
                                 id="demo-multiple-checkbox"
                                 value={group}
                                 onChange={handleChange}
-                                input={<OutlinedInput label="Group" />}
+                                input={<OutlinedInput label="Choose event list..." />}
                                 renderValue={(selected) => selected.join(',')}
                                 MenuProps={[]}
                             >
