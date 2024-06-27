@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const fetchUserEventList = () => {
+const fetchUsers = () => {
     const axios = require('axios');
 
-    return axios.get("path/to/felix");
+    return axios.get("http://127.0.0.1:8000/users/");
 }
 
-export default fetchUserEventList;
+export default fetchUsers;
