@@ -3,6 +3,7 @@ import { Box, Button, List, ListItem } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person"
 import GroupsIcon from "@mui/icons-material/Groups"
 import Divider from "@mui/material/Divider"
+import { Link } from "react-router-dom";
 
 const MenuSidebarComponent = () => {
     return (
@@ -31,7 +32,9 @@ const MenuSidebarComponent = () => {
                 </ListItem>
                 <Divider />
                 <ListItem>
+                    <Link to={"/"}>
                     <Button variant="text" color="error">Log out</Button>
+                    </Link>
                 </ListItem>
             </List>
         </Box>
