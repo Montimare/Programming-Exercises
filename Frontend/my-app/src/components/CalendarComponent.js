@@ -185,9 +185,9 @@ const CalendarComponent = () => {
                     <IconButton aria-label="menu" onClick={() => toggleDrawer(true)}>
                         <MenuIcon sx={{ color: 'white' }} />
                     </IconButton>
-                    Team Calendar  <CalendarMonthIcon />
+                    TeamCalendar  <CalendarMonthIcon />
                 </h1>
-                <div className="UserText">User</div>
+                <div className="UserText">Welcome, User!</div>
             </header>
             <body className="CalendarBody">
                 <div className="CalendarOverview">

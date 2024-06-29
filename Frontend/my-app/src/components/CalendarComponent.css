@@ -19,11 +19,11 @@
 
 .UserText {
     font-size: small;
-    font-weight: bold;;
+    font-weight: bold;
     text-align: right;
     padding-top: 0.4vw;
     padding-right: 5vw;
-    float:right;
+    float: right;
 }
 
 .CalendarBody {
