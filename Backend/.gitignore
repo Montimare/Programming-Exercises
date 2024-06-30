@@ -1,4 +1,4 @@
-find . -name "__pycache__".venv/
+.venv/
 .idea/
 bin/
 lib/*
@@ -7,6 +7,13 @@ include/*
 mysite/test.py
 **/__pycache__/*
 myenv/
+
+myenv/
+*/__pycache__/
+mysite/Database/__pycache__
+mysite/mysite/__pycache__
+mysite/mysite/Database/__pycache__
+mysite/mysite/Database/Serializer/__pycache__
 
 pyvenv.cfg
 */__pycache__/
