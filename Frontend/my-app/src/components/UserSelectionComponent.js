@@ -1,6 +1,6 @@
 import { Button, CircularProgress, Divider, FormControl, InputLabel, List, ListItem, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { Link } from "react-router-dom";
-import { fetchUsers, fetchEvents } from "./WebService";
+import { fetchUsers, fetchEvents } from "../Services/WebService";
 import { useEffect, useState } from "react";
 import "./UserSelectionComponent.css"
 
@@ -54,7 +54,7 @@ const UserSelectionComponent = () => {
                     </FormControl>
                 </div>
                 <div className="SelectButtonContainer">
-                    <Link to={'/calendar/${selectedUserID}'}>
+                    <Link to={'/calendar/' + selectedUserID}>
                         <Button variant="contained" size="large">Select</Button>
                     </Link>
                 </div>

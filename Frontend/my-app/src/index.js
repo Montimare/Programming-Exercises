@@ -14,7 +14,7 @@ root.render(
       <Routes>
         <Route path="/" element={<UserSelectionComponent />} />
         <Route path="/register" element={<UserRegistrationComponent />} />
-        <Route path="/calendar" element={<CalendarComponent />} />
+        <Route path="/calendar/:id" element={<CalendarComponent />} />
       </Routes>
     </Router>
   </React.StrictMode>
