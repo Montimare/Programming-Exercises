@@ -1,0 +1,32 @@
+# Ignore Python bytecode files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore log files and databases
+*.log
+*.sqlite3
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore Python virtual environments
+venv
+*.venv
+.venv/
+ENV/
+myenv/
+.myenv/
+
+# Ignore git files
+.git
+.gitignore
+
+# Ignore all markdown files
+*.md
+
+# Ignore all test and documentation directories
+tests/
+docs/
