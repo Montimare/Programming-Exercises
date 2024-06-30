@@ -1,5 +1,6 @@
 import './CalendarComponent.css'
 import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -10,8 +11,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer"
 import MenuSidebarComponent from './MenuSidebarComponent';
-import { useLocation, useParams } from "react-router-dom";
-import { createEvents, editEvents, fetchEventsByUser } from "../Services/WebService";
+import { useParams } from "react-router-dom";
+import { fetchEventsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
 /*
@@ -77,37 +78,24 @@ const eventList = [
 const CalendarComponent = () => {
     const calendarRef = useRef(null);
 
-    // User data
-    const [selectedUserID, setSelectedUserID] = useState(useParams().id);
-    const location = useLocation();
-    const username = location.state?.username || "";
-
-    // Event add and modify popup openers
     const [openAddEvent, setOpenAddEvent] = useState(false);
     const [openEditEvent, setOpenEditEvent] = useState(false);
-
-    // Menu sidebar opener
     const [openDrawer, setOpenDrawer] = useState(false);
-
-    // Event-related
-    const [event, setEvent] = useState([]);
-    const [eventID, setEventID] = useState();
-    const [listID, setListID] = useState();
-    const [eventList, setEventList] = useState();
+    const [event, setEvent] = useState(false);
     const [clickedDate, setClickedDate] = useState(false);
-
-    // Loading screen
+    const [selectedUserID, setSelectedUserID] = useState(useParams().id);
+    const [eventList, setEventList] = useState();
     const [loading, setLoading] = useState(true);
-
-    useEffect(() => { }, [event]);
 
     useEffect(() => {
         // Define an async function inside useEffect
-        const getUserEvents = async () => {
+        const getUsers = async () => {
             try {
-                const userEventData = await fetchEventsByUser(selectedUserID)
-                    .then(userEventData => {
-                        setEventList(userEventData.data); // Update state with fetched user events
+                const usersData = await fetchEventsByUser(selectedUserID)
+                    .then(usersData => {
+                        console.log("FETCHED DATA: ");
+                        console.log(usersData.data);
+                        setEventList(usersData.data); // Update state with fetched users
                         setLoading(false);
                     }); // Assuming fetchUsers returns a promise
             } catch (error) {
@@ -115,8 +103,13 @@ const CalendarComponent = () => {
             }
         };
 
-        getUserEvents(); // Call the async function
+        getUsers(); // Call the async function
     }, []); // Empty dependency array means this effect runs only once
+
+    useEffect(() => {
+        console.log("EVENT LIST: ");
+        console.log(eventList);
+    }, [eventList]);
 
     const handleDateClick = (info) => {
         setClickedDate(info.date);
@@ -180,8 +173,8 @@ const CalendarComponent = () => {
         }
 
         calendarAPI.addEvent(newEvent);
-        await createEvents(newEvent);
-
+        eventList.push(newEvent);
+        
         console.log("EVENT LIST: ");
         console.log(eventList);
     }
@@ -214,6 +207,10 @@ const CalendarComponent = () => {
 
     const toggleDrawer = (newOpen) => {
         setOpenDrawer(newOpen);
+    }
+
+    if (loading) {
+        return <CircularProgress />
     }
 
     if (loading) {
