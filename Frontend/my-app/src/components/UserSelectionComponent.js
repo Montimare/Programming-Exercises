@@ -1,18 +1,19 @@
-import { Button, CircularProgress, Divider, FormControl, InputLabel, List, ListItem, Select } from "@mui/material";
+import { Button, CircularProgress, Divider, FormControl, InputLabel, List, ListItem, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { Link } from "react-router-dom";
-import fetchUsers, { fetchEvents } from "./WebService";
+import { fetchUsers, fetchEvents } from "./WebService";
 import { useEffect, useState } from "react";
 import "./UserSelectionComponent.css"
 
 const UserSelectionComponent = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedUser, setSelectedUser] = useState();
 
     useEffect(() => {
         // Define an async function inside useEffect
         const getUsers = async () => {
             try {
-                const usersData = await fetchEvents()
+                const usersData = await fetchUsers()
                     .then(usersData => {
                         setUsers(usersData.data); // Update state with fetched users
                         setLoading(false);
@@ -29,6 +30,10 @@ const UserSelectionComponent = () => {
         return <CircularProgress />
     }
 
+    const handleUserSelection = (event) => {
+        setSelectedUser(event.target.value);
+    }
+
     return (
         <div className="UserSelectionPage">
             <div className="UserSelectionBox">
@@ -37,7 +42,15 @@ const UserSelectionComponent = () => {
                 <div className="SelectContainer">
                     <FormControl sx={{ marginTop: "20px", minWidth: 300, justifyContent: "center" }}>
                         <InputLabel>Choose user...</InputLabel>
-                        <Select label="Choose user..." />
+                        <Select 
+                            label="Choose user..."
+                            value={selectedUser}
+                            onChange={handleUserSelection}
+                        >
+                            {users.map(user => (
+                                <MenuItem key={user.id} value={user.id}>{user.name} ({user.email})</MenuItem>
+                            ))}
+                        </Select>
                     </FormControl>
                 </div>
                 <div className="SelectButtonContainer">
@@ -49,9 +62,6 @@ const UserSelectionComponent = () => {
                 <div className="RegisterOptionContainer">
                     No account?&nbsp;<Link to={"/register"}>Register here</Link>
                 </div>
-            </div>
-            <div>
-                {JSON.stringify(users)}
             </div>
         </div>
     );
