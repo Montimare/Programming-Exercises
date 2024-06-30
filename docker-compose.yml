@@ -1,0 +1,28 @@
+services:
+  frontend:
+    build: ./Frontend/my-app
+    volumes:
+      - ./Frontend/my-app:/frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    # depends_on:
+    #   - backend
+  # was das?????????????????
+  #   stdin_open: true
+  #   tty: true
+
+  # backend:
+  #   image: "node:14"
+  #   working_dir: /app
+  #   volumes:
+  #     - .:/app
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #   stdin_open: true
+  #   tty: true
+  #   ports:
+  #     - "5000:5000"
+  #   command: npm run dev
