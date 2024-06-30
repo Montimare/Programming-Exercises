@@ -1,21 +1,4 @@
 node_modules
+npm-debug.log
 Dockerfile
 docker-compose.yml
-*.log
-/build
-*.md
-
-# Ignore system files
-.DS_Store
-Thumbs.db
-
-# Ignore git files
-.git
-.gitignore
-
-# Ignore environment variables file
-.env
-
-# Ignore all test and documentation directories
-tests/
-docs/
