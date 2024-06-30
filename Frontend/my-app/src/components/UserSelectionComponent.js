@@ -7,7 +7,7 @@ import "./UserSelectionComponent.css"
 const UserSelectionComponent = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedUser, setSelectedUser] = useState();
+    const [selectedUserID, setSelectedUserID] = useState();
 
     useEffect(() => {
         // Define an async function inside useEffect
@@ -31,7 +31,7 @@ const UserSelectionComponent = () => {
     }
 
     const handleUserSelection = (event) => {
-        setSelectedUser(event.target.value);
+        setSelectedUserID(event.target.value);
     }
 
     return (
@@ -44,7 +44,7 @@ const UserSelectionComponent = () => {
                         <InputLabel>Choose user...</InputLabel>
                         <Select 
                             label="Choose user..."
-                            value={selectedUser}
+                            value={selectedUserID}
                             onChange={handleUserSelection}
                         >
                             {users.map(user => (
@@ -54,7 +54,7 @@ const UserSelectionComponent = () => {
                     </FormControl>
                 </div>
                 <div className="SelectButtonContainer">
-                    <Link to={"/calendar"}>
+                    <Link to={"/calendar/" + selectedUserID}>
                         <Button variant="contained" size="large">Select</Button>
                     </Link>
                 </div>
