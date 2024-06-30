@@ -54,7 +54,7 @@ const UserSelectionComponent = () => {
                     </FormControl>
                 </div>
                 <div className="SelectButtonContainer">
-                    <Link to={"/calendar/" + selectedUserID}>
+                    <Link to={'/calendar/${selectedUserID}'}>
                         <Button variant="contained" size="large">Select</Button>
                     </Link>
                 </div>
