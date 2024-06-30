@@ -2,7 +2,7 @@ services:
   frontend:
     build: ./Frontend/my-app
     volumes:
-      - ./Frontend/my-app:/frontend
+      - ./Frontend/my-app:/frontend-dev
     container_name: frontend
     ports:
       - "3000:3000"
@@ -14,15 +14,15 @@ services:
   #   stdin_open: true
   #   tty: true
 
-  # backend:
-  #   image: "node:14"
-  #   working_dir: /app
-  #   volumes:
-  #     - .:/app
-  #   environment:
-  #     - CHOKIDAR_USEPOLLING=true
+  backend:
+    build: ./Backend
+    volumes:
+      - ./Backend:/backend-dev
+    container_name: backend
+    ports:
+      - "8000:8000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+  # was das?????????????????
   #   stdin_open: true
   #   tty: true
-  #   ports:
-  #     - "5000:5000"
-  #   command: npm run dev
