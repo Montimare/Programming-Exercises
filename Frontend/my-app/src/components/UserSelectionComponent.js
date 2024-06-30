@@ -1,19 +1,19 @@
-import { Button, CircularProgress, Divider, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { fetchUsers } from "../Services/WebService";
+import { Button, CircularProgress, Divider, FormControl, InputLabel, List, ListItem, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Link } from "react-router-dom";
+import { fetchUsers, fetchEvents } from "./WebService";
 import { useEffect, useState } from "react";
 import "./UserSelectionComponent.css"
 
 const UserSelectionComponent = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedUserID, setSelectedUserID] = useState("");
-    const navigate = useNavigate();
+    const [selectedUser, setSelectedUser] = useState();
 
     useEffect(() => {
         // Define an async function inside useEffect
         const getUsers = async () => {
             try {
+                const usersData = await fetchUsers()
                 const usersData = await fetchUsers()
                     .then(usersData => {
                         setUsers(usersData.data); // Update state with fetched users
@@ -32,7 +32,7 @@ const UserSelectionComponent = () => {
     }
 
     const handleUserSelection = (event) => {
-        setSelectedUserID(event.target.value);
+        setSelectedUser(event.target.value);
     }
 
     return (
@@ -45,7 +45,7 @@ const UserSelectionComponent = () => {
                         <InputLabel>Choose user...</InputLabel>
                         <Select 
                             label="Choose user..."
-                            value={selectedUserID}
+                            value={selectedUser}
                             onChange={handleUserSelection}
                         >
                             {users.map(user => (
