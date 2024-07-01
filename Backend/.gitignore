@@ -6,7 +6,7 @@ lib64/*
 include/*
 mysite/test.py
 **/__pycache__/*
-
+mysite/__pycache__/*
 myenv/
 */__pycache__/
 mysite/Database/__pycache__
