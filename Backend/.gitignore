@@ -5,6 +5,7 @@ lib/*
 lib64/*
 include/*
 mysite/test.py
+mysite/__pycache__/*
 myenv/
 
 pyvenv.cfg
