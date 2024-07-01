@@ -2,14 +2,14 @@ from django.db import models
 
 
 class Event(models.Model):
-    name = models.CharField(max_length=256, null=False)
+    title = models.CharField(max_length=256, null=False)
     description = models.CharField(max_length=256, blank=True)
     start = models.DateTimeField(null=False)
     end = models.DateTimeField(null=False)
     list = models.ForeignKey('EventList', on_delete=models.CASCADE, related_name='event')
 
     def __str__(self):
-        return f"<Event('{self.name}', '{self.description}', '{self.startTime}', '{self.endTime}')>"
+        return f"<Event('{self.title}', '{self.description}', '{self.start}', '{self.end}')>"
 
 
 class EventList(models.Model):
