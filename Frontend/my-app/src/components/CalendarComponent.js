@@ -30,6 +30,11 @@ import CircularProgress from "@mui/material/CircularProgress";
     MUI - https://mui.com/material-ui/
     Bootstrap - https://getbootstrap.com/docs/5.3/getting-started/introduction/
     Axios - https://axios-http.com/docs/intro
+
+    TODO: Is useLocation useful?
+    TODO: Fetch the username and email from the user whose calendar is open
+    TODO: Fetch the groups for the chosen user
+    TODO: Fetch the event lists for the chosen user
 */
 
 // Temporarily storing event list in frontend
@@ -89,7 +94,7 @@ const CalendarComponent = () => {
 
     useEffect(() => {
         // Define an async function inside useEffect
-        const getUsers = async () => {
+        const getUserEvents = async () => {
             try {
                 const usersData = await fetchEventsByUser(selectedUserID)
                     .then(usersData => {
@@ -103,7 +108,7 @@ const CalendarComponent = () => {
             }
         };
 
-        getUsers(); // Call the async function
+        getUserEvents(); // Call the async function
     }, []); // Empty dependency array means this effect runs only once
 
     useEffect(() => {
