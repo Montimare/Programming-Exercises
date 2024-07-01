@@ -4,8 +4,8 @@ from django.db import models
 class Event(models.Model):
     name = models.CharField(max_length=256, null=False)
     description = models.CharField(max_length=256, blank=True)
-    startTime = models.DateTimeField(null=False)
-    endTime = models.DateTimeField(null=False)
+    start = models.DateTimeField(null=False)
+    end = models.DateTimeField(null=False)
     list = models.ForeignKey('EventList', on_delete=models.CASCADE, related_name='event')
 
     def __str__(self):
