@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.urls import path, include
 from rest_framework import routers
-from mysite.views import UserViewSet, GroupViewSet, EventViewSet, EventListViewSet, NotificationViewSet, User_GroupViewSet, Group_EventListViewSet
+from .views import UserViewSet, GroupViewSet, EventViewSet, EventListViewSet, NotificationViewSet, User_GroupViewSet, Group_EventListViewSet
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
