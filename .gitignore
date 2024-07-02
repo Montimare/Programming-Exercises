@@ -13,6 +13,19 @@ include/*
 pyvenv.cfg
 **/Database/migrations/
 
+
+**/.venv/
+**/.idea/*
+**/bin/
+lib/*
+lib64/*
+include/*
+mysite/test.py
+mysite/__pycache__/*
+
+pyvenv.cfg
+**/Database/migrations/
+
 node_modules
 .env
 */.env
