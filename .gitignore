@@ -1,2 +1,13 @@
 Backend/lib64
 Backend/lib
+
+**/.venv/
+**/.idea/*
+**/bin/
+lib/*
+lib64/*
+include/*
+**/__pycache__/*
+
+pyvenv.cfg
+**/Database/migrations/
