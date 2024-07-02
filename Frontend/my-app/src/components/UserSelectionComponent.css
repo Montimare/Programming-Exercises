@@ -1,0 +1,41 @@
+.UserSelectionPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.UserSelectionTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.SelectButtonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.UserSelectionBox {
+    height: 280px;
+    width: 350px;
+    border: 2px solid gray;
+}
+
+.SelectContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.RegisterOptionContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    font-size: small;
+}
