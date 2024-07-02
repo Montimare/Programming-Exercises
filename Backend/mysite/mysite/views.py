@@ -38,6 +38,14 @@ class UserViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveMode
         serializer = NotificationSerializer(notifications, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get'])
+    def groups(self, request, pk=None):
+        user = self.get_object()
+        user_groups = User_Group.objects.filter(user=user)
+        groups = [ug.group for ug in user_groups]
+        serializer = GroupSerializer(groups, many=True)
+        return Response(serializer.data)
+
 
 class GroupViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = Group.objects.all()
