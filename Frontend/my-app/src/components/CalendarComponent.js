@@ -10,7 +10,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer"
 import MenuSidebarComponent from './MenuSidebarComponent';
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { fetchEventsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -90,20 +90,22 @@ const CalendarComponent = () => {
     const [selectedUserID, setSelectedUserID] = useState(useParams().id);
     const [eventList, setEventList] = useState();
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
+    const username = location.state?.username || "";
 
     useEffect(() => {
         // Define an async function inside useEffect
         const getUserEvents = async () => {
             try {
-                const usersData = await fetchEventsByUser(selectedUserID)
-                    .then(usersData => {
+                const userEventData = await fetchEventsByUser(selectedUserID)
+                    .then(userEventData => {
                         console.log("FETCHED DATA: ");
-                        console.log(usersData.data);
-                        setEventList(usersData.data); // Update state with fetched users
+                        console.log(userEventData.data);
+                        setEventList(userEventData.data); // Update state with fetched user events
                         setLoading(false);
-                    }); // Assuming fetchUsers returns a promise
+                    }); // Assuming fetchEventsByUser returns a promise
             } catch (error) {
-                console.error("Failed to fetch users:", error);
+                console.error("Failed to fetch events for this user:", error);
             }
         };
 
@@ -214,7 +216,11 @@ const CalendarComponent = () => {
     }
 
     if (loading) {
-        return <CircularProgress />
+        return (
+            <div className="LoadingContainer">
+                <CircularProgress />
+            </div>
+        );
     }
 
     return (
@@ -226,7 +232,7 @@ const CalendarComponent = () => {
                     </IconButton>
                     TeamCalendar  <CalendarMonthIcon />
                 </h1>
-                <div className="UserText">Welcome, User!</div>
+                <div className="UserText">Welcome, {username}!</div>
             </header>
             <body className="CalendarBody">
                 <div className="CalendarOverview">

@@ -1,5 +1,5 @@
 import { Button, CircularProgress, Divider, FormControl, InputLabel, List, ListItem, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchUsers, fetchEvents } from "../Services/WebService";
 import { useEffect, useState } from "react";
 import "./UserSelectionComponent.css"
@@ -8,6 +8,7 @@ const UserSelectionComponent = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedUserID, setSelectedUserID] = useState();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Define an async function inside useEffect
@@ -27,12 +28,25 @@ const UserSelectionComponent = () => {
     }, []); // Empty dependency array means this effect runs only once
 
     if (loading) {
-        return <CircularProgress />
+        return (
+            <div className="LoadingContainer">
+                <CircularProgress />
+            </div>
+        );
     }
 
     const handleUserSelection = (event) => {
         setSelectedUserID(event.target.value);
-    }
+    };
+
+    const handleSelectClick = () => {
+        const userDetails = users.find(user => user.id === selectedUserID);
+        if (userDetails) {
+            navigate('/calendar/' + selectedUserID, { state: { username: userDetails.name, email: userDetails.email } });
+        } else {
+            console.error("User details not found!");
+        }
+    };
 
     return (
         <div className="UserSelectionPage">
@@ -42,7 +56,7 @@ const UserSelectionComponent = () => {
                 <div className="SelectContainer">
                     <FormControl sx={{ marginTop: "20px", minWidth: 300, justifyContent: "center" }}>
                         <InputLabel>Choose user...</InputLabel>
-                        <Select 
+                        <Select
                             label="Choose user..."
                             value={selectedUserID}
                             onChange={handleUserSelection}
@@ -54,9 +68,13 @@ const UserSelectionComponent = () => {
                     </FormControl>
                 </div>
                 <div className="SelectButtonContainer">
-                    <Link to={'/calendar/' + selectedUserID}>
-                        <Button variant="contained" size="large">Select</Button>
-                    </Link>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        onClick={handleSelectClick}
+                    >
+                        Select
+                    </Button>
                 </div>
                 <Divider />
                 <div className="RegisterOptionContainer">

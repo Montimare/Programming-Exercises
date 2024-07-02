@@ -3,9 +3,12 @@ import { Box, Button, List, ListItem } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person"
 import GroupsIcon from "@mui/icons-material/Groups"
 import Divider from "@mui/material/Divider"
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const MenuSidebarComponent = () => {
+    const location = useLocation();
+    const { username, email, groups } = location.state || {};
+
     return (
         <Box
             sx={{
@@ -16,8 +19,8 @@ const MenuSidebarComponent = () => {
             <List>
                 <ListItem>
                     <List>
-                        <ListItem><PersonIcon /><b>User</b></ListItem>
-                        <ListItem>user@user.user</ListItem>
+                        <ListItem><PersonIcon /><b>{username}</b></ListItem>
+                        <ListItem>{email}</ListItem>
                     </List>
                 </ListItem>
                 <Divider />
@@ -25,9 +28,9 @@ const MenuSidebarComponent = () => {
                 <Divider variant="middle"/>
                 <ListItem>
                     <List>
-                        <ListItem>Group1</ListItem>
-                        <ListItem>Group2</ListItem>
-                        <ListItem>Group3</ListItem>
+                        {groups.map(group => (
+                            <ListItem key={group.id} value={group.id}>{}</ListItem>
+                        ))}
                     </List>
                 </ListItem>
                 <Divider />
