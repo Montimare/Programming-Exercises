@@ -258,7 +258,9 @@ const CalendarComponent = () => {
                     />
                 </div>
                 <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
-                    <MenuSidebarComponent />
+                    <MenuSidebarComponent
+                        selectedUserID = {selectedUserID}
+                    />
                 </Drawer>
             </body>
             <footer className="CalendarFooter">
