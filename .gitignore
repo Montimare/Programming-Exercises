@@ -20,8 +20,20 @@ pyvenv.cfg
 lib/*
 lib64/*
 include/*
-mysite/test.py
-mysite/__pycache__/*
+**/myenv/
+**/__pycache__/*
+
+pyvenv.cfg
+**/Database/migrations/
+
+
+**/.venv/
+**/.idea/*
+**/bin/
+lib/*
+lib64/*
+include/*
+**/__pycache__/*
 
 pyvenv.cfg
 **/Database/migrations/
