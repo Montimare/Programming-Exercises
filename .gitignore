@@ -7,8 +7,7 @@ Backend/lib
 lib/*
 lib64/*
 include/*
-mysite/test.py
-mysite/__pycache__/*
+**/__pycache__/*
 
 pyvenv.cfg
 **/Database/migrations/
