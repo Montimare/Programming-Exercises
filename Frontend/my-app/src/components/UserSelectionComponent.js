@@ -1,6 +1,6 @@
-import { Button, CircularProgress, Divider, FormControl, InputLabel, List, ListItem, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Button, CircularProgress, Divider, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchUsers, fetchEvents } from "../Services/WebService";
+import { fetchUsers } from "../Services/WebService";
 import { useEffect, useState } from "react";
 import "./UserSelectionComponent.css"
 
