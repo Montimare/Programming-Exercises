@@ -16,3 +16,7 @@ export const fetchEvents = async () => {
 export const fetchEventsByUser = async (userID) => {
     return await axios.get("http://localhost:8000/users/" + userID + "/events/");
 };
+
+export const fetchEventListsByUser = async () => {
+    return await axios.get("http://localhost:8000/users/" + userID + "/eventlists/");
+}
