@@ -19,6 +19,24 @@ class UserViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveMode
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get'])
+    def eventlists(self, request, pk=None):
+        user = self.get_object()
+        user_groups = User_Group.objects.filter(user=user)
+        group_eventlists = Group_EventList.objects.filter(group__in=[ug.group for ug in user_groups])
+        eventlists = EventList.objects.filter(id__in=[gel.event_list.id for gel in group_eventlists])
+        serializer = EventListSerializer(eventlists, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def notifications(self, request, pk=None):
+        user = self.get_object()
+        user_groups = User_Group.objects.filter(user=user)
+        group_eventlists = Group_EventList.objects.filter(group__in=[ug.group for ug in user_groups])
+        events = Event.objects.filter(list__in=[gel.event_list for gel in group_eventlists])
+        notifications = Notification.objects.filter(event__in=events)
+        serializer = NotificationSerializer(notifications, many=True)
+        return Response(serializer.data)
 
 
 class GroupViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
