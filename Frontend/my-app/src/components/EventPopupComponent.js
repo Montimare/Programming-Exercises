@@ -1,7 +1,7 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Checkbox, DialogActions, DialogContent, FormControl, InputLabel, ListItem, ListItemText, MenuItem, OutlinedInput, TextField } from '@mui/material';
+import { DialogActions, DialogContent, FormControl, InputLabel, ListItem, ListItemText, MenuItem, TextField } from '@mui/material';
 import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
 import { TimePicker, DatePicker } from "@mui/x-date-pickers"
@@ -9,19 +9,46 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import List from "@mui/material/List";
+import { fetchEventListsByUser } from "../Services/WebService";
+import CircularProgress from "@mui/material/CircularProgress";
 
-const EventPopupComponent = ({ open, setOpen, sendEventData, clickedDate }) => {
-    const [text, setText] = React.useState("My Event");
-    const [startTime, setStartTime] = React.useState(null);
-    const [endTime, setEndTime] = React.useState(null);
-    const [startDate, setStartDate] = React.useState(null);
-    const [endDate, setEndDate] = React.useState(null);
+const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, clickedDate }) => {
+    const [text, setText] = useState("My Event");
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
+    const [startDate, setStartDate] = useState(dayjs(clickedDate).format("YYYY-MM-DD"));
+    const [endDate, setEndDate] = useState(dayjs(clickedDate).format("YYYY-MM-DD"));
+    const [eventList, setEventList] = useState([]);
+    const [selectedList, setSelectedList] = useState();
+    const [loading, setLoading] = useState(false);
 
-    const groupNames = [
-        "The Gang",
-        "The Gang 2",
-        "The Gang 3"
-    ]
+
+    useEffect(() => {
+        // Define an async function inside useEffect
+        const getUserEvents = async () => {
+            try {
+                const eventListData = await fetchEventListsByUser(selectedUserID)
+                    .then(eventListData => {
+                        console.log("FETCHED DATA: ");
+                        console.log(eventListData.data);
+                        setEventList(eventListData.data); // Update state with fetched user events
+                        setLoading(false);
+                    }); // Assuming fetchEventsByUser returns a promise
+            } catch (error) {
+                console.error("Failed to fetch events for this user:", error);
+            }
+        };
+
+        getUserEvents(); // Call the async function
+    }, []); // Empty dependency array means this effect runs only once
+
+    if (loading) {
+        return (
+            <div className="LoadingContainer">
+                <CircularProgress />
+            </div>
+        );
+    }
 
     const handleClose = () => {
         setOpen(false);
@@ -37,34 +64,17 @@ const EventPopupComponent = ({ open, setOpen, sendEventData, clickedDate }) => {
 
     const handleSave = () => {
         setOpen(false);
-        if(startDate === null) {
-            sendEventData(text, startTime, endTime, dayjs(clickedDate).format("YYYY-MM-DD"), endDate);
-        } else {
-            sendEventData(text, startTime, endTime, startDate, endDate);
-        }
+        sendEventData(text, startTime, endTime, startDate, endDate, selectedList);
         emptyLocalData();
     }
-
-    const [group, setGroup] = React.useState([]);
-
-    const handleChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setGroup(
-            typeof value === "string" ? value.split(',') : value,
-        );
-    };
 
     //TODO: Change "Group" section to "Event List"
     return (
         <Dialog
             open={open}
             onClose={handleClose}
-            aria-labelledby="event-dialog-title"
-            aria-describedby="event-dialog-description"
         >
-            <DialogTitle id="event-dialog-title">
+            <DialogTitle>
                 {"Add new event"}
             </DialogTitle>
             <DialogContent>
@@ -97,6 +107,7 @@ const EventPopupComponent = ({ open, setOpen, sendEventData, clickedDate }) => {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                                 label="Choose end date..."
+                                value={dayjs(clickedDate)}
                                 onChange={(newValue) => setEndDate(newValue.format("YYYY-MM-DD"))}
                             />
                         </LocalizationProvider>
@@ -109,20 +120,15 @@ const EventPopupComponent = ({ open, setOpen, sendEventData, clickedDate }) => {
                     </ListItem>
                     <ListItem>
                         <FormControl sx={{ minWidth: 200 }}>
-                            <InputLabel id="demo-multiple-checkbox-label">Choose event list...</InputLabel>
+                            <InputLabel>Choose event list...</InputLabel>
                             <Select
-                                labelId="demo-multiple-checkbox-label"
-                                id="demo-multiple-checkbox"
-                                value={group}
-                                onChange={handleChange}
-                                input={<OutlinedInput label="Choose event list..." />}
-                                renderValue={(selected) => selected.join(',')}
-                                MenuProps={[]}
+                                value={selectedList}
+                                onChange={(event) => setSelectedList(event.target.value)}
+                                label={"Choose event list..."}
                             >
-                                {groupNames.map((name) => (
-                                    <MenuItem key={name} value={name}>
-                                        <Checkbox checked={group.indexOf(name) > -1} />
-                                        <ListItemText primary={name} />
+                                {eventList.map(eventListItem => (
+                                    <MenuItem key={eventListItem.id} value={eventListItem.id}>
+                                        {eventListItem.name}
                                     </MenuItem>
                                 ))}
                             </Select>

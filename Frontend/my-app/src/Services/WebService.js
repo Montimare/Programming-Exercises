@@ -1,5 +1,9 @@
 import axios from "axios";
 
+/*
+    PUT in Axios: https://yourblogcoach.com/axios-put-request-in-react/
+*/
+
 // GET functions
 export const fetchUsers = async () => {
     return await axios.get("http://127.0.0.1:8000/users/");
@@ -27,7 +31,7 @@ export const fetchGroupsByUser = async (userID) => {
 
 // POST Functions
 export const createUsers = async (username, email) => {
-    //marc ist sich nicht mehr sicher wie genau das geht, aber wenn moeglich wollen wir die daten im body senden.
+    console.log("Sending web request for user");
     console.log("username:" + username);
     console.log("email: " + email);
 
@@ -47,3 +51,31 @@ export const createUsers = async (username, email) => {
         return 1;
     }
 };
+
+export const createEvents = async (event) => {
+    console.log("Sending web request for event");
+    console.log("title: " + event.title);
+    console.log("start: " + event.start);
+    console.log("end: " + event.end);
+    console.log("list: " + event.list);
+
+    try {
+        await axios.post(
+            "http://127.0.0.1:8000/events/",
+            {
+                title: event.title,
+                start: event.start,
+                end: event.end,
+                list: event.list
+            }
+        );
+        // Return the response data or a success message to be displayed to the user
+        return 0; // or return "User created successfully!";
+    } catch (error) {
+        console.error("An error occurred:", error);
+        // Return an error message to be displayed to the user
+        return 1;
+    }
+};
+
+// PUT Functions
