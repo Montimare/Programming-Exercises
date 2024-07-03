@@ -184,6 +184,7 @@ const CalendarComponent = () => {
 
         console.log("EVENT LIST: ");
         console.log(eventList);
+        console.log(list)
     }
 
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
