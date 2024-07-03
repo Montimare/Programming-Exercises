@@ -10,8 +10,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer"
 import MenuSidebarComponent from './MenuSidebarComponent';
-import { useParams } from "react-router-dom";
-import { fetchEventsByUser } from "../Services/WebService";
+import { useLocation, useParams } from "react-router-dom";
+import { createEvents, fetchEventsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
 /*
@@ -29,11 +29,6 @@ import CircularProgress from "@mui/material/CircularProgress";
     MUI - https://mui.com/material-ui/
     Bootstrap - https://getbootstrap.com/docs/5.3/getting-started/introduction/
     Axios - https://axios-http.com/docs/intro
-
-    TODO: Is useLocation useful?
-    TODO: Fetch the username and email from the user whose calendar is open
-    TODO: Fetch the groups for the chosen user
-    TODO: Fetch the event lists for the chosen user
 */
 
 // Temporarily storing event list in frontend
@@ -85,21 +80,23 @@ const CalendarComponent = () => {
     const [openAddEvent, setOpenAddEvent] = useState(false);
     const [openEditEvent, setOpenEditEvent] = useState(false);
     const [openDrawer, setOpenDrawer] = useState(false);
-    const [event, setEvent] = useState(false);
+    const [event, setEvent] = useState([]);
     const [clickedDate, setClickedDate] = useState(false);
     const [selectedUserID, setSelectedUserID] = useState(useParams().id);
     const [eventList, setEventList] = useState();
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
+    const username = location.state?.username || "";
+
+    useEffect(() => {}, [event]);
 
     useEffect(() => {
         // Define an async function inside useEffect
         const getUserEvents = async () => {
             try {
-                const usersData = await fetchEventsByUser(selectedUserID)
-                    .then(usersData => {
-                        console.log("FETCHED DATA: ");
-                        console.log(usersData.data);
-                        setEventList(usersData.data); // Update state with fetched users
+                const userEventData = await fetchEventsByUser(selectedUserID)
+                    .then(userEventData => {
+                        setEventList(userEventData.data); // Update state with fetched user events
                         setLoading(false);
                     }); // Assuming fetchUsers returns a promise
             } catch (error) {
@@ -109,11 +106,6 @@ const CalendarComponent = () => {
 
         getUserEvents(); // Call the async function
     }, []); // Empty dependency array means this effect runs only once
-
-    useEffect(() => {
-        console.log("EVENT LIST: ");
-        console.log(eventList);
-    }, [eventList]);
 
     const handleDateClick = (info) => {
         setClickedDate(info.date);
@@ -125,74 +117,52 @@ const CalendarComponent = () => {
         setOpenEditEvent(true);
     }
 
-    const handleAddEvent = (text, startTime, endTime, startDate, endDate) => {
+    const handleAddEvent = async (text, startTime, endTime, startDate, endDate, list) => {
         const calendarAPI = calendarRef.current.getApi();
         let newEvent = null;
-        if (startTime === null && endTime === null) {
-            if(endDate === null) {
-                newEvent = {
-                    title: text,
-                    start: startDate.toString()
-                };
-            } else {
-                newEvent = {
-                    title: text,
-                    start: startDate.toString(),
-                    end: endDate.toString()
-                };
-            }
-        } else if(startTime === null && endTime !== null) {
-            if(endDate === null) {
-                newEvent = {
-                    title: text,
-                    start: startDate.toString()
-                };
-            } else {
-                newEvent = {
-                    title: text,
-                    start: startDate.toString(),
-                    end: endDate.toString() + "T" + endTime.toString("HH:mm:ssZ")
-                };
-            }
+        if(startTime === null && endTime === null) {
+            newEvent = {
+                title: text,
+                start: startDate.toString(),
+                end: endDate.toString(),
+                list: list
+            };
         } else if(startTime !== null && endTime === null) {
-            if(endDate === null) {
-                newEvent = {
-                    title: text,
-                    start: startDate.toString() + "T" + startTime.toString("HH:mm:ssZ")
-                };
-            } else {
-                newEvent = {
-                    title: text,
-                    start: startDate.toString() + "T" + startTime.toString("HH:mm:ssZ"),
-                    end: endDate.toString()
-                };
-            }
+            newEvent = {
+                title: text,
+                start: startDate.toString() + "T" + startTime.toString(),
+                end: endDate.toString(),
+                list: list
+            };
+        } else if(startTime === null && endTime !== null) {
+            newEvent = {
+                title: text,
+                start: startDate.toString(),
+                end: endDate.toString() + "T" + endTime.toString(),
+                list: list
+            };
         } else {
-            if(endDate === null) {
-                newEvent = {
-                    title: text,
-                    start: startDate.toString() + "T" + startTime.toString("HH:mm:ssZ")
-                };
-            } else {
-                newEvent = {
-                    title: text,
-                    start: startDate.toString() + "T" + startTime.toString("HH:mm:ssZ"),
-                    end: endDate.toString() + "T" + endTime.toString("HH:mm:ssZ")
-                };
-            }
+            newEvent = {
+                title: text,
+                start: startDate.toString() + "T" + startTime.toString(),
+                end: endDate.toString() + "T" + endTime.toString(),
+                list: list
+            };
         }
+
         calendarAPI.addEvent(newEvent);
-        eventList.push(newEvent);
-        
+        await createEvents(newEvent);
+
         console.log("EVENT LIST: ");
         console.log(eventList);
+        console.log(list)
     }
 
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
         // TODO: Add error handling when start or end time are undefined
         if (event) {
-            let formattedStart = startDate.toString() + "T" + startTime.toString("HH:mm:ssZ");
-            let formattedEnd = endDate.toString() + "T" + endTime.toString("HH:mm:ssZ");
+            let formattedStart = startDate.toString() + "T" + startTime.toString();
+            let formattedEnd = endDate.toString() + "T" + endTime.toString();
             event.setProp('title', text);
             event.setStart(formattedStart);
             event.setEnd(formattedEnd);
@@ -244,12 +214,14 @@ const CalendarComponent = () => {
                         dateClick={handleDateClick}
                     />
                     <EventPopupComponent
+                        selectedUserID={selectedUserID}
                         open={openAddEvent}
                         setOpen={setOpenAddEvent}
                         clickedDate={clickedDate}
                         sendEventData={handleAddEvent}
                     />
                     <EventEditComponent
+                        selectedUserID={selectedUserID}
                         open={openEditEvent}
                         setOpen={setOpenEditEvent}
                         sendEventData={handleEditEvent}
@@ -259,7 +231,7 @@ const CalendarComponent = () => {
                 </div>
                 <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
                     <MenuSidebarComponent
-                        selectedUserID = {selectedUserID}
+                        selectedUserID={selectedUserID}
                     />
                 </Drawer>
             </body>
