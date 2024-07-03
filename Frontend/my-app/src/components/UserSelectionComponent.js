@@ -7,7 +7,7 @@ import "./UserSelectionComponent.css"
 const UserSelectionComponent = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedUserID, setSelectedUserID] = useState();
+    const [selectedUserID, setSelectedUserID] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
