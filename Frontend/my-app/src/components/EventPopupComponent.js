@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import { DialogActions, DialogContent, FormControl, InputLabel, ListItem, ListItemText, MenuItem, TextField } from '@mui/material';
@@ -21,6 +22,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
     const [eventList, setEventList] = useState([]);
     const [selectedList, setSelectedList] = useState();
     const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         // Define an async function inside useEffect
@@ -64,6 +66,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
     const handleSave = () => {
         setOpen(false);
         sendEventData(text, startTime, endTime, startDate, endDate, selectedList);
+        sendEventData(text, startTime, endTime, startDate, endDate, selectedList);
         emptyLocalData();
     }
 
@@ -73,6 +76,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
             open={open}
             onClose={handleClose}
         >
+            <DialogTitle>
             <DialogTitle>
                 {"Add new event"}
             </DialogTitle>

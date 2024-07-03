@@ -5,6 +5,11 @@ import axios from "axios";
 */
 
 // GET functions
+/*
+    PUT in Axios: https://yourblogcoach.com/axios-put-request-in-react/
+*/
+
+// GET functions
 export const fetchUsers = async () => {
     return await axios.get("http://127.0.0.1:8000/users/");
 };
@@ -31,6 +36,7 @@ export const fetchGroupsByUser = async (userID) => {
 
 // POST Functions
 export const createUsers = async (username, email) => {
+    console.log("Sending web request for user");
     console.log("Sending web request for user");
     console.log("username:" + username);
     console.log("email: " + email);

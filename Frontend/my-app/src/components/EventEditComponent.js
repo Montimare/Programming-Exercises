@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import { DialogActions, DialogContent, FormControl, InputLabel, ListItem, MenuItem, TextField } from '@mui/material';
@@ -11,6 +12,9 @@ import dayjs from "dayjs"
 import List from "@mui/material/List";
 import { fetchEventListsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
+
+
+// TODO: Make sure that text doesn't return "undefined"
 
 const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requestDelete, event }) => {
     const [text, setText] = useState(event.title);
@@ -120,8 +124,9 @@ const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requ
                     <ListItem>
                         <FormControl sx={{ minWidth: 200 }}>
                             <InputLabel>Choose event list...</InputLabel>
+                            <InputLabel>Choose event list...</InputLabel>
                             <Select
-                                value={event.list}
+                                value={selectedList}
                                 onChange={(event) => setSelectedList(event.target.value)}
                                 label={"Choose event list..."}
                             >
