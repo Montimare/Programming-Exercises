@@ -22,7 +22,6 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
     const [selectedList, setSelectedList] = useState();
     const [loading, setLoading] = useState(false);
 
-
     useEffect(() => {
         // Define an async function inside useEffect
         const getUserEvents = async () => {
@@ -64,6 +63,8 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
 
     const handleSave = () => {
         setOpen(false);
+        console.log(startDate + startTime);
+        console.log(endDate + endTime);
         sendEventData(text, startTime, endTime, startDate, endDate, selectedList);
         emptyLocalData();
     }
@@ -92,7 +93,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                                 label="Choose start date..."
-                                value={dayjs(clickedDate)}
+                                value={dayjs(startDate)}
                                 onChange={(newValue) => setStartDate(newValue.format("YYYY-MM-DD"))}
                             />
                         </LocalizationProvider>
@@ -107,7 +108,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                                 label="Choose end date..."
-                                value={dayjs(clickedDate)}
+                                value={dayjs(endDate)}
                                 onChange={(newValue) => setEndDate(newValue.format("YYYY-MM-DD"))}
                             />
                         </LocalizationProvider>
