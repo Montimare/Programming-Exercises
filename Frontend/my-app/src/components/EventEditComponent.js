@@ -123,7 +123,7 @@ const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requ
                             <InputLabel>Choose event list...</InputLabel>
                             <InputLabel>Choose event list...</InputLabel>
                             <Select
-                                value={selectedList}
+                                value={event.list}
                                 onChange={(event) => setSelectedList(event.target.value)}
                                 label={"Choose event list..."}
                             >

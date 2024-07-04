@@ -12,7 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer"
 import MenuSidebarComponent from './MenuSidebarComponent';
 import { useLocation, useParams } from "react-router-dom";
-import { createEvents, fetchEventsByUser } from "../Services/WebService";
+import { createEvents, editEvents, fetchEventsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
 /*
@@ -78,16 +78,27 @@ const eventList = [
 const CalendarComponent = () => {
     const calendarRef = useRef(null);
 
-    const [openAddEvent, setOpenAddEvent] = useState(false);
-    const [openEditEvent, setOpenEditEvent] = useState(false);
-    const [openDrawer, setOpenDrawer] = useState(false);
-    const [event, setEvent] = useState([]);
-    const [clickedDate, setClickedDate] = useState(false);
+    // User data
     const [selectedUserID, setSelectedUserID] = useState(useParams().id);
-    const [eventList, setEventList] = useState();
-    const [loading, setLoading] = useState(true);
     const location = useLocation();
     const username = location.state?.username || "";
+
+    // Event add and modify popup openers
+    const [openAddEvent, setOpenAddEvent] = useState(false);
+    const [openEditEvent, setOpenEditEvent] = useState(false);
+
+    // Menu sidebar opener
+    const [openDrawer, setOpenDrawer] = useState(false);
+
+    // Event-related
+    const [event, setEvent] = useState([]);
+    const [eventID, setEventID] = useState();
+    const [listID, setListID] = useState();
+    const [eventList, setEventList] = useState();
+    const [clickedDate, setClickedDate] = useState(false);
+
+    // Loading screen
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => { }, [event]);
 
@@ -131,12 +142,8 @@ const CalendarComponent = () => {
     }
 
     const handleEventClick = (info) => {
-        const modifiedEvent = {
-            title: info.event.title,
-            start: info.event.start,
-            end: info.event.end === null ? info.event.start : info.event.end
-        };
-        setEvent(modifiedEvent);
+        info.event.setEnd(info.event.end === null ? info.event.start : info.event.end);
+        setEvent(findEventInEventList(info.event)); // Call the function with the fcEvent parameter
         setOpenEditEvent(true);
     }
 
@@ -177,8 +184,8 @@ const CalendarComponent = () => {
         calendarAPI.addEvent(newEvent);
         await createEvents(newEvent);
 
-        // console.log("EVENT LIST: ");
-        // console.log(eventList);
+        console.log("EVENT LIST: ");
+        console.log(eventList);
     }
 
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
