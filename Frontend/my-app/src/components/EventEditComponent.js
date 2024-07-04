@@ -13,9 +13,6 @@ import List from "@mui/material/List";
 import { fetchEventListsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
-
-// TODO: Make sure that text doesn't return "undefined"
-
 const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requestDelete, event }) => {
     const [text, setText] = useState(event.title);
     const [startDate, setStartDate] = useState(dayjs(event.start).format("YYYY-MM-DD"));
@@ -93,7 +90,7 @@ const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requ
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                                 label="Choose start date..."
-                                value={dayjs(startDate)}
+                                value={dayjs(event.start)}
                                 onChange={(newValue) => setStartDate(newValue.format("YYYY-MM-DD"))}
                             />
                         </LocalizationProvider>
@@ -109,7 +106,7 @@ const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requ
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                                 label="Choose end date..."
-                                value={dayjs(endDate)}
+                                value={dayjs(event.end)}
                                 onChange={(newValue) => setEndDate(newValue.format("YYYY-MM-DD"))}
                             />
                         </LocalizationProvider>

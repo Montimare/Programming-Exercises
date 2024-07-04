@@ -64,8 +64,6 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
 
     const handleSave = () => {
         setOpen(false);
-        console.log(startDate + startTime);
-        console.log(endDate + endTime);
         sendEventData(text, startTime, endTime, startDate, endDate, selectedList);
         sendEventData(text, startTime, endTime, startDate, endDate, selectedList);
         emptyLocalData();

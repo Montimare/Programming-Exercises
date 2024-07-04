@@ -131,8 +131,12 @@ const CalendarComponent = () => {
     }
 
     const handleEventClick = (info) => {
-        info.event.setEnd(info.event.end === null ? info.event.start : info.event.end);
-        setEvent(findEventInEventList(info.event)); // Call the function with the fcEvent parameter
+        const modifiedEvent = {
+            title: info.event.title,
+            start: info.event.start,
+            end: info.event.end === null ? info.event.start : info.event.end
+        };
+        setEvent(modifiedEvent);
         setOpenEditEvent(true);
     }
 
@@ -173,9 +177,8 @@ const CalendarComponent = () => {
         calendarAPI.addEvent(newEvent);
         await createEvents(newEvent);
 
-        console.log("EVENT LIST: ");
-        console.log(eventList);
-        console.log(list)
+        // console.log("EVENT LIST: ");
+        // console.log(eventList);
     }
 
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
