@@ -113,7 +113,12 @@ const CalendarComponent = () => {
     }
 
     const handleEventClick = (info) => {
-        setEvent(info.event);
+        const modifiedEvent = {
+            title: info.event.title,
+            start: info.event.start,
+            end: info.event.end === null ? info.event.start : info.event.end
+        };
+        setEvent(modifiedEvent);
         setOpenEditEvent(true);
     }
 
@@ -153,9 +158,8 @@ const CalendarComponent = () => {
         calendarAPI.addEvent(newEvent);
         await createEvents(newEvent);
 
-        console.log("EVENT LIST: ");
-        console.log(eventList);
-        console.log(list)
+        // console.log("EVENT LIST: ");
+        // console.log(eventList);
     }
 
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
@@ -218,30 +222,32 @@ const CalendarComponent = () => {
                         dateClick={handleDateClick}
                     />
                     {openAddEvent && (
-                    <EventPopupComponent
-                        selectedUserID={selectedUserID}
-                        open={openAddEvent}
-                        setOpen={setOpenAddEvent}
-                        clickedDate={clickedDate}
-                        sendEventData={handleAddEvent}
-                    />
+                        <EventPopupComponent
+                            selectedUserID={selectedUserID}
+                            open={openAddEvent}
+                            setOpen={setOpenAddEvent}
+                            clickedDate={clickedDate}
+                            sendEventData={handleAddEvent}
+                        />
                     )}
                     {openEditEvent && (
-                    <EventEditComponent
-                        selectedUserID={selectedUserID}
-                        open={openEditEvent}
-                        setOpen={setOpenEditEvent}
-                        sendEventData={handleEditEvent}
-                        requestDelete={handleDeleteEvent}
-                        event={event}
-                    />
+                        <EventEditComponent
+                            selectedUserID={selectedUserID}
+                            open={openEditEvent}
+                            setOpen={setOpenEditEvent}
+                            sendEventData={handleEditEvent}
+                            requestDelete={handleDeleteEvent}
+                            event={event}
+                        />
                     )}
                 </div>
-                <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
-                    <MenuSidebarComponent
-                        selectedUserID={selectedUserID}
-                    />
-                </Drawer>
+                {openDrawer && (
+                    <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
+                        <MenuSidebarComponent
+                            selectedUserID={selectedUserID}
+                        />
+                    </Drawer>
+                )}
             </body>
             <footer className="CalendarFooter">
                 © 2024 ProgExTRAORDINAIRE
