@@ -121,7 +121,7 @@ const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requ
                         <FormControl sx={{ minWidth: 200 }}>
                             <InputLabel>Choose event list...</InputLabel>
                             <Select
-                                value={selectedList}
+                                value={event.list}
                                 onChange={(event) => setSelectedList(event.target.value)}
                                 label={"Choose event list..."}
                             >

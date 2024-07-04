@@ -84,3 +84,23 @@ export const createEvents = async (event) => {
 };
 
 // PUT Functions
+export const editEvents = async (event, eventID, list) => {
+    try {
+        console.log(event.title);
+        console.log(event.start);
+        console.log(event.end);
+        console.log(event.list);
+        await axios.put(
+            "http://127.0.0.1:8000/events/" + eventID + "/",
+            {
+                id: eventID,
+                title: event.title,
+                start: event.start,
+                end: event.end,
+                list: list
+            }
+        );
+    } catch (error) {
+        console.error("An error occurred:", error.response);
+    }
+};
