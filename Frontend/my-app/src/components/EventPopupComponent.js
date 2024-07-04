@@ -63,8 +63,6 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
 
     const handleSave = () => {
         setOpen(false);
-        console.log(startDate + startTime);
-        console.log(endDate + endTime);
         sendEventData(text, startTime, endTime, startDate, endDate, selectedList);
         emptyLocalData();
     }
@@ -100,7 +98,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose start time..."
-                                onChange={(newValue) => setStartTime(newValue.format("HH:mm:ssZ"))}
+                                onChange={(newValue) => setStartTime(newValue.format("HH:mm:ss"))}
                             />
                         </LocalizationProvider>
                     </ListItem>
@@ -115,7 +113,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose end time..."
-                                onChange={(newValue) => setEndTime(newValue.format("HH:mm:ssZ"))}
+                                onChange={(newValue) => setEndTime(newValue.format("HH:mm:ss"))}
                             />
                         </LocalizationProvider>
                     </ListItem>
