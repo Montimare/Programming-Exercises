@@ -10,4 +10,3 @@ include/*
 **/__pycache__/*
 
 pyvenv.cfg
-**/Database/migrations/
