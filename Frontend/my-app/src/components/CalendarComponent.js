@@ -88,7 +88,7 @@ const CalendarComponent = () => {
     const location = useLocation();
     const username = location.state?.username || "";
 
-    useEffect(() => {}, [event]);
+    useEffect(() => { }, [event]);
 
     useEffect(() => {
         // Define an async function inside useEffect
@@ -120,21 +120,21 @@ const CalendarComponent = () => {
     const handleAddEvent = async (text, startTime, endTime, startDate, endDate, list) => {
         const calendarAPI = calendarRef.current.getApi();
         let newEvent = null;
-        if(startTime === null && endTime === null) {
+        if (startTime === null && endTime === null) {
             newEvent = {
                 title: text,
                 start: startDate.toString(),
                 end: endDate.toString(),
                 list: list
             };
-        } else if(startTime !== null && endTime === null) {
+        } else if (startTime !== null && endTime === null) {
             newEvent = {
                 title: text,
                 start: startDate.toString() + "T" + startTime.toString(),
                 end: endDate.toString(),
                 list: list
             };
-        } else if(startTime === null && endTime !== null) {
+        } else if (startTime === null && endTime !== null) {
             newEvent = {
                 title: text,
                 start: startDate.toString(),
@@ -213,6 +213,7 @@ const CalendarComponent = () => {
                         eventClick={handleEventClick}
                         dateClick={handleDateClick}
                     />
+                    {openAddEvent && (
                     <EventPopupComponent
                         selectedUserID={selectedUserID}
                         open={openAddEvent}
@@ -220,6 +221,8 @@ const CalendarComponent = () => {
                         clickedDate={clickedDate}
                         sendEventData={handleAddEvent}
                     />
+                    )}
+                    {openEditEvent && (
                     <EventEditComponent
                         selectedUserID={selectedUserID}
                         open={openEditEvent}
@@ -228,6 +231,7 @@ const CalendarComponent = () => {
                         requestDelete={handleDeleteEvent}
                         event={event}
                     />
+                    )}
                 </div>
                 <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
                     <MenuSidebarComponent
