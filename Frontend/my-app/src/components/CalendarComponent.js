@@ -98,8 +98,6 @@ const CalendarComponent = () => {
 
     // Loading screen
     const [loading, setLoading] = useState(true);
-    const location = useLocation();
-    const username = location.state?.username || "";
 
     useEffect(() => { }, [event]);
 
@@ -184,8 +182,8 @@ const CalendarComponent = () => {
         calendarAPI.addEvent(newEvent);
         await createEvents(newEvent);
 
-        // console.log("EVENT LIST: ");
-        // console.log(eventList);
+        console.log("EVENT LIST: ");
+        console.log(eventList);
     }
 
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
