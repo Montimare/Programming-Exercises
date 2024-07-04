@@ -184,9 +184,8 @@ const CalendarComponent = () => {
         calendarAPI.addEvent(newEvent);
         await createEvents(newEvent);
 
-        console.log("EVENT LIST: ");
-        console.log(eventList);
-        console.log(list)
+        // console.log("EVENT LIST: ");
+        // console.log(eventList);
     }
 
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {

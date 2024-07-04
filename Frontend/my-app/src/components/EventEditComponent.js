@@ -89,7 +89,7 @@ const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requ
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                                 label="Choose start date..."
-                                value={dayjs(startDate)}
+                                value={dayjs(event.start)}
                                 onChange={(newValue) => setStartDate(newValue.format("YYYY-MM-DD"))}
                             />
                         </LocalizationProvider>
@@ -105,7 +105,7 @@ const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requ
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                                 label="Choose end date..."
-                                value={dayjs(endDate)}
+                                value={dayjs(event.end)}
                                 onChange={(newValue) => setEndDate(newValue.format("YYYY-MM-DD"))}
                             />
                         </LocalizationProvider>
