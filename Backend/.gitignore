@@ -8,3 +8,8 @@ mysite/test.py
 myenv/
 
 pyvenv.cfg
+*/__pycache__/
+mysite/Database/__pycache__
+mysite/mysite/__pycache__
+mysite/mysite/Database/__pycache__
+mysite/mysite/Database/Serializer/__pycache__
