@@ -12,3 +12,12 @@ include/*
 
 pyvenv.cfg
 **/Database/migrations/
+
+node_modules
+.env
+*/.env
+*/.env.local
+*/.env.development.local
+*/.env.test.local
+*/.env.production.local
+mysql-data

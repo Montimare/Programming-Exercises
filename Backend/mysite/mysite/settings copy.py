@@ -11,9 +11,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import os
-from dotenv import load_dotenv
-load_dotenv() # Load environment variables from .env file
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-8iwz2dfp1s$of4_f1v$0ge$u$9p&y(ij83_cxeth$&006fv4a8'
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -86,30 +84,16 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    # localhost
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'calendar_app',
-        'USER': 'root',
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': 'database',
-        'PORT': '3306',
-    },
-    # niklas
-    'niklas': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'calendar_app',
         'USER': 'calendar_app',
-        'PASSWORD': os.getenv('NIKLAS_DB'),
+        'PASSWORD': 'O0~p2ZF5;3j|CH@LGl+8VXi-N6#19=TO',
         'HOST': 'descus.de',
         'PORT': '3306',
-    },
-    # marc
-    'TBA': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'calendar_app',
     }
 }
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
