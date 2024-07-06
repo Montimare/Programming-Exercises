@@ -44,6 +44,10 @@ services:
     #   - "database"
     volumes:
       - ./mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 50
 
-volumes:
-  mysql-data:
+# volumes:
+#   mysql-data:
