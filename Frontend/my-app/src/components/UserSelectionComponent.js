@@ -1,8 +1,13 @@
-import { Button, CircularProgress, Divider, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Button, CircularProgress, Divider, FormControl, InputLabel, ListItemText, MenuItem, Select } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchUsers } from "../Services/WebService";
 import { useEffect, useState } from "react";
 import "./UserSelectionComponent.css"
+
+/*
+    TODO: Fix the look for the user selection page
+    TODO: Maybe add a background???
+*/
 
 const UserSelectionComponent = () => {
     const [users, setUsers] = useState([]);
@@ -62,7 +67,9 @@ const UserSelectionComponent = () => {
                             onChange={handleUserSelection}
                         >
                             {users.map(user => (
-                                <MenuItem key={user.id} value={user.id}>{user.name} ({user.email})</MenuItem>
+                                <MenuItem key={user.id} value={user.id}>
+                                    <ListItemText primary={user.name} secondary={user.email} />
+                                </MenuItem>
                             ))}
                         </Select>
                     </FormControl>

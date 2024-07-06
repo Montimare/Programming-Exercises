@@ -44,10 +44,10 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, groupName, groupID }
             <DialogTitle>
                 {groupName}
             </DialogTitle>
-            <Divider/>
+            <Divider />
             <DialogContent>
                 Members
-                <Divider/>
+                <Divider />
                 <List>
                     {filterUsersByGroupId().map(user => (
                         <ListItem key={user.id} value={user.id}>{user.name} ({user.email})</ListItem>

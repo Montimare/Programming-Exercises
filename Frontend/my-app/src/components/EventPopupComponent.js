@@ -28,8 +28,6 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
             try {
                 const eventListData = await fetchEventListsByUser(selectedUserID)
                     .then(eventListData => {
-                        console.log("FETCHED DATA: ");
-                        console.log(eventListData.data);
                         setEventList(eventListData.data); // Update state with fetched user events
                         setLoading(false);
                     }); // Assuming fetchEventsByUser returns a promise
@@ -98,7 +96,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose start time..."
-                                onChange={(newValue) => setStartTime(newValue.format("HH:mm:ss"))}
+                                onChange={(newValue) => setStartTime(newValue.format("HH:mm:ssZ"))}
                             />
                         </LocalizationProvider>
                     </ListItem>
@@ -113,7 +111,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose end time..."
-                                onChange={(newValue) => setEndTime(newValue.format("HH:mm:ss"))}
+                                onChange={(newValue) => setEndTime(newValue.format("HH:mm:ssZ"))}
                             />
                         </LocalizationProvider>
                     </ListItem>
@@ -121,7 +119,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
                         <FormControl sx={{ minWidth: 200 }}>
                             <InputLabel>Choose event list...</InputLabel>
                             <Select
-                                value={selectedList}
+                                value={selectedList || ''}
                                 onChange={(event) => setSelectedList(event.target.value)}
                                 label={"Choose event list..."}
                             >

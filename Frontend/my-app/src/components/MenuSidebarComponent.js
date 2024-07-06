@@ -6,6 +6,11 @@ import Divider from "@mui/material/Divider"
 import { Link, useLocation } from "react-router-dom";
 import { fetchGroupsByUser } from "../Services/WebService";
 import GroupPopupComponent from "./GroupPopupComponent"
+import CreateGroupComponent from "./CreateGroupComponent";
+
+/*
+    TODO: Create buttons for each event list + the event list creating popup
+*/
 
 const MenuSidebarComponent = ({ selectedUserID }) => {
     const location = useLocation();
@@ -15,9 +20,10 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
     const [selectedGroupName, setSelectedGroupName] = useState();
     const [loading, setLoading] = useState(true);
     const [openPopup, setOpenPopup] = useState(false);
+    const [openCreateGroup, setOpenCreateGroup] = useState(false);
 
-    useEffect(() => {}, [selectedGroupName]); // Dependency on selectedGroupName
-    useEffect(() => {}, [selectedGroupID]); // Dependency on selectedGroupID
+    useEffect(() => { }, [selectedGroupName]); // Dependency on selectedGroupName
+    useEffect(() => { }, [selectedGroupID]); // Dependency on selectedGroupID
 
     useEffect(() => {
         const getGroups = async () => {
@@ -53,6 +59,14 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
         setOpenPopup(false);
     }
 
+    const handleOpenCreateGroup = () => {
+        setOpenCreateGroup(true);
+    }
+
+    const handleCloseCreateGroup = () => {
+        setOpenCreateGroup(false);
+    }
+
     return (
         <>
             <Box
@@ -79,7 +93,7 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
                                 </ListItem>
                             ))}
                             <ListItem>
-                                <Button>Create new group...</Button>
+                                <Button onClick={handleOpenCreateGroup}>Create new group...</Button>
                             </ListItem>
                         </List>
                     </ListItem>
@@ -96,6 +110,10 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
                 handleClosePopup={handleClosePopup}
                 groupName={selectedGroupName}
                 groupID={selectedGroupID}
+            />)}
+            {openCreateGroup && (<CreateGroupComponent
+                openCreateGroup={openCreateGroup}
+                handleCloseCreateGroup={handleCloseCreateGroup}
             />)}
         </>
     );

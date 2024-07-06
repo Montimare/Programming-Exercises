@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer"
 import MenuSidebarComponent from './MenuSidebarComponent';
 import { useLocation, useParams } from "react-router-dom";
-import { createEvents, editEvents, fetchEventsByUser } from "../Services/WebService";
+import { createEvents, deleteEvents, editEvents, fetchEventsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
 /*
@@ -31,49 +31,6 @@ import CircularProgress from "@mui/material/CircularProgress";
     Axios - https://axios-http.com/docs/intro
 */
 
-// Temporarily storing event list in frontend
-const eventList = [
-    {
-        title: 'Learning Session',
-        start: '2024-05-08',
-        end: '2024-05-12'
-    },
-    {
-        title: 'Learning Session 2',
-        start: '2024-05-08'
-    },
-    {
-        title: 'Learning Session 3',
-        start: '2024-05-08'
-    },
-    {
-        title: 'Learning Session 4',
-        start: '2024-05-08'
-    },
-    {
-        title: 'Thing I Need To Do',
-        start: '2024-05-09',
-        end: '2024-05-10'
-    },
-    {
-        title: 'Hello',
-        start: '2024-05-11T12:30:00',
-        end: '2024-05-12T14:30:00'
-    },
-    {
-        title: 'Hi',
-        start: '2024-05-11T12:30:00'
-    },
-    {
-        title: 'Prog',
-        start: '2024-05-11T12:30:00'
-    },
-    {
-        title: 'ProgEx',
-        start: '2024-05-11T12:30:00'
-    }
-]
-
 const CalendarComponent = () => {
     const calendarRef = useRef(null);
 
@@ -91,13 +48,14 @@ const CalendarComponent = () => {
 
     // Event-related
     const [event, setEvent] = useState([]);
-    const [eventID, setEventID] = useState();
     const [listID, setListID] = useState();
     const [eventList, setEventList] = useState();
     const [clickedDate, setClickedDate] = useState(false);
 
     // Loading screen
+    const [eventsChangeTracker, setEventsChangeTracker] = useState(0);
     const [loading, setLoading] = useState(true);
+
 
     useEffect(() => { }, [event]);
 
@@ -116,34 +74,28 @@ const CalendarComponent = () => {
         };
 
         getUserEvents(); // Call the async function
-    }, []); // Empty dependency array means this effect runs only once
+    }, [eventsChangeTracker]); // Empty dependency array means this effect runs only once
+
+    const updateEventList = () => {
+        setEventsChangeTracker(prev => prev + 1);
+    }
 
     const handleDateClick = (info) => {
         setClickedDate(info.date);
         setOpenAddEvent(true);
     }
 
-    const findEventInEventList = (fcEvent) => {
-        // Attempt to find a matching event in the eventList
-        const matchingEvent = eventList.find(event =>
-            event.title === fcEvent.title &&
-            event.start === fcEvent.start &&
-            event.end === fcEvent.end
-        );
-        console.log(matchingEvent);
-        if (matchingEvent) {
-            setEventID(matchingEvent.id);
-            setListID(matchingEvent.list);
-            return fcEvent;
-        }
-        // If no match is found, return null
-        return null;
-    }
-
     const handleEventClick = (info) => {
         info.event.setEnd(info.event.end === null ? info.event.start : info.event.end);
-        setEvent(findEventInEventList(info.event)); // Call the function with the fcEvent parameter
-        setOpenEditEvent(true);
+        // Finding corresponding event in the Django API's database to get list ID
+        let foundDjangoEvent = eventList.find(djangoEvent => djangoEvent.id == info.event.id);
+        if (foundDjangoEvent) {
+            setEvent(info.event);
+            setListID(foundDjangoEvent.list);
+            setOpenEditEvent(true);
+        } else {
+            console.error("Event not found");
+        }
     }
 
     const handleAddEvent = async (text, startTime, endTime, startDate, endDate, list) => {
@@ -179,23 +131,26 @@ const CalendarComponent = () => {
             };
         }
 
-        calendarAPI.addEvent(newEvent);
         await createEvents(newEvent);
+        calendarAPI.addEvent(newEvent);
+        updateEventList();
 
         console.log("EVENT LIST: ");
         console.log(eventList);
+
+        console.log("FULLCALENDAR EVENT LIST:");
+        console.log(calendarAPI.getEvents());
     }
 
-    const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
-        // TODO: Add error handling when start or end time are undefined
+    const handleEditEvent = (text, startTime, endTime, startDate, endDate, selectedListID) => {
         if (event) {
             let formattedStart = startDate.toString() + "T" + startTime.toString();
             let formattedEnd = endDate.toString() + "T" + endTime.toString();
             event.setProp('title', text);
             event.setStart(formattedStart);
             event.setEnd(formattedEnd);
-            editEvents(event, eventID, listID);
-
+            editEvents(event, event.id, selectedListID);
+            updateEventList();
 
             console.log("EVENT LIST: ");
             console.log(eventList);
@@ -207,6 +162,8 @@ const CalendarComponent = () => {
     const handleDeleteEvent = () => {
         if (event) {
             event.remove();
+            deleteEvents(event.id);
+            updateEventList();
         } else {
             alert("Event not found!");
         }
