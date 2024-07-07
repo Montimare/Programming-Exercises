@@ -25,6 +25,9 @@ services:
       - "8000:8000"
     # environment:
     #   - CHOKIDAR_USEPOLLING=true
+    networks:
+      - database
+      - default
     depends_on:
       - database
   # was das?????????????????
@@ -40,14 +43,18 @@ services:
       MYSQL_DATABASE: calendar_app
     ports:
       - "3306:3306"
-    # networks:
-    #   - "database"
+    networks:
+      - database
     volumes:
       - ./mysql-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 50
+
+networks:
+  database:
+    driver: bridge
 
 # volumes:
 #   mysql-data:
