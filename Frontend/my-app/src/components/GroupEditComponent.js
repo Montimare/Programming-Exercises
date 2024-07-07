@@ -1,13 +1,13 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, List, ListItem, Select, TextField } from "@mui/material";
 
-const CreateGroupComponent = ({ openCreateGroup, handleCloseCreateGroup }) => {
+const GroupEditComponent = ({ openEditGroup, handleCloseEditGroup, groupName }) => {
     return (
         <Dialog
-            open={openCreateGroup}
-            onClose={handleCloseCreateGroup}
+            open={openEditGroup}
+            onClose={handleCloseEditGroup}
         >
             <DialogTitle>
-                Create new group
+                Edit "{groupName}"
             </DialogTitle>
             <DialogContent>
                 <List>
@@ -27,11 +27,11 @@ const CreateGroupComponent = ({ openCreateGroup, handleCloseCreateGroup }) => {
                 </List>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseCreateGroup}>Cancel</Button>
-                <Button variant="contained">Add</Button>
+                <Button onClick={handleCloseEditGroup}>Cancel</Button>
+                <Button variant="contained">Apply</Button>
             </DialogActions>
         </Dialog>
     );
 }
 
-export default CreateGroupComponent;
+export default GroupEditComponent;

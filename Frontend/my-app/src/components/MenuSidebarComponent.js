@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, CircularProgress, List, ListItem } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person"
 import GroupsIcon from "@mui/icons-material/Groups"
+import ListIcon from '@mui/icons-material/List';
 import Divider from "@mui/material/Divider"
 import { Link, useLocation } from "react-router-dom";
-import { fetchGroupsByUser } from "../Services/WebService";
+import { createGroupLists, createGroupMembers, createGroups, deleteGroups, fetchEventListsByUser, fetchGroupsByUser } from "../Services/WebService";
 import GroupPopupComponent from "./GroupPopupComponent"
-import CreateGroupComponent from "./CreateGroupComponent";
+import GroupCreateComponent from "./GroupCreateComponent";
 
 /*
     TODO: Create buttons for each event list + the event list creating popup
@@ -16,6 +17,7 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
     const location = useLocation();
     const { username, email } = location.state || "";
     const [groups, setGroups] = useState([]);
+    const [eventLists, setEventLists] = useState([]);
     const [selectedGroupID, setSelectedGroupID] = useState();
     const [selectedGroupName, setSelectedGroupName] = useState();
     const [loading, setLoading] = useState(true);
@@ -41,6 +43,22 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
         getGroups();    // call the async function
     }, []); // Empty dependency array means this effect runs only once
 
+    useEffect(() => {
+        const getEventLists = async () => {
+            try {
+                const eventListData = await fetchEventListsByUser(selectedUserID)
+                    .then(eventListData => {
+                        setEventLists(eventListData.data);  // update state with fetched groups
+                        setLoading(false);
+                    });
+            } catch (error) {
+                console.error("Failed to fetch groups: " + error);
+            }
+        }
+
+        getEventLists();    // call the async function
+    }, []); // Empty dependency array means this effect runs only once
+
     if (loading) {
         return (
             <div className="LoadingContainer">
@@ -49,13 +67,13 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
         );
     }
 
-    const handleOpenPopup = (groupName, groupID) => {
+    const handleOpenGroup = (groupName, groupID) => {
         setSelectedGroupName(groupName);
         setSelectedGroupID(groupID);
         setOpenPopup(true);
     }
 
-    const handleClosePopup = () => {
+    const handleCloseGroup = () => {
         setOpenPopup(false);
     }
 
@@ -65,6 +83,23 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
 
     const handleCloseCreateGroup = () => {
         setOpenCreateGroup(false);
+    }
+
+    const handleCreateGroup = (groupName) => {
+        createGroups({
+            name: groupName,
+            admin: selectedUserID
+        });
+    }
+
+    const handleAddMembers = (selectedMembers) => {
+        for(const member of selectedMembers) {
+            createGroupMembers(member, selectedGroupID);
+        }
+    }
+
+    const handleDeleteGroup = () => {
+        deleteGroups(selectedGroupID);
     }
 
     return (
@@ -89,11 +124,26 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
                         <List>
                             {groups.map(group => (
                                 <ListItem key={group.id} value={group.id}>
-                                    <Button onClick={() => handleOpenPopup(group.name, group.id)}>{group.name}</Button>
+                                    <Button onClick={() => handleOpenGroup(group.name, group.id)}>{group.name}</Button>
                                 </ListItem>
                             ))}
                             <ListItem>
                                 <Button onClick={handleOpenCreateGroup}>Create new group...</Button>
+                            </ListItem>
+                        </List>
+                    </ListItem>
+                    <Divider />
+                    <ListItem><ListIcon /><b>Event lists</b></ListItem>
+                    <Divider variant="middle" />
+                    <ListItem>
+                        <List>
+                            {eventLists.map(eventList => (
+                                <ListItem key={eventList.id} value={eventList.id}>
+                                    <Button onClick={() => handleOpenGroup(eventList.name, eventList.id)}>{eventList.name}</Button>
+                                </ListItem>
+                            ))}
+                            <ListItem>
+                                <Button>Create new list...</Button>
                             </ListItem>
                         </List>
                     </ListItem>
@@ -107,13 +157,18 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
             </Box>
             {openPopup && (<GroupPopupComponent
                 openPopup={openPopup}
-                handleClosePopup={handleClosePopup}
+                handleClosePopup={handleCloseGroup}
+                requestAddMembers={handleAddMembers}
+                requestDeleteGroup={handleDeleteGroup}
+                selectedUserID={selectedUserID}
                 groupName={selectedGroupName}
                 groupID={selectedGroupID}
             />)}
-            {openCreateGroup && (<CreateGroupComponent
+            {openCreateGroup && (<GroupCreateComponent
                 openCreateGroup={openCreateGroup}
                 handleCloseCreateGroup={handleCloseCreateGroup}
+                requestCreate={handleCreateGroup}
+                eventLists={eventLists}
             />)}
         </>
     );

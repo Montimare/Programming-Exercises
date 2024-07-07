@@ -85,17 +85,13 @@ export const createGroups = async (group) => {
     console.log("Sending web request for creating group");
     console.log("name: " + group.name);
     console.log("admin: " + group.admin);
-    console.log("event_lists: " + group.event_lists);
-    console.log("users: " + group.users);
 
     try {
         await axios.post(
             "http://127.0.0.1:8000/groups/",
             {
                 name: group.name,
-                admin: group.admin,
-                event_lists: group.event_lists,
-                users: group.users
+                admin: group.admin
             }
         );
     } catch (error) {
@@ -116,6 +112,42 @@ export const createEventLists = async (eventList) => {
                 name: eventList.name,
                 admin: eventList.admin,
                 groups: eventList.groups
+            }
+        );
+    } catch (error) {
+        console.error("An error occurred:", error);
+    }
+}
+
+export const createGroupMembers = async (userID, groupID) => {
+    console.log("Sending web request for creating group member");
+    console.log("user: " + userID);
+    console.log("group: " + groupID);
+
+    try {
+        await axios.post(
+            "http://127.0.0.1:8000/user_groups/",
+            {
+                user: userID,
+                group: groupID
+            }
+        );
+    } catch (error) {
+        console.error("An error occurred:", error);
+    }
+}
+
+export const createGroupLists = async (groupID, listID) => {
+    console.log("Sending web request for creating group lists");
+    console.log("group: " + groupID);
+    console.log("list: " + listID);
+
+    try {
+        await axios.post(
+            "http://127.0.0.1:8000/user_groups/",
+            {
+                group: groupID,
+                event_list: listID
             }
         );
     } catch (error) {
