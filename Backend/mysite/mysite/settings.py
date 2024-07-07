@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'mysite.Database',
     'corsheaders',
+    'mysite',
 ]
 
 MIDDLEWARE = [
@@ -95,20 +96,20 @@ DATABASES = {
         'HOST': 'database',
         'PORT': '3306',
     },
-    # niklas
-    'niklas': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'calendar_app',
-        'USER': 'calendar_app',
-        'PASSWORD': os.getenv('NIKLAS_DB'),
-        'HOST': 'descus.de',
-        'PORT': '3306',
-    },
-    # marc
-    'TBA': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'calendar_app',
-    }
+    # # niklas
+    # 'niklas': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'calendar_app',
+    #     'USER': 'calendar_app',
+    #     'PASSWORD': os.getenv('NIKLAS_DB'),
+    #     'HOST': 'descus.de',
+    #     'PORT': '3306',
+    # },
+    # # marc
+    # 'TBA': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'calendar_app',
+    # }
 }
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
