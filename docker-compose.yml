@@ -18,7 +18,7 @@ services:
   backend:
     container_name: backend
     build: ./Backend
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./Backend:/backend-dev
     ports:
@@ -48,7 +48,8 @@ services:
     volumes:
       - ./mysql-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      # test: ["CMD", "root", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
       interval: 10s
       retries: 50
 
