@@ -60,7 +60,7 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
 
     // TODO: Check why this works
     const filterListsByGroupID = () => {
-        return lists.filter(list => Array.isArray(list.groups) && list.groups.includes(groupID));
+        return lists.filter(list => list.groups.includes(groupID));
     }
 
     const handleOpenDeleteGroup = () => {
