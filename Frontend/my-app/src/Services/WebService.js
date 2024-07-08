@@ -6,11 +6,11 @@ import axios from "axios";
 
 // GET functions
 export const fetchUsers = async () => {
-    return await axios.get("http://127.0.0.1:8000/users/");
+    return await axios.get("http://localhost:8000/users/");
 };
 
 export const fetchEvents = async () => {
-    return await axios.get("http://127.0.0.1:8000/events/");
+    return await axios.get("http://localhost:8000/events/");
 };
 
 export const fetchEventsByUser = async (userID) => {
