@@ -6,9 +6,11 @@ services:
     volumes:
       - ./Frontend/my-app:/frontend-dev
     ports:
-      - "3033:3000"
+      - "3000:3000"
     environment:
       - CHOKIDAR_USEPOLLING=true
+    networks:
+      - progex-frontend
     # depends_on:
     #   - backend
   # was das?????????????????
@@ -26,7 +28,8 @@ services:
     # environment:
     #   - CHOKIDAR_USEPOLLING=true
     networks:
-      - database
+      - progex-database
+      - progex-frontend
       # - default
     depends_on:
       - database
@@ -44,9 +47,9 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - database
+      - progex-database
     volumes:
-      - ./mysql-data:/var/lib/mysql
+      - /mnt/hdd1/progex:/var/lib/mysql
     healthcheck:
       # test: ["CMD", "root", "ping", "-h", "localhost"]
       test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
@@ -54,7 +57,9 @@ services:
       retries: 50
 
 networks:
-  database:
+  progex-database:
+    driver: bridge
+  progex-frontend:
     driver: bridge
 
 # volumes:
