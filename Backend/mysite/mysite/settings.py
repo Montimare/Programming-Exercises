@@ -30,6 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '192.168.178.2',
+    'montilab.duckdns.org',
     'localhost'
 ]
 
