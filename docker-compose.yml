@@ -27,7 +27,7 @@ services:
     #   - CHOKIDAR_USEPOLLING=true
     networks:
       - database
-      - default
+      # - default
     depends_on:
       - database
   # was das?????????????????
