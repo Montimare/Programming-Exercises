@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import List from "@mui/material/List";
-import { fetchEventListsByUser } from "../Services/WebService";
+import { fetchEventListsInGroupsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requestDelete, event, listID }) => {
@@ -27,7 +27,7 @@ const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requ
         // Define an async function inside useEffect
         const getUserEvents = async () => {
             try {
-                const eventListData = await fetchEventListsByUser(selectedUserID)
+                const eventListData = await fetchEventListsInGroupsByUser(selectedUserID)
                     .then(eventListData => {
                         setEventList(eventListData.data); // Update state with fetched user events
                         setLoading(false);

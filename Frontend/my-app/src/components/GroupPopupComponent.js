@@ -1,11 +1,13 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, List, ListItem, ListItemText, MenuItem, OutlinedInput, Select } from "@mui/material";
-import { createGroupMembers, fetchEventListsByUser, fetchUsers } from "../Services/WebService";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, List, ListItem, ListItemText, MenuItem, OutlinedInput, Select, TextField } from "@mui/material";
+import { createGroupMembers, fetchEventListsInGroupsByUser, fetchUsers } from "../Services/WebService";
 import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 
 const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, requestAddLists, requestDeleteGroup, groupName, groupID, selectedUserID }) => {
     const [users, setUsers] = useState([]);
     const [lists, setLists] = useState([]);
+    const [groupLists, setGroupLists] = useState([]);
+    const [selectedLists, setSelectedLists] = useState([]);
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [openAddMembers, setOpenAddMembers] = useState(false);
@@ -31,9 +33,26 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
 
     useEffect(() => {
         // Define an async function inside useEffect
+        const getGroupLists = async () => {
+            try {
+                const groupListData = await fetchEventListsInGroupsByUser(selectedUserID)
+                    .then(groupListData => {
+                        setGroupLists(groupListData.data); // Update state with fetched users
+                        setLoading(false);
+                    }); // Assuming fetchUsers returns a promise
+            } catch (error) {
+                console.error("Failed to fetch event lists:", error);
+            }
+        };
+
+        getGroupLists(); // Call the async function
+    }, []); // Empty dependency array means this effect runs only once
+
+    useEffect(() => {
+        // Define an async function inside useEffect
         const getLists = async () => {
             try {
-                const listData = await fetchEventListsByUser(selectedUserID)
+                const listData = await fetchEventListsInGroupsByUser(selectedUserID)
                     .then(listData => {
                         setLists(listData.data); // Update state with fetched users
                         setLoading(false);
@@ -58,9 +77,8 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
         return users.filter(user => user.groups.includes(groupID));
     };
 
-    // TODO: Check why this works
     const filterListsByGroupID = () => {
-        return lists.filter(list => list.groups.includes(groupID));
+        return groupLists.filter(groupList => groupList.groups.includes(groupID));
     }
 
     const handleOpenDeleteGroup = () => {
@@ -108,7 +126,7 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
         const {
             target: { value },
         } = event;
-        setLists(
+        setSelectedLists(
             // On autofill we get a stringified value.
             typeof value === 'string' ? value.split(',') : value,
         );
@@ -119,7 +137,7 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
     }
 
     const handleAddLists = () => {
-        requestAddLists(lists);
+        requestAddLists(selectedLists);
         setOpenAddLists(false);
     }
 
@@ -148,16 +166,16 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
                             <Button onClick={handleOpenAddMembers}>Add new members...</Button>
                         </ListItem>
                         <ListItem>
-                            <Button>Edit</Button>
+                            <Button onClick={handleOpenEditGroup}>Edit</Button>
                             <Button color="error" onClick={handleOpenDeleteGroup}>Delete</Button>
                         </ListItem>
                     </List>
                     <List>
                         <ListItem>Event lists</ListItem>
                         <Divider />
-                        {filterListsByGroupID().map(list => (
-                            <ListItem key={list.id} value={list.id}>
-                                <ListItemText primary={list.name} />
+                        {filterListsByGroupID().map(groupList => (
+                            <ListItem key={groupList.id} value={groupList.id}>
+                                <ListItemText primary={groupList.name} />
                             </ListItem>
                         ))}
                         <ListItem>
@@ -174,6 +192,26 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
                     <Button color="error">Leave</Button>
                 </DialogActions>
             </Dialog>
+            {openEditGroup && (
+                <Dialog
+                    open={openEditGroup}
+                    onClose={handleCloseEditGroup}
+                >
+                    <DialogTitle>
+                        Edit group
+                    </DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            label={"Enter group name..."}
+                            onChange={(event) => setGroupName(event.target.value)}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseEditGroup}>Cancel</Button>
+                        <Button variant="contained" onClick={requestEdit}>Add</Button>
+                    </DialogActions>
+                </Dialog>
+            )}
             {openDeleteGroup && (
                 <Dialog
                     open={openDeleteGroup}
@@ -236,7 +274,7 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
                             <InputLabel>Enter group lists...</InputLabel>
                             <Select
                                 multiple
-                                value={lists}
+                                value={selectedLists}
                                 onChange={handleListChange}
                                 label="Enter group lists..."
                             >
