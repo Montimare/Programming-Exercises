@@ -98,6 +98,13 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
         }
     }
 
+    const handleAddLists = (selectedLists) => {
+        for(const list of selectedLists) {
+            console.log(list);
+            createGroupLists(selectedGroupID, list);
+        }
+    }
+
     const handleDeleteGroup = () => {
         deleteGroups(selectedGroupID);
     }
@@ -159,6 +166,7 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
                 openPopup={openPopup}
                 handleClosePopup={handleCloseGroup}
                 requestAddMembers={handleAddMembers}
+                requestAddLists={handleAddLists}
                 requestDeleteGroup={handleDeleteGroup}
                 selectedUserID={selectedUserID}
                 groupName={selectedGroupName}

@@ -3,12 +3,13 @@ import { createGroupMembers, fetchEventListsByUser, fetchUsers } from "../Servic
 import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 
-const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, requestDeleteGroup, groupName, groupID, selectedUserID }) => {
+const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, requestAddLists, requestDeleteGroup, groupName, groupID, selectedUserID }) => {
     const [users, setUsers] = useState([]);
     const [lists, setLists] = useState([]);
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [openAddMembers, setOpenAddMembers] = useState(false);
+    const [openAddLists, setOpenAddLists] = useState(false);
     const [openDeleteGroup, setOpenDeleteGroup] = useState(false);
 
     useEffect(() => {
@@ -57,9 +58,10 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
         return users.filter(user => user.groups.includes(groupID));
     };
 
+    // TODO: Check why this works
     const filterListsByGroupID = () => {
-        return lists.filter(list => list.groups.includes(groupID));
-    };
+        return lists.filter(list => Array.isArray(list.groups) && list.groups.includes(groupID));
+    }
 
     const handleOpenDeleteGroup = () => {
         setOpenDeleteGroup(true);
@@ -96,6 +98,29 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
     const handleAddMembers = () => {
         requestAddMembers(members);
         setOpenAddMembers(false);
+    }
+
+    const handleOpenAddLists = () => {
+        setOpenAddLists(true);
+    };
+
+    const handleListChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setLists(
+            // On autofill we get a stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    };
+
+    const handleCloseAddLists = () => {
+        setOpenAddLists(false);
+    }
+
+    const handleAddLists = () => {
+        requestAddLists(lists);
+        setOpenAddLists(false);
     }
 
     return (
@@ -136,7 +161,7 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
                             </ListItem>
                         ))}
                         <ListItem>
-                            <Button onClick={handleOpenAddMembers}>Add new lists...</Button>
+                            <Button onClick={handleOpenAddLists}>Add new lists...</Button>
                         </ListItem>
                         <ListItem>
                             <Button>Edit</Button>
@@ -195,6 +220,35 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
                     <DialogActions>
                         <Button onClick={handleCloseAddMembers}>Cancel</Button>
                         <Button variant="contained" onClick={handleAddMembers}>Apply</Button>
+                    </DialogActions>
+                </Dialog>
+            )}
+            {openAddLists && (
+                <Dialog
+                    open={openAddLists}
+                    onClose={handleCloseAddLists}
+                >
+                    <DialogTitle>
+                        Add new lists
+                    </DialogTitle>
+                    <DialogContent>
+                        <FormControl sx={{ minWidth: 200 }}>
+                            <InputLabel>Enter group lists...</InputLabel>
+                            <Select
+                                multiple
+                                value={lists}
+                                onChange={handleListChange}
+                                label="Enter group lists..."
+                            >
+                                {lists.map(list => (
+                                    <MenuItem key={list.id} value={list.id}>{list.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseAddLists}>Cancel</Button>
+                        <Button variant="contained" onClick={handleAddLists}>Apply</Button>
                     </DialogActions>
                 </Dialog>
             )}

@@ -4,7 +4,8 @@ import axios from "axios";
     PUT in Axios: https://yourblogcoach.com/axios-put-request-in-react/
     More API requests in Axios: https://www.freecodecamp.org/news/axios-react-how-to-make-get-post-and-delete-api-requests/
 
-    TODO: Check if all web requests are correctly written
+    TODO: Add DELETE requests for deleting members and group lists
+    TODO: Fix the groups and group list requests 
 */
 
 // GET functions
@@ -103,7 +104,7 @@ export const createEventLists = async (eventList) => {
     console.log("Sending web request for creating event list");
     console.log("name: " + eventList.name);
     console.log("admin: " + eventList.admin);
-    console.log("event_lists: " + eventList.groups);
+    console.log("groups: " + eventList.groups);
 
     try {
         await axios.post(
