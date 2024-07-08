@@ -6,27 +6,27 @@ import axios from "axios";
 
 // GET functions
 export const fetchUsers = async () => {
-    return await axios.get("http://192.168.178.2:8000/users/");
+    return await axios.get("http://montilab.duckdns.org:8000/users/");
 };
 
 export const fetchEvents = async () => {
-    return await axios.get("http://192.168.178.2:8000/events/");
+    return await axios.get("http://montilab.duckdns.org:8000/events/");
 };
 
 export const fetchEventsByUser = async (userID) => {
-    return await axios.get("http://192.168.178.2:8000/users/" + userID + "/events/");
+    return await axios.get("http://montilab.duckdns.org:8000/users/" + userID + "/events/");
 };
 
 export const fetchEventListsByUser = async (userID) => {
-    return await axios.get("http://192.168.178.2:8000/users/" + userID + "/eventlists/");
+    return await axios.get("http://montilab.duckdns.org:8000/users/" + userID + "/eventlists/");
 };
 
 export const fetchNotificationsByUser = async (userID) => {
-    return await axios.get("http://192.168.178.2:8000/users/" + userID + "/notifications/");
+    return await axios.get("http://montilab.duckdns.org:8000/users/" + userID + "/notifications/");
 };
 
 export const fetchGroupsByUser = async (userID) => {
-    return await axios.get("http://192.168.178.2:8000/users/" + userID + "/groups/");
+    return await axios.get("http://montilab.duckdns.org:8000/users/" + userID + "/groups/");
 }
 
 // POST Functions
@@ -37,7 +37,7 @@ export const createUsers = async (username, email) => {
 
     try {
         await axios.post(
-            "http://192.168.178.2:8000/users/",
+            "http://montilab.duckdns.org:8000/users/",
             {
                 name: username,
                 email: email
@@ -61,7 +61,7 @@ export const createEvents = async (event) => {
 
     try {
         await axios.post(
-            "http://192.168.178.2:8000/events/",
+            "http://montilab.duckdns.org:8000/events/",
             {
                 title: event.title,
                 start: event.start,
@@ -86,7 +86,7 @@ export const editEvents = async (event, eventID, list) => {
         console.log(event.end);
         console.log(event.list);
         await axios.put(
-            "http://192.168.178.2:8000/events/" + eventID + "/",
+            "http://montilab.duckdns.org:8000/events/" + eventID + "/",
             {
                 id: eventID,
                 title: event.title,
