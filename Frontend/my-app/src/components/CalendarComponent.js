@@ -16,7 +16,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button"
 import MenuSidebarComponent from './MenuSidebarComponent';
 import { useLocation, useParams } from "react-router-dom";
-import { createEvents, deleteEvents, editEvents, fetchEventsByUser, fetchOwnedEventListsByUser } from "../Services/WebService";
+import { createEvents, deleteEvents, editEvents, fetchEventsByUser, fetchOwnedEventListsByUser, fetchNotificationsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
 /*
@@ -50,6 +50,8 @@ const CalendarComponent = () => {
 
     // Event-related resources
     const [event, setEvent] = useState([]);
+    const [eventList, setEventList] = useState([]);
+    const [eventID, setEventID] = useState();
     const [listID, setListID] = useState();
 
     // Default for start and end date when clicking on an empty grid
