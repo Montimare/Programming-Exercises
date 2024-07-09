@@ -35,6 +35,7 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
 
     // Rendering
     const [loading, setLoading] = useState(true);
+    const [groupsChangeTracker, setGroupsChangeTracker] = useState(0);
 
     useEffect(() => { }, [selectedGroupName]); // Dependency on selectedGroupName
     useEffect(() => { }, [selectedGroupID]); // Dependency on selectedGroupID
@@ -53,7 +54,7 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
         }
 
         getGroups();    // call the async function
-    }, []); // Empty dependency array means this effect runs only once
+    }, [groupsChangeTracker]); // Empty dependency array means this effect runs only once
 
     useEffect(() => {
         const getEventLists = async () => {
@@ -79,6 +80,10 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
         );
     }
 
+    const updateGroups = () => {
+        setGroupsChangeTracker(prev => prev + 1);
+    }
+
     // Group Popup
     const handleOpenGroup = (groupName, groupID) => {
         setSelectedGroupName(groupName);
@@ -99,38 +104,44 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
         setOpenCreateGroup(false);
     }
 
-    const handleCreateGroup = (groupName) => {
-        createGroups({
+    const handleCreateGroup = async (groupName) => {
+        await createGroups({
             name: groupName,
             admin: selectedUserID
         });
+        updateGroups();
     }
 
-    const handleEditGroup = (groupID, groupName, adminID) => {
-        editGroups({
+    const handleEditGroup = async (groupID, groupName, adminID) => {
+        await editGroups({
             id: groupID,
             name: groupName,
             admin: adminID
         });
+        setSelectedGroupName(groupName);
+        updateGroups();
     }
 
     // Add members
-    const handleAddMembers = (selectedMembers) => {
+    const handleAddMembers = async (selectedMembers) => {
         for (const member of selectedMembers) {
-            createGroupMembers(member, selectedGroupID);
+            await createGroupMembers(member, selectedGroupID);
         }
+        updateGroups();
     }
 
     // Add lists
-    const handleAddLists = (selectedLists) => {
+    const handleAddLists = async (selectedLists) => {
         for (const list of selectedLists) {
-            createGroupLists(selectedGroupID, list);
+            await createGroupLists(selectedGroupID, list);
         }
+        updateGroups();
     }
 
     // Delete Group
-    const handleDeleteGroup = () => {
-        deleteGroups(selectedGroupID);
+    const handleDeleteGroup = async () => {
+        await deleteGroups(selectedGroupID);
+        updateGroups();
     }
 
     // List Popup

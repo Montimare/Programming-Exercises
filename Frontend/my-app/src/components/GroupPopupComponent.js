@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, List, ListItem, ListItemText, MenuItem, OutlinedInput, Select, TextField } from "@mui/material";
-import { createGroupMembers, fetchEventListsInGroupsByUser, fetchUsers } from "../Services/WebService";
+import { createGroupMembers, fetchEventListsInGroupsByUser, fetchOwnedEventListsByUser, fetchUsers } from "../Services/WebService";
 import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 
@@ -7,6 +7,7 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
     // Django API Resources
     const [users, setUsers] = useState([]);
     const [lists, setLists] = useState([]);
+    const [ownedLists, setOwnedLists] = useState([]);
 
     // Group Elements
     const [members, setMembers] = useState([]);
@@ -68,6 +69,23 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
                     }); // Assuming fetchUsers returns a promise
             } catch (error) {
                 console.error("Failed to fetch event lists:", error);
+            }
+        };
+
+        getLists(); // Call the async function
+    }, []); // Empty dependency array means this effect runs only once
+
+    useEffect(() => {
+        // Define an async function inside useEffect
+        const getOwnedLists = async () => {
+            try {
+                const ownedListData = await fetchOwnedEventListsByUser(selectedUserID)
+                    .then(listData => {
+                        setOwnedLists(ownedListData.data); // Update state with fetched users
+                        setLoading(false);
+                    }); // Assuming fetchUsers returns a promise
+            } catch (error) {
+                console.error("Failed to fetch owned event lists:", error);
             }
         };
 
@@ -214,7 +232,7 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
                     onClose={handleCloseEdit}
                 >
                     <DialogTitle>
-                        Edit group
+                        Edit group name
                     </DialogTitle>
                     <DialogContent>
                         <TextField
@@ -225,7 +243,7 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCloseEdit}>Cancel</Button>
-                        <Button variant="contained" onClick={handleEdit}>Add</Button>
+                        <Button variant="contained" onClick={handleEdit}>Apply</Button>
                     </DialogActions>
                 </Dialog>
             )}

@@ -2,18 +2,18 @@ import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogT
 import { useEffect, useState } from "react";
 import { fetchUsers } from "../Services/WebService";
 
-const GroupCreateComponent = ({ openCreateGroup, handleCloseCreateGroup, requestCreate }) => {
+const GroupCreateComponent = ({ open, handleClose, requestCreate }) => {
     const [groupName, setGroupName] = useState("My Group");
 
     const handleCreate = () => {
         requestCreate(groupName);
-        handleCloseCreateGroup();
+        handleClose();
     };
 
     return (
         <Dialog
-            open={openCreateGroup}
-            onClose={handleCloseCreateGroup}
+            open={open}
+            onClose={handleClose}
         >
             <DialogTitle>
                 Create new group
@@ -25,7 +25,7 @@ const GroupCreateComponent = ({ openCreateGroup, handleCloseCreateGroup, request
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseCreateGroup}>Cancel</Button>
+                <Button onClick={handleClose}>Cancel</Button>
                 <Button variant="contained" onClick={handleCreate}>Add</Button>
             </DialogActions>
         </Dialog>
