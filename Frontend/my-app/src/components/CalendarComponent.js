@@ -11,6 +11,9 @@ import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer"
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button"
 import MenuSidebarComponent from './MenuSidebarComponent';
 import { useLocation, useParams } from "react-router-dom";
 import { createEvents, editEvents, fetchEventsByUser, fetchNotificationsByUser } from "../Services/WebService";
@@ -130,29 +133,41 @@ const CalendarComponent = () => {
         const notificationFetcher = async () => {
             try {
                 const notificationDataRaw = await fetchNotificationsByUser(selectedUserID)
-                    .then(notificationDataRaw => {
-                        setNotificationData(notificationDataRaw.data);
-                        console.log("Notification data fetched:", notificationDataRaw.data);
-                        console.log("Notification data fetched:", notificationData);
-                    });
+                setNotificationData(notificationDataRaw.data);
             } catch (error) {
                 console.log("Failed to fetch notifications:", error);
             }
         };
-
-        const notificationLogic = () => {
-
-        };
-
-        notificationLogic(); // do at start
-        const notificationInterval = setInterval(notificationLogic, 60000); // do every minute
-        notificationFetcher(); // do at start
+            
+        
+        notificationFetcher();
+        console.log("Notification data:", notificationData);
         const fetchInterval = setInterval(notificationFetcher, 600000); // do every 10 minutes
-        return () => { // prevent memory leaks
-            clearInterval(notificationInterval); 
-            clearInterval(fetchInterval);
-        };
+
+        return () => clearInterval(fetchInterval); // prevent memory leaks
     }, []);
+    
+    useEffect(() => {
+        if (!notificationData) return;
+
+        const notificationLogic = async () => {
+            const currentTime = new Date();
+            
+            notificationData.forEach(notification => {
+                const notificationTime = new Date(notification.time);
+                
+                if (notificationTime <= currentTime) {
+                    setNotificationDisplay(notification.event);
+                    setIsNotificationDataOpen(true);
+                }
+            });
+        };
+        
+        notificationLogic();
+        const notificationInterval = setInterval(notificationLogic, 60000); // do every minute
+
+        return () => clearInterval(notificationInterval); // prevent memory leaks
+    }, [notificationData]);
 
     const handleDateClick = (info) => {
         setClickedDate(info.date);
@@ -316,7 +331,7 @@ const CalendarComponent = () => {
                             Notification
                         </DialogTitle>
                         <DialogContent>
-                            {notificationDisplay}
+                            {notificationDisplay + " is starting now!"}
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => setIsNotificationDataOpen(false)}>Close</Button>

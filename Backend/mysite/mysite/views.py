@@ -66,6 +66,16 @@ class EventViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveMod
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = EventSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        event = serializer.save()
+
+        notification = Notification(event=event, time=event.start)
+        notification.save()
+
+        return Response(serializer.data)
+
 
 class EventListViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = EventList.objects.all()
