@@ -167,9 +167,7 @@ const CalendarComponent = () => {
                 if (notificationTimeInBerlin <= currentTimeInBerlin) {
                     setNotificationDisplay(notification.event);
                     setIsNotificationDataOpen(true);
-                    console.log("Notification displayed");
-                } else {
-                    console.log("No notifications to display");
+                    // Hier noch Notification löschen
                 }
             });
         };
