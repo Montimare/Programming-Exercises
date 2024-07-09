@@ -9,45 +9,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import List from "@mui/material/List";
-import { fetchEventListsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, clickedDate }) => {
+const EventAddComponent = ({ selectedUserID, ownedEventLists, open, setOpen, sendEventData, clickedDate }) => {
     const [text, setText] = useState("My Event");
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [startDate, setStartDate] = useState(dayjs(clickedDate).format("YYYY-MM-DD"));
     const [endDate, setEndDate] = useState(dayjs(clickedDate).format("YYYY-MM-DD"));
-    const [eventList, setEventList] = useState([]);
     const [selectedList, setSelectedList] = useState();
-    const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        // Define an async function inside useEffect
-        const getUserEvents = async () => {
-            try {
-                const eventListData = await fetchEventListsByUser(selectedUserID)
-                    .then(eventListData => {
-                        console.log("FETCHED DATA: ");
-                        console.log(eventListData.data);
-                        setEventList(eventListData.data); // Update state with fetched user events
-                        setLoading(false);
-                    }); // Assuming fetchEventsByUser returns a promise
-            } catch (error) {
-                console.error("Failed to fetch events for this user:", error);
-            }
-        };
-
-        getUserEvents(); // Call the async function
-    }, []); // Empty dependency array means this effect runs only once
-
-    if (loading) {
-        return (
-            <div className="LoadingContainer">
-                <CircularProgress />
-            </div>
-        );
-    }
 
     const handleClose = () => {
         setOpen(false);
@@ -64,11 +34,9 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
     const handleSave = () => {
         setOpen(false);
         sendEventData(text, startTime, endTime, startDate, endDate, selectedList);
-        sendEventData(text, startTime, endTime, startDate, endDate, selectedList);
         emptyLocalData();
     }
 
-    //TODO: Change "Group" section to "Event List"
     return (
         <Dialog
             open={open}
@@ -99,7 +67,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose start time..."
-                                onChange={(newValue) => setStartTime(newValue.format("HH:mm:ss"))}
+                                onChange={(newValue) => setStartTime(newValue.format("HH:mm:ssZ"))}
                             />
                         </LocalizationProvider>
                     </ListItem>
@@ -114,7 +82,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose end time..."
-                                onChange={(newValue) => setEndTime(newValue.format("HH:mm:ss"))}
+                                onChange={(newValue) => setEndTime(newValue.format("HH:mm:ssZ"))}
                             />
                         </LocalizationProvider>
                     </ListItem>
@@ -122,11 +90,11 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
                         <FormControl sx={{ minWidth: 200 }}>
                             <InputLabel>Choose event list...</InputLabel>
                             <Select
-                                value={selectedList}
+                                value={selectedList || ''}
                                 onChange={(event) => setSelectedList(event.target.value)}
                                 label={"Choose event list..."}
                             >
-                                {eventList.map(eventListItem => (
+                                {ownedEventLists.map(eventListItem => (
                                     <MenuItem key={eventListItem.id} value={eventListItem.id}>
                                         {eventListItem.name}
                                     </MenuItem>
@@ -144,4 +112,4 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
     );
 }
 
-export default EventPopupComponent;
+export default EventAddComponent;

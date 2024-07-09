@@ -53,3 +53,9 @@ h1 {
     margin-top: 1px;
     margin-bottom: 0px;
 }
+
+.LoadingContainer {
+    display: flex;
+    margin-top: 50vh;
+    justify-content: center;
+}
