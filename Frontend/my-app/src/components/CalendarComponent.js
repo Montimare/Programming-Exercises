@@ -9,9 +9,11 @@ import EventEditComponent from './EventEditComponent';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer"
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 import MenuSidebarComponent from './MenuSidebarComponent';
 import { useLocation, useParams } from "react-router-dom";
-import { createEvents, editEvents, fetchEventsByUser } from "../Services/WebService";
+import { createEvents, editEvents, fetchEventsByUser, fetchNotificationsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
 /*
@@ -99,6 +101,11 @@ const CalendarComponent = () => {
     // Loading screen
     const [loading, setLoading] = useState(true);
 
+    // Notification data
+    const [notificationData, setNotificationData] = useState();
+    const [notificationDisplay, setNotificationDisplay] = useState();
+    const [isNotificationDataOpen, setIsNotificationDataOpen] = useState(false);
+
     useEffect(() => { }, [event]);
 
     useEffect(() => {
@@ -117,6 +124,35 @@ const CalendarComponent = () => {
 
         getUserEvents(); // Call the async function
     }, []); // Empty dependency array means this effect runs only once
+
+    useEffect(() => {
+
+        const notificationFetcher = async () => {
+            try {
+                const notificationDataRaw = await fetchNotificationsByUser(selectedUserID)
+                    .then(notificationDataRaw => {
+                        setNotificationData(notificationDataRaw.data);
+                        console.log("Notification data fetched:", notificationDataRaw.data);
+                        console.log("Notification data fetched:", notificationData);
+                    });
+            } catch (error) {
+                console.log("Failed to fetch notifications:", error);
+            }
+        };
+
+        const notificationLogic = () => {
+
+        };
+
+        notificationLogic(); // do at start
+        const notificationInterval = setInterval(notificationLogic, 60000); // do every minute
+        notificationFetcher(); // do at start
+        const fetchInterval = setInterval(notificationFetcher, 600000); // do every 10 minutes
+        return () => { // prevent memory leaks
+            clearInterval(notificationInterval); 
+            clearInterval(fetchInterval);
+        };
+    }, []);
 
     const handleDateClick = (info) => {
         setClickedDate(info.date);
@@ -220,10 +256,6 @@ const CalendarComponent = () => {
         return <CircularProgress />
     }
 
-    if (loading) {
-        return <CircularProgress />
-    }
-
     return (
         <>
             <header className="CalendarTitle">
@@ -277,6 +309,19 @@ const CalendarComponent = () => {
                             selectedUserID={selectedUserID}
                         />
                     </Drawer>
+                )}
+                { isNotificationDataOpen && (
+                    <Dialog>
+                        <DialogTitle>
+                            Notification
+                        </DialogTitle>
+                        <DialogContent>
+                            {notificationDisplay}
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setIsNotificationDataOpen(false)}>Close</Button>
+                        </DialogActions>
+                    </Dialog>
                 )}
             </body>
             <footer className="CalendarFooter">

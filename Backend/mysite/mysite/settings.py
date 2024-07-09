@@ -88,28 +88,23 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     # localhost
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'calendar_app',
+    #     'USER': 'root',
+    #     'PASSWORD': os.getenv('DB_PASSWORD'),
+    #     'HOST': 'database',
+    #     'PORT': '3306',
+    # }
+    # # niklas
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'calendar_app',
-        'USER': 'root',
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': 'database',
+        'USER': 'calendar_app',
+        'PASSWORD': os.getenv('NIKLAS_DB'),
+        'HOST': 'descus.de',
         'PORT': '3306',
-    },
-    # # niklas
-    # 'niklas': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'calendar_app',
-    #     'USER': 'calendar_app',
-    #     'PASSWORD': os.getenv('NIKLAS_DB'),
-    #     'HOST': 'descus.de',
-    #     'PORT': '3306',
-    # },
-    # # marc
-    # 'TBA': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'calendar_app',
-    # }
+    }
 }
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
