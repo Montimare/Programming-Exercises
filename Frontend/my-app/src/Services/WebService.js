@@ -184,13 +184,13 @@ export const editEvents = async (event, eventID, list) => {
 export const editGroups = async (group) => {
     try {
         console.log("Sending web request for editing group");
-        console.log("id:" + group.id)
-        console.log("name:" + group.name);
+        console.log("id: " + group.id)
+        console.log("name: " + group.name);
         await axios.put(
             "http://127.0.0.1:8000/groups/" + group.id + "/",
             {
-                id: group.id,
                 name: group.name,
+                admin: group.admin
             }
         );
     } catch (error) {
@@ -201,12 +201,14 @@ export const editGroups = async (group) => {
 export const editEventLists = async (eventList) => {
     try {
         console.log("Sending web request for editing event list");
-        console.log(eventList.name);
+        console.log("name: " + eventList.name);
+        console.log("admin: " + eventList.admin);
         await axios.put(
             "http://127.0.0.1:8000/eventlists/" + eventList.id + "/",
             {
                 id: eventList.id,
-                name: eventList.name
+                name: eventList.name,
+                admin: eventList.admin
             }
         );
     } catch (error) {

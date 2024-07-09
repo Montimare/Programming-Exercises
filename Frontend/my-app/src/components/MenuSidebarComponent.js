@@ -8,28 +8,33 @@ import { Link, useLocation } from "react-router-dom";
 import { createEventLists, createGroupLists, createGroupMembers, createGroups, deleteEventLists, deleteGroups, editEventLists, editGroups, fetchEventListsInGroupsByUser, fetchGroupsByUser, fetchOwnedEventListsByUser } from "../Services/WebService";
 import GroupPopupComponent from "./GroupPopupComponent"
 import GroupCreateComponent from "./GroupCreateComponent";
+import ListPopupComponent from "./ListPopupComponent";
+import ListCreateComponent from "./ListCreateComponent";
 
 /*
     TODO: Create buttons for each event list + the event list creating popup
 */
 
 const MenuSidebarComponent = ({ selectedUserID }) => {
+    // Username and email
     const location = useLocation();
     const { username, email } = location.state || "";
+    
+    // Group Management
     const [groups, setGroups] = useState([]);
-    const [eventLists, setEventLists] = useState([]);
-    const [selectedList, setSelectedList] = useState();
     const [selectedGroupID, setSelectedGroupID] = useState();
     const [selectedGroupName, setSelectedGroupName] = useState();
-    const [listName, setListName] = useState();
-    const [loading, setLoading] = useState(true);
     const [openGroup, setOpenGroup] = useState(false);
     const [openCreateGroup, setOpenCreateGroup] = useState(false);
-    const [openEditGroup, setOpenEditGroup] = useState(false);
+
+    // Event List Management
+    const [eventLists, setEventLists] = useState([]);
+    const [selectedList, setSelectedList] = useState();
     const [openList, setOpenList] = useState(false);
     const [openCreateList, setOpenCreateList] = useState(false);
-    const [openEditList, setOpenEditList] = useState(false);
-    const [openDeleteList, setOpenDeleteList] = useState(false);
+
+    // Rendering
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => { }, [selectedGroupName]); // Dependency on selectedGroupName
     useEffect(() => { }, [selectedGroupID]); // Dependency on selectedGroupID
@@ -101,10 +106,11 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
         });
     }
 
-    const handleEditGroup = (groupID, groupName) => {
+    const handleEditGroup = (groupID, groupName, adminID) => {
         editGroups({
             id: groupID,
-            name: groupName
+            name: groupName,
+            admin: adminID
         });
     }
 
@@ -146,7 +152,7 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
         setOpenCreateList(false);
     }
 
-    const handleCreateList = () => {
+    const handleCreateList = (listName) => {
         createEventLists({
             name: listName,
             admin: selectedUserID
@@ -154,35 +160,17 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
         setOpenCreateList(false);
     }
 
-    // Edit List Popup
-    const handleOpenEditList = () => {
-        setOpenEditList(true);
-    }
-
-    const handleCloseEditList = () => {
-        setOpenEditList(false);
-    }
-
-    const handleEditList = () => {
+    const handleEditList = (listName) => {
         editEventLists({
             id: selectedList.id,
-            name: listName
+            name: listName,
+            admin: selectedUserID
         })
         setOpenCreateList(false);
     }
 
-    // Delete List Popup
-    const handleOpenDeleteList = () => {
-        setOpenDeleteList(true);
-    }
-
-    const handleCloseDeleteList = () => {
-        setOpenDeleteList(false);
-    }
-
     const handleDeleteList = () => {
         deleteEventLists(selectedList.id)
-        setOpenDeleteList(false);
     }
 
     return (
@@ -239,108 +227,35 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
                 </List>
             </Box>
             {openGroup && (<GroupPopupComponent
-                openPopup={openGroup}
-                handleClosePopup={handleCloseGroup}
+                open={openGroup}
+                handleClose={handleCloseGroup}
                 requestAddMembers={handleAddMembers}
                 requestAddLists={handleAddLists}
-                requestEditGroup={handleEditGroup}
-                requestDeleteGroup={handleDeleteGroup}
+                requestEdit={handleEditGroup}
+                requestDelete={handleDeleteGroup}
                 selectedUserID={selectedUserID}
                 groupName={selectedGroupName}
                 groupID={selectedGroupID}
             />)}
             {openCreateGroup && (<GroupCreateComponent
-                openCreateGroup={openCreateGroup}
-                handleCloseCreateGroup={handleCloseCreateGroup}
+                open={openCreateGroup}
+                handleClose={handleCloseCreateGroup}
                 requestCreate={handleCreateGroup}
             />)}
-            {openEditGroup && (<GroupEditComponent
-                openEditGroup={openEditGroup}
-                handleCloseEditGroup={handleCloseEditGroup}
-                requestEdit={handleEditGroup}
+            {openList && (<ListPopupComponent
+                open={openList}
+                selectedList={selectedList}
+                handleClose={handleCloseList}
+                requestEdit={handleEditList}
+                requestDelete={handleDeleteList}
+                username={username}
+                email={email}
             />)}
-            {openList && (
-                <Dialog
-                    open={openList}
-                    onClose={handleCloseList}
-                >
-                    <DialogTitle>
-                        {selectedList.name}
-                    </DialogTitle>
-                    <DialogContent>
-                        <List>
-                            <ListItem>Admin</ListItem>
-                            <Divider />
-                            <ListItem>
-                                <ListItemText
-                                    primary={username}
-                                    secondary={email}
-                                />
-                            </ListItem>
-                        </List>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseList}>Cancel</Button>
-                        <Button onClick={handleOpenEditList}>Edit</Button>
-                        <Button color="error" onClick={handleOpenDeleteList}>Delete</Button>
-                    </DialogActions>
-                </Dialog>
-            )}
-            {openCreateList && (
-                <Dialog
-                    open={openCreateList}
-                    onClose={handleCloseCreateList}
-                >
-                    <DialogTitle>Create a new list</DialogTitle>
-                    <DialogContent>
-                        <TextField
-                            label={"Enter list name..."}
-                            onChange={(event) => setListName(event.target.value)}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseCreateList}>Cancel</Button>
-                        <Button variant="contained" onClick={handleCreateList}>Add</Button>
-                    </DialogActions>
-                </Dialog>
-            )}
-            {openEditList && (
-                <Dialog
-                    open={openEditList}
-                    onClose={handleCloseEditList}
-                >
-                    <DialogTitle>Edit list</DialogTitle>
-                    <DialogContent>
-                        <TextField
-                            label={"Enter list name..."}
-                            value={selectedList.name}
-                            onChange={(event) => setListName(event.target.value)}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseEditList}>Cancel</Button>
-                        <Button variant="contained" onClick={handleEditList}>Add</Button>
-                    </DialogActions>
-                </Dialog>
-            )}
-            {openDeleteList && (
-                <Dialog
-                    open={openDeleteList}
-                    onClose={handleCloseDeleteList}
-                >
-                    <DialogTitle>
-                        Delete "{selectedList.name}"?
-                    </DialogTitle>
-                    <DialogContent>
-                        Are you sure you want to delete this list?
-                        If this event is deleted, it cannot be recovered.
-                    </DialogContent>
-                    <DialogActions>
-                        <Button variant="text" onClick={handleDeleteList}>Yes</Button>
-                        <Button onClick={handleCloseDeleteList}>No</Button>
-                    </DialogActions>
-                </Dialog>
-            )}
+            {openCreateList && (<ListCreateComponent
+                open={openCreateList}
+                requestCreate={handleCreateList}
+                handleClose={handleCloseCreateList}
+            />)}
         </>
     );
 }

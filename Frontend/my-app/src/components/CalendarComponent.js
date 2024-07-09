@@ -4,7 +4,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import EventPopupComponent from "./EventPopupComponent";
+import EventAddComponent from "./EventAddComponent";
 import EventEditComponent from './EventEditComponent';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from "@mui/material/IconButton";
@@ -34,27 +34,27 @@ import CircularProgress from "@mui/material/CircularProgress";
 const CalendarComponent = () => {
     const calendarRef = useRef(null);
 
-    // User data
+    // User data fetched from the user selection
     const [selectedUserID, setSelectedUserID] = useState(useParams().id);
     const location = useLocation();
     const username = location.state?.username || "";
 
-    // Event add and modify popup openers
-    const [openAddEvent, setOpenAddEvent] = useState(false);
-    const [openEditEvent, setOpenEditEvent] = useState(false);
+    // All events fetched from Django's API
+    const [eventList, setEventList] = useState();
 
-    // Menu sidebar opener
-    const [openDrawer, setOpenDrawer] = useState(false);
-
-    // Event-related
+    // Event-related resources
     const [event, setEvent] = useState([]);
     const [listID, setListID] = useState();
-    const [eventList, setEventList] = useState();
+
+    // Default for start and end date when clicking on an empty grid
     const [clickedDate, setClickedDate] = useState(false);
 
-    // Loading screen
+    // Rendering
     const [eventsChangeTracker, setEventsChangeTracker] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [openAddEvent, setOpenAddEvent] = useState(false);
+    const [openEditEvent, setOpenEditEvent] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState(false);
 
 
     useEffect(() => { }, [event]);
@@ -74,7 +74,7 @@ const CalendarComponent = () => {
         };
 
         getUserEvents(); // Call the async function
-    }, [eventsChangeTracker]); // Empty dependency array means this effect runs only once
+    }, [eventsChangeTracker]); // This effect runs every time the tracker is updated
 
     const updateEventList = () => {
         setEventsChangeTracker(prev => prev + 1);
@@ -87,7 +87,7 @@ const CalendarComponent = () => {
 
     const handleEventClick = (info) => {
         info.event.setEnd(info.event.end === null ? info.event.start : info.event.end);
-        // Finding corresponding event in the Django API's database to get list ID
+        // Finds corresponding event in Django API's database to get list ID
         let foundDjangoEvent = eventList.find(djangoEvent => djangoEvent.id == info.event.id);
         if (foundDjangoEvent) {
             setEvent(info.event);
@@ -208,7 +208,7 @@ const CalendarComponent = () => {
                         dateClick={handleDateClick}
                     />
                     {openAddEvent && (
-                        <EventPopupComponent
+                        <EventAddComponent
                             selectedUserID={selectedUserID}
                             open={openAddEvent}
                             setOpen={setOpenAddEvent}

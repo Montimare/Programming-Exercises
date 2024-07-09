@@ -9,10 +9,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import List from "@mui/material/List";
-import { fetchEventListsInGroupsByUser } from "../Services/WebService";
+import { fetchOwnedEventListsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, clickedDate }) => {
+const EventAddComponent = ({ selectedUserID, open, setOpen, sendEventData, clickedDate }) => {
     const [text, setText] = useState("My Event");
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
@@ -26,7 +26,7 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
         // Define an async function inside useEffect
         const getUserEvents = async () => {
             try {
-                const eventListData = await fetchEventListsInGroupsByUser(selectedUserID)
+                const eventListData = await fetchOwnedEventListsByUser(selectedUserID)
                     .then(eventListData => {
                         setEventList(eventListData.data); // Update state with fetched user events
                         setLoading(false);
@@ -141,4 +141,4 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
     );
 }
 
-export default EventPopupComponent;
+export default EventAddComponent;

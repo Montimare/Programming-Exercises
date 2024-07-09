@@ -42,7 +42,7 @@ const UserRegistrationComponent = () => {
                             The email you are trying to write already exists.
                         </DialogContent>
                         <DialogActions>
-                            <Button autoFocus variant="contained" onClick={handleClose}>OK</Button>
+                            <Button onClick={handleClose}>OK</Button>
                         </DialogActions>
                     </Dialog>
                 )}

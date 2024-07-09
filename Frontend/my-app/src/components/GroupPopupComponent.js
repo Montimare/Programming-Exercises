@@ -3,15 +3,24 @@ import { createGroupMembers, fetchEventListsInGroupsByUser, fetchUsers } from ".
 import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 
-const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, requestAddLists, requestDeleteGroup, groupName, groupID, selectedUserID }) => {
+const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddLists, requestEdit, requestDelete, selectedUserID, groupName, groupID }) => {
+    // Django API Resources
     const [users, setUsers] = useState([]);
     const [lists, setLists] = useState([]);
-    const [groupLists, setGroupLists] = useState([]);
-    const [selectedLists, setSelectedLists] = useState([]);
+
+    // Group Elements
     const [members, setMembers] = useState([]);
+    const [groupLists, setGroupLists] = useState([]);
+
+    // Editor Variables
+    const [selectedLists, setSelectedLists] = useState([]);
+    const [name, setName] = useState(groupName);
+
+    // Rendering
     const [loading, setLoading] = useState(true);
     const [openAddMembers, setOpenAddMembers] = useState(false);
     const [openAddLists, setOpenAddLists] = useState(false);
+    const [openEditGroup, setOpenEditGroup] = useState(false);
     const [openDeleteGroup, setOpenDeleteGroup] = useState(false);
 
     useEffect(() => {
@@ -81,18 +90,31 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
         return groupLists.filter(groupList => groupList.groups.includes(groupID));
     }
 
-    const handleOpenDeleteGroup = () => {
+    const handleOpenEdit = () => {
+        setOpenEditGroup(true);
+    };
+
+    const handleCloseEdit = () => {
+        setOpenEditGroup(false);
+    };
+
+    const handleEdit = () => {
+        requestEdit(groupID, name, selectedUserID);
+        setOpenEditGroup(false);
+    }
+
+    const handleOpenDelete = () => {
         setOpenDeleteGroup(true);
     };
 
-    const handleCloseDeleteGroup = () => {
+    const handleCloseDelete = () => {
         setOpenDeleteGroup(false);
     };
 
     const handleDelete = () => {
         setOpenDeleteGroup(false);
-        handleClosePopup();
-        requestDeleteGroup();
+        handleClose();
+        requestDelete();
     };
 
     const handleOpenAddMembers = () => {
@@ -144,8 +166,8 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
     return (
         <>
             <Dialog
-                open={openPopup}
-                onClose={handleClosePopup}
+                open={open}
+                onClose={handleClose}
             >
                 <DialogTitle>
                     {groupName}
@@ -165,10 +187,6 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
                         <ListItem>
                             <Button onClick={handleOpenAddMembers}>Add new members...</Button>
                         </ListItem>
-                        <ListItem>
-                            <Button onClick={handleOpenEditGroup}>Edit</Button>
-                            <Button color="error" onClick={handleOpenDeleteGroup}>Delete</Button>
-                        </ListItem>
                     </List>
                     <List>
                         <ListItem>Event lists</ListItem>
@@ -181,21 +199,19 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
                         <ListItem>
                             <Button onClick={handleOpenAddLists}>Add new lists...</Button>
                         </ListItem>
-                        <ListItem>
-                            <Button>Edit</Button>
-                            <Button color="error" onClick={handleOpenDeleteGroup}>Delete</Button>
-                        </ListItem>
                     </List>
+                    <Button onClick={handleOpenEdit}>Edit</Button>
+                    <Button color="error" onClick={handleOpenDelete}>Delete</Button>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClosePopup}>Cancel</Button>
+                    <Button onClick={handleClose}>Cancel</Button>
                     <Button color="error">Leave</Button>
                 </DialogActions>
             </Dialog>
             {openEditGroup && (
                 <Dialog
                     open={openEditGroup}
-                    onClose={handleCloseEditGroup}
+                    onClose={handleCloseEdit}
                 >
                     <DialogTitle>
                         Edit group
@@ -203,19 +219,20 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
                     <DialogContent>
                         <TextField
                             label={"Enter group name..."}
-                            onChange={(event) => setGroupName(event.target.value)}
+                            defaultValue={groupName}
+                            onChange={(event) => setName(event.target.value)}
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleCloseEditGroup}>Cancel</Button>
-                        <Button variant="contained" onClick={requestEdit}>Add</Button>
+                        <Button onClick={handleCloseEdit}>Cancel</Button>
+                        <Button variant="contained" onClick={handleEdit}>Add</Button>
                     </DialogActions>
                 </Dialog>
             )}
             {openDeleteGroup && (
                 <Dialog
                     open={openDeleteGroup}
-                    onClose={handleCloseDeleteGroup}
+                    onClose={handleCloseDelete}
                 >
                     <DialogTitle>
                         Delete "{groupName}"?
@@ -226,7 +243,7 @@ const GroupPopupComponent = ({ openPopup, handleClosePopup, requestAddMembers, r
                     </DialogContent>
                     <DialogActions>
                         <Button variant="text" onClick={handleDelete}>Yes</Button>
-                        <Button onClick={handleCloseDeleteGroup}>No</Button>
+                        <Button onClick={handleCloseDelete}>No</Button>
                     </DialogActions>
                 </Dialog>
             )}
