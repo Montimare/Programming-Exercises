@@ -141,7 +141,6 @@ const CalendarComponent = () => {
             
         
         notificationFetcher();
-        console.log("Notification data:", notificationData);
         const fetchInterval = setInterval(notificationFetcher, 600000); // do every 10 minutes
 
         return () => clearInterval(fetchInterval); // prevent memory leaks
@@ -149,16 +148,28 @@ const CalendarComponent = () => {
     
     useEffect(() => {
         if (!notificationData) return;
+        console.log(notificationData);
 
         const notificationLogic = async () => {
             const currentTime = new Date();
+            currentTime.setTime(currentTime.getTime() + currentTime.getTimezoneOffset()*60*1000); // Adjust for timezone offset
+            const berlinOffset = 2 * 60 * 60 * 1000; // CEST (Central European Summer Time) UTC +2 hours
+            const currentTimeInBerlin = new Date(currentTime.getTime() + berlinOffset);
+    
             
             notificationData.forEach(notification => {
-                const notificationTime = new Date(notification.time);
-                
-                if (notificationTime <= currentTime) {
+                const notificationTime = new Date(notification.time); // Assuming 'notification.time' is in a standard format
+                notificationTime.setTime(notificationTime.getTime()); // Adjust for timezone offset
+                const notificationTimeInBerlin = new Date(notificationTime.getTime());
+
+                console.log(notificationTimeInBerlin);
+                console.log(currentTimeInBerlin);
+                if (notificationTimeInBerlin <= currentTimeInBerlin) {
                     setNotificationDisplay(notification.event);
                     setIsNotificationDataOpen(true);
+                    console.log("Notification displayed");
+                } else {
+                    console.log("No notifications to display");
                 }
             });
         };
@@ -325,19 +336,19 @@ const CalendarComponent = () => {
                         />
                     </Drawer>
                 )}
-                { isNotificationDataOpen && (
-                    <Dialog>
-                        <DialogTitle>
-                            Notification
-                        </DialogTitle>
-                        <DialogContent>
-                            {notificationDisplay + " is starting now!"}
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => setIsNotificationDataOpen(false)}>Close</Button>
-                        </DialogActions>
-                    </Dialog>
-                )}
+                
+                <Dialog open={isNotificationDataOpen}>
+                    <DialogTitle>
+                        Notification
+                    </DialogTitle>
+                    <DialogContent>
+                        {notificationDisplay + " is starting now!"}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setIsNotificationDataOpen(false)}>Close</Button>
+                    </DialogActions>
+                </Dialog>
+                
             </body>
             <footer className="CalendarFooter">
                 © 2024 ProgExTRAORDINAIRE
