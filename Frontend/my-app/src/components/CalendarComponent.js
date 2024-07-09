@@ -340,7 +340,6 @@ const CalendarComponent = () => {
                         />
                     </Drawer>
                 )}
-            </div>
                 
                 <Dialog open={isNotificationDataOpen}> {/* Notification Dialog */}
                     <DialogTitle>
@@ -354,7 +353,7 @@ const CalendarComponent = () => {
                     </DialogActions>
                 </Dialog>
                 
-            </body>
+            </div>
             <footer className="CalendarFooter">
                 © 2024 ProgExTRAORDINAIRE
             </footer>
