@@ -128,7 +128,7 @@ const CalendarComponent = () => {
         getUserEvents(); // Call the async function
     }, []); // Empty dependency array means this effect runs only once
 
-    useEffect(() => {
+    useEffect(() => { // Fetch notifications
 
         const notificationFetcher = async () => {
             try {
@@ -146,7 +146,7 @@ const CalendarComponent = () => {
         return () => clearInterval(fetchInterval); // prevent memory leaks
     }, []);
     
-    useEffect(() => {
+    useEffect(() => { // Display notifications
         if (!notificationData) return;
         console.log(notificationData);
 
