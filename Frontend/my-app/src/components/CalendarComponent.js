@@ -62,6 +62,12 @@ const CalendarComponent = () => {
     const [openEditEvent, setOpenEditEvent] = useState(false);
     const [openDrawer, setOpenDrawer] = useState(false);
 
+    // Notification data
+    const [notificationData, setNotificationData] = useState();
+    const [notificationDisplay, setNotificationDisplay] = useState();
+    const [isNotificationDataOpen, setIsNotificationDataOpen] = useState(false);
+
+
 
     useEffect(() => { }, [event]);
 
@@ -113,24 +119,24 @@ const CalendarComponent = () => {
                 console.log("Failed to fetch notifications:", error);
             }
         };
-        
+
         notificationFetcher();
         const fetchInterval = setInterval(notificationFetcher, 600000); // do every 10 minutes
 
         return () => clearInterval(fetchInterval); // prevent memory leaks
     }, []);
-    
+
     useEffect(() => { // Display notifications.
         if (!notificationData) return;
         console.log(notificationData);
 
         const notificationLogic = async () => {
             const currentTime = new Date();
-            currentTime.setTime(currentTime.getTime() + currentTime.getTimezoneOffset()*60*1000); // Adjust for timezone offset
+            currentTime.setTime(currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000); // Adjust for timezone offset
             const berlinOffset = 2 * 60 * 60 * 1000; // CEST (Central European Summer Time) UTC +2 hours
             const currentTimeInBerlin = new Date(currentTime.getTime() + berlinOffset);
-    
-            
+
+
             notificationData.forEach(notification => {
                 const notificationTime = new Date(notification.time); // Assuming 'notification.time' is in a standard format
                 notificationTime.setTime(notificationTime.getTime()); // Adjust for timezone offset
@@ -147,7 +153,7 @@ const CalendarComponent = () => {
                 }
             });
         };
-        
+
         notificationLogic();
         const notificationInterval = setInterval(notificationLogic, 60000); // do every minute
 
@@ -253,7 +259,7 @@ const CalendarComponent = () => {
     const handleEventDrop = (info) => {
         info.event.setEnd(info.event.end === null ? info.event.start : info.event.end);
         let foundDjangoEvent = allUserEvents.find(djangoEvent => djangoEvent.id == info.event.id);
-        if(foundDjangoEvent) {
+        if (foundDjangoEvent) {
             editEvents(info.event, info.event.id, foundDjangoEvent.list);
             updateEventList();
         } else {
@@ -340,7 +346,7 @@ const CalendarComponent = () => {
                         />
                     </Drawer>
                 )}
-                
+
                 <Dialog open={isNotificationDataOpen}> {/* Notification Dialog */}
                     <DialogTitle>
                         Notification
@@ -352,7 +358,7 @@ const CalendarComponent = () => {
                         <Button onClick={() => setIsNotificationDataOpen(false)}>Close</Button>
                     </DialogActions>
                 </Dialog>
-                
+
             </div>
             <footer className="CalendarFooter">
                 © 2024 ProgExTRAORDINAIRE
