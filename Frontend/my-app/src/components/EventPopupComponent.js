@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import { DialogActions, DialogContent, FormControl, InputLabel, ListItem, ListItemText, MenuItem, TextField } from '@mui/material';
@@ -75,7 +74,6 @@ const EventPopupComponent = ({ selectedUserID, open, setOpen, sendEventData, cli
             open={open}
             onClose={handleClose}
         >
-            <DialogTitle>
             <DialogTitle>
                 {"Add new event"}
             </DialogTitle>

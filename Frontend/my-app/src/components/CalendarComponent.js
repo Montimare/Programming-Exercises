@@ -1,6 +1,5 @@
 import './CalendarComponent.css'
 import React, { useRef, useEffect, useState } from "react";
-import React, { useRef, useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -148,7 +147,6 @@ const CalendarComponent = () => {
     }
 
     const handleAddEvent = async (text, startTime, endTime, startDate, endDate, list) => {
-    const handleAddEvent = async (text, startTime, endTime, startDate, endDate, list) => {
         const calendarAPI = calendarRef.current.getApi();
         let newEvent = null;
         if (startTime === null && endTime === null) {
@@ -191,8 +189,6 @@ const CalendarComponent = () => {
     const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
         // TODO: Add error handling when start or end time are undefined
         if (event) {
-            let formattedStart = startDate.toString() + "T" + startTime.toString();
-            let formattedEnd = endDate.toString() + "T" + endTime.toString();
             let formattedStart = startDate.toString() + "T" + startTime.toString();
             let formattedEnd = endDate.toString() + "T" + endTime.toString();
             event.setProp('title', text);

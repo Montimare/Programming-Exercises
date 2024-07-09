@@ -15,7 +15,6 @@ const UserSelectionComponent = () => {
         const getUsers = async () => {
             try {
                 const usersData = await fetchUsers()
-                const usersData = await fetchUsers()
                     .then(usersData => {
                         setUsers(usersData.data); // Update state with fetched users
                         setLoading(false);
