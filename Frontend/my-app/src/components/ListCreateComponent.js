@@ -2,7 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } 
 import { useState } from "react";
 
 const ListCreateComponent = ({ open, handleClose, requestCreate }) => {
-    const [name, setName] = useState();
+    const [name, setName] = useState("My List");
 
     const handleCreate = () => {
         requestCreate(name);

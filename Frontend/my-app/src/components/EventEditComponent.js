@@ -12,41 +12,14 @@ import List from "@mui/material/List";
 import { fetchOwnedEventListsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requestDelete, event, listID }) => {
+const EventEditComponent = ({ selectedUserID, ownedEventLists, open, setOpen, sendEventData, requestDelete, event, listID }) => {
     const [text, setText] = useState(event.title);
     const [startDate, setStartDate] = useState(dayjs(event.start).format("YYYY-MM-DD"));
     const [startTime, setStartTime] = useState(dayjs(event.start).format("HH:mm:ssZ"));
     const [endDate, setEndDate] = useState(dayjs(event.end).format("YYYY-MM-DD"));
     const [endTime, setEndTime] = useState(dayjs(event.end).format("HH:mm:ssZ"));
-    const [eventList, setEventList] = useState([]);
     const [selectedList, setSelectedList] = useState(listID);
-    const [loading, setLoading] = useState(false);
     const [openDeletePopup, setOpenDeletePopup] = useState(false);
-
-    useEffect(() => {
-        // Define an async function inside useEffect
-        const getUserEvents = async () => {
-            try {
-                const eventListData = await fetchOwnedEventListsByUser(selectedUserID)
-                    .then(eventListData => {
-                        setEventList(eventListData.data); // Update state with fetched user events
-                        setLoading(false);
-                    }); // Assuming fetchEventsByUser returns a promise
-            } catch (error) {
-                console.error("Failed to fetch events for this user:", error);
-            }
-        };
-
-        getUserEvents(); // Call the async function
-    }, []); // Empty dependency array means this effect runs only once
-
-    if (loading) {
-        return (
-            <div className="LoadingContainer">
-                <CircularProgress />
-            </div>
-        );
-    }
 
     const handleClose = () => {
         setOpen(false);
@@ -134,7 +107,7 @@ const EventEditComponent = ({ selectedUserID, open, setOpen, sendEventData, requ
                                     onChange={(event) => setSelectedList(event.target.value)}
                                     label={"Choose event list..."}
                                 >
-                                    {eventList.map(eventListItem => (
+                                    {ownedEventLists.map(eventListItem => (
                                         <MenuItem key={eventListItem.id} value={eventListItem.id}>
                                             {eventListItem.name}
                                         </MenuItem>

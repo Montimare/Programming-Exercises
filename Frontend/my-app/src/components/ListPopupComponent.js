@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, TextField } from "@mui/material";
 import { useState } from "react";
 
-const ListPopupComponent = ({ open, selectedList, handleClose, requestEdit, requestDelete, username, email }) => {
+const ListPopupComponent = ({ open, selectedList, selectedListName, handleClose, requestEdit, requestDelete, username, email }) => {
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
@@ -42,7 +42,7 @@ const ListPopupComponent = ({ open, selectedList, handleClose, requestEdit, requ
                 onClose={handleClose}
             >
                 <DialogTitle>
-                    {selectedList.name}
+                    {selectedListName}
                 </DialogTitle>
                 <DialogContent>
                     <List>
@@ -67,7 +67,7 @@ const ListPopupComponent = ({ open, selectedList, handleClose, requestEdit, requ
                     open={openEdit}
                     onClose={handleCloseEdit}
                 >
-                    <DialogTitle>Edit list</DialogTitle>
+                    <DialogTitle>Edit list name</DialogTitle>
                     <DialogContent>
                         <TextField
                             label={"Enter list name..."}

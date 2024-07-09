@@ -14,6 +14,7 @@ const UserSelectionComponent = () => {
     const [loading, setLoading] = useState(true);
     const [selectedUserID, setSelectedUserID] = useState("");
     const navigate = useNavigate();
+    const [disabled, setDisabled] = useState(true);
 
     useEffect(() => {
         // Define an async function inside useEffect
@@ -42,6 +43,7 @@ const UserSelectionComponent = () => {
 
     const handleUserSelection = (event) => {
         setSelectedUserID(event.target.value);
+        setDisabled(false);
     };
 
     const handleSelectClick = () => {
@@ -76,6 +78,7 @@ const UserSelectionComponent = () => {
                 </div>
                 <div className="SelectButtonContainer">
                     <Button
+                        disabled={disabled}
                         variant="contained"
                         size="large"
                         onClick={handleSelectClick}

@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer"
 import MenuSidebarComponent from './MenuSidebarComponent';
 import { useLocation, useParams } from "react-router-dom";
-import { createEvents, deleteEvents, editEvents, fetchEventsByUser } from "../Services/WebService";
+import { createEvents, deleteEvents, editEvents, fetchEventsByUser, fetchOwnedEventListsByUser } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
 
 /*
@@ -40,7 +40,8 @@ const CalendarComponent = () => {
     const username = location.state?.username || "";
 
     // All events fetched from Django's API
-    const [eventList, setEventList] = useState();
+    const [allUserEvents, setAllUserEvents] = useState();
+    const [ownedEventLists, setOwnedEventLists] = useState();
 
     // Event-related resources
     const [event, setEvent] = useState([]);
@@ -65,7 +66,7 @@ const CalendarComponent = () => {
             try {
                 const userEventData = await fetchEventsByUser(selectedUserID)
                     .then(userEventData => {
-                        setEventList(userEventData.data); // Update state with fetched user events
+                        setAllUserEvents(userEventData.data); // Update state with fetched user events
                         setLoading(false);
                     }); // Assuming fetchEventsByUser returns a promise
             } catch (error) {
@@ -75,6 +76,23 @@ const CalendarComponent = () => {
 
         getUserEvents(); // Call the async function
     }, [eventsChangeTracker]); // This effect runs every time the tracker is updated
+
+    useEffect(() => {
+        // Define an async function inside useEffect
+        const getUserEventLists = async () => {
+            try {
+                const eventListData = await fetchOwnedEventListsByUser(selectedUserID)
+                    .then(eventListData => {
+                        setOwnedEventLists(eventListData.data); // Update state with fetched user events
+                        setLoading(false);
+                    }); // Assuming fetchEventsByUser returns a promise
+            } catch (error) {
+                console.error("Failed to fetch events for this user:", error);
+            }
+        };
+
+        getUserEventLists(); // Call the async function
+    }, []); // Empty dependency array means this effect runs only once
 
     const updateEventList = () => {
         setEventsChangeTracker(prev => prev + 1);
@@ -88,7 +106,7 @@ const CalendarComponent = () => {
     const handleEventClick = (info) => {
         info.event.setEnd(info.event.end === null ? info.event.start : info.event.end);
         // Finds corresponding event in Django API's database to get list ID
-        let foundDjangoEvent = eventList.find(djangoEvent => djangoEvent.id == info.event.id);
+        let foundDjangoEvent = allUserEvents.find(djangoEvent => djangoEvent.id == info.event.id);
         if (foundDjangoEvent) {
             setEvent(info.event);
             setListID(foundDjangoEvent.list);
@@ -136,7 +154,7 @@ const CalendarComponent = () => {
         updateEventList();
 
         console.log("EVENT LIST: ");
-        console.log(eventList);
+        console.log(allUserEvents);
 
         console.log("FULLCALENDAR EVENT LIST:");
         console.log(calendarAPI.getEvents());
@@ -153,9 +171,20 @@ const CalendarComponent = () => {
             updateEventList();
 
             console.log("EVENT LIST: ");
-            console.log(eventList);
+            console.log(allUserEvents);
         } else {
             alert("Event not found!");
+        }
+    }
+
+    const handleEventDrop = (info) => {
+        info.event.setEnd(info.event.end === null ? info.event.start : info.event.end);
+        let foundDjangoEvent = allUserEvents.find(djangoEvent => djangoEvent.id == info.event.id);
+        if(foundDjangoEvent) {
+            editEvents(info.event, info.event.id, foundDjangoEvent.list);
+            updateEventList();
+        } else {
+            console.error("Event not found");
         }
     }
 
@@ -192,7 +221,7 @@ const CalendarComponent = () => {
                 </h1>
                 <div className="UserText">Welcome, {username}!</div>
             </header>
-            <body className="CalendarBody">
+            <div className="CalendarBody">
                 <div className="CalendarOverview">
                     <FullCalendar
                         plugins={[dayGridPlugin, interactionPlugin]}
@@ -202,14 +231,16 @@ const CalendarComponent = () => {
                         dayMaxEventRows={true}
                         editable={true}
                         selectable={true}
-                        events={eventList}
+                        events={allUserEvents}
                         ref={calendarRef}
                         eventClick={handleEventClick}
+                        eventDrop={handleEventDrop}
                         dateClick={handleDateClick}
                     />
                     {openAddEvent && (
                         <EventAddComponent
                             selectedUserID={selectedUserID}
+                            ownedEventLists={ownedEventLists}
                             open={openAddEvent}
                             setOpen={setOpenAddEvent}
                             clickedDate={clickedDate}
@@ -219,6 +250,7 @@ const CalendarComponent = () => {
                     {openEditEvent && (
                         <EventEditComponent
                             selectedUserID={selectedUserID}
+                            ownedEventLists={ownedEventLists}
                             open={openEditEvent}
                             setOpen={setOpenEditEvent}
                             sendEventData={handleEditEvent}
@@ -235,7 +267,7 @@ const CalendarComponent = () => {
                         />
                     </Drawer>
                 )}
-            </body>
+            </div>
             <footer className="CalendarFooter">
                 © 2024 ProgExTRAORDINAIRE
             </footer>

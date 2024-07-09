@@ -1,13 +1,14 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, List, ListItem, ListItemText, MenuItem, OutlinedInput, Select, TextField } from "@mui/material";
-import { createGroupMembers, fetchEventListsInGroupsByUser, fetchOwnedEventListsByUser, fetchUsers } from "../Services/WebService";
+import { fetchEventListsInGroupsByUser, fetchGroupMembers, fetchOwnedEventListsByUser, fetchUsers } from "../Services/WebService";
 import { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
+import KeyIcon from '@mui/icons-material/Key';
 
-const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddLists, requestEdit, requestDelete, selectedUserID, groupName, groupID }) => {
+const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestLeave, requestAddLists, requestEdit, requestDelete, selectedUserID, groupName, groupID, admin }) => {
     // Django API Resources
     const [users, setUsers] = useState([]);
-    const [lists, setLists] = useState([]);
     const [ownedLists, setOwnedLists] = useState([]);
+    const [memberList, setMemberList] = useState([]);
 
     // Group Elements
     const [members, setMembers] = useState([]);
@@ -23,6 +24,9 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
     const [openAddLists, setOpenAddLists] = useState(false);
     const [openEditGroup, setOpenEditGroup] = useState(false);
     const [openDeleteGroup, setOpenDeleteGroup] = useState(false);
+    const [openLeaveGroup, setOpenLeaveGroup] = useState(false);
+    const [openAdminError, setOpenAdminError] = useState(false);
+    const memberData = memberList.find(member => member.user == selectedUserID && member.group == groupID);
 
     useEffect(() => {
         // Define an async function inside useEffect
@@ -60,27 +64,10 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
 
     useEffect(() => {
         // Define an async function inside useEffect
-        const getLists = async () => {
-            try {
-                const listData = await fetchEventListsInGroupsByUser(selectedUserID)
-                    .then(listData => {
-                        setLists(listData.data); // Update state with fetched users
-                        setLoading(false);
-                    }); // Assuming fetchUsers returns a promise
-            } catch (error) {
-                console.error("Failed to fetch event lists:", error);
-            }
-        };
-
-        getLists(); // Call the async function
-    }, []); // Empty dependency array means this effect runs only once
-
-    useEffect(() => {
-        // Define an async function inside useEffect
         const getOwnedLists = async () => {
             try {
                 const ownedListData = await fetchOwnedEventListsByUser(selectedUserID)
-                    .then(listData => {
+                    .then(ownedListData => {
                         setOwnedLists(ownedListData.data); // Update state with fetched users
                         setLoading(false);
                     }); // Assuming fetchUsers returns a promise
@@ -89,7 +76,24 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
             }
         };
 
-        getLists(); // Call the async function
+        getOwnedLists(); // Call the async function
+    }, []); // Empty dependency array means this effect runs only once
+
+    useEffect(() => {
+        // Define an async function inside useEffect
+        const getMembers = async () => {
+            try {
+                const membersData = await fetchGroupMembers()
+                    .then(membersData => {
+                        setMemberList(membersData.data); // Update state with fetched users
+                        setLoading(false);
+                    }); // Assuming fetchUsers returns a promise
+            } catch (error) {
+                console.error("Failed to fetch member list:", error);
+            }
+        };
+
+        getMembers(); // Call the async function
     }, []); // Empty dependency array means this effect runs only once
 
     if (loading) {
@@ -181,6 +185,33 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
         setOpenAddLists(false);
     }
 
+    const handleOpenLeaveGroup = () => {
+        setOpenLeaveGroup(true);
+    };
+
+    const handleCloseLeaveGroup = () => {
+        setOpenLeaveGroup(false);
+    }
+
+    const handleLeave = () => {
+        if (memberData.user == admin) {
+            handleOpenAdminError();
+        } else {
+            requestLeave(memberData.id);
+            setOpenLeaveGroup(false);
+            handleClose();
+        }
+    }
+
+    const handleOpenAdminError = () => {
+        setOpenAdminError(true);
+    };
+
+    const handleCloseAdminError = () => {
+        setOpenAdminError(false);
+        setOpenLeaveGroup(false);
+    }
+
     return (
         <>
             <Dialog
@@ -200,10 +231,13 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
                         {filterUsersByGroupID().map(user => (
                             <ListItem key={user.id} value={user.id}>
                                 <ListItemText primary={user.name} secondary={user.email} />
+                                {user.id == admin && <KeyIcon/>}
                             </ListItem>
                         ))}
                         <ListItem>
-                            <Button onClick={handleOpenAddMembers}>Add new members...</Button>
+                            {memberData.user == admin && (
+                                <Button onClick={handleOpenAddMembers}>Add new members...</Button>
+                            )}
                         </ListItem>
                     </List>
                     <List>
@@ -215,15 +249,19 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
                             </ListItem>
                         ))}
                         <ListItem>
-                            <Button onClick={handleOpenAddLists}>Add new lists...</Button>
+                            {memberData.user == admin && (
+                                <Button onClick={handleOpenAddLists}>Add new lists...</Button>
+                            )}
                         </ListItem>
                     </List>
-                    <Button onClick={handleOpenEdit}>Edit</Button>
-                    <Button color="error" onClick={handleOpenDelete}>Delete</Button>
+                    {memberData.user == admin && (<>
+                        <Button onClick={handleOpenEdit}>Edit</Button>
+                        <Button color="error" onClick={handleOpenDelete}>Delete</Button>
+                    </>)}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button color="error">Leave</Button>
+                    <Button color="error" onClick={handleOpenLeaveGroup}>Leave</Button>
                 </DialogActions>
             </Dialog>
             {openEditGroup && (
@@ -282,7 +320,7 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
                                 onChange={handleMemberChange}
                                 label="Enter group members..."
                             >
-                                {users.map(user => (
+                                {users.filter(user => !user.groups.includes(groupID)).map(user => (
                                     <MenuItem key={user.id} value={user.id}>
                                         <ListItemText primary={user.name} secondary={user.email} />
                                     </MenuItem>
@@ -313,8 +351,8 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
                                 onChange={handleListChange}
                                 label="Enter group lists..."
                             >
-                                {lists.map(list => (
-                                    <MenuItem key={list.id} value={list.id}>{list.name}</MenuItem>
+                                {ownedLists.map(ownedList => (
+                                    <MenuItem key={ownedList.id} value={ownedList.id}>{ownedList.name}</MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -322,6 +360,39 @@ const GroupPopupComponent = ({ open, handleClose, requestAddMembers, requestAddL
                     <DialogActions>
                         <Button onClick={handleCloseAddLists}>Cancel</Button>
                         <Button variant="contained" onClick={handleAddLists}>Apply</Button>
+                    </DialogActions>
+                </Dialog>
+            )}
+            {openLeaveGroup && (
+                <Dialog
+                    open={openLeaveGroup}
+                    onClose={handleCloseLeaveGroup}
+                >
+                    <DialogTitle>
+                        Leave "{groupName}"?
+                    </DialogTitle>
+                    <DialogContent>
+                        Are you sure you want to leave this group?
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseLeaveGroup}>No</Button>
+                        <Button onClick={handleLeave}>Yes</Button>
+                    </DialogActions>
+                </Dialog>
+            )}
+            {openAdminError && (
+                <Dialog
+                    open={openAdminError}
+                    onClose={handleCloseAdminError}
+                >
+                    <DialogTitle>
+                        Not allowed to leave group
+                    </DialogTitle>
+                    <DialogContent>
+                        You are not allowed to leave this group because of your admin role.
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseAdminError}>Ok</Button>
                     </DialogActions>
                 </Dialog>
             )}

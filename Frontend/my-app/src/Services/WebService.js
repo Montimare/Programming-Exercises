@@ -37,6 +37,10 @@ export const fetchGroupsByUser = async (userID) => {
     return await axios.get("http://localhost:8000/users/" + userID + "/groups/");
 }
 
+export const fetchGroupMembers = async () => {
+    return await axios.get("http://localhost:8000/user_groups/");
+}
+
 // POST Functions
 export const createUsers = async (username, email) => {
     console.log("Sending web request for user");
@@ -159,13 +163,14 @@ export const createGroupLists = async (groupID, listID) => {
 }
 
 // PUT Functions
-export const editEvents = async (event, eventID, list) => {
+export const editEvents = async (event, eventID, listID) => {
     try {
         console.log("Sending web request for editing event");
-        console.log(event.title);
-        console.log(event.start);
-        console.log(event.end);
-        console.log(event.list);
+        console.log("id: " + event.id);
+        console.log("title: " + event.title);
+        console.log("start: " + event.start);
+        console.log("end: " + event.end);
+        console.log("list: " + listID);
         await axios.put(
             "http://127.0.0.1:8000/events/" + eventID + "/",
             {
@@ -173,7 +178,7 @@ export const editEvents = async (event, eventID, list) => {
                 title: event.title,
                 start: event.start,
                 end: event.end,
-                list: list
+                list: listID
             }
         );
     } catch (error) {
@@ -239,6 +244,15 @@ export const deleteEventLists = async (eventListID) => {
     console.log("Sending web request for deleting event list");
     try {
         await axios.delete("http://127.0.0.1:8000/eventlists/" + eventListID + "/");
+    } catch (error) {
+        console.error("An error occurred:", error.response);
+    }
+}
+
+export const deleteMembers = async (memberID) => {
+    console.log("Sending web request for deleting member");
+    try {
+        await axios.delete("http://127.0.0.1:8000/user_groups/" + memberID + "/");
     } catch (error) {
         console.error("An error occurred:", error.response);
     }
