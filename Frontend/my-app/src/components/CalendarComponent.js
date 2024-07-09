@@ -102,7 +102,17 @@ const CalendarComponent = () => {
     const updateEventList = () => {
         setEventsChangeTracker(prev => prev + 1);
     }
-            
+
+    useEffect(() => { // Fetch notifications.
+
+        const notificationFetcher = async () => {
+            try {
+                const notificationDataRaw = await fetchNotificationsByUser(selectedUserID)
+                setNotificationData(notificationDataRaw.data);
+            } catch (error) {
+                console.log("Failed to fetch notifications:", error);
+            }
+        };
         
         notificationFetcher();
         const fetchInterval = setInterval(notificationFetcher, 600000); // do every 10 minutes
@@ -110,7 +120,7 @@ const CalendarComponent = () => {
         return () => clearInterval(fetchInterval); // prevent memory leaks
     }, []);
     
-    useEffect(() => { // Display notifications
+    useEffect(() => { // Display notifications.
         if (!notificationData) return;
         console.log(notificationData);
 
@@ -331,6 +341,20 @@ const CalendarComponent = () => {
                     </Drawer>
                 )}
             </div>
+                
+                <Dialog open={isNotificationDataOpen}> {/* Notification Dialog */}
+                    <DialogTitle>
+                        Notification
+                    </DialogTitle>
+                    <DialogContent>
+                        {notificationDisplay + " is starting now!"}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setIsNotificationDataOpen(false)}>Close</Button>
+                    </DialogActions>
+                </Dialog>
+                
+            </body>
             <footer className="CalendarFooter">
                 © 2024 ProgExTRAORDINAIRE
             </footer>
