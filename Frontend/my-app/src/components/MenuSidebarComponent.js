@@ -5,7 +5,7 @@ import GroupsIcon from "@mui/icons-material/Groups"
 import ListIcon from '@mui/icons-material/List';
 import Divider from "@mui/material/Divider"
 import { Link, useLocation } from "react-router-dom";
-import { createEventLists, createGroupLists, createGroupMembers, createGroups, deleteEventLists, deleteGroups, deleteMembers, editEventLists, editGroups, fetchEventListsInGroupsByUser, fetchGroupsByUser, fetchOwnedEventListsByUser } from "../Services/WebService";
+import { createEventLists, createGroupLists, createGroupMembers, createGroups, deleteEventLists, deleteGroups, deleteMembers, editEventLists, editGroups, fetchEventListsInGroupsByUser, fetchGroupMembers, fetchGroupsByUser, fetchOwnedEventListsByUser } from "../Services/WebService";
 import GroupPopupComponent from "./GroupPopupComponent"
 import GroupCreateComponent from "./GroupCreateComponent";
 import ListPopupComponent from "./ListPopupComponent";
@@ -86,7 +86,8 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest, requestUp
     }
 
     // Group Popup
-    const handleOpenGroup = (groupName, groupID, admin) => {
+    const handleOpenGroup = async (groupName, groupID, admin) => {
+        await fetchGroupMembers(groupID);
         setSelectedGroupName(groupName);
         setSelectedGroupID(groupID);
         setSelectedAdmin(admin);
@@ -230,7 +231,7 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest, requestUp
                             {loadingGroups && <CircularProgress />}
                             {groups.map(group => (
                                 <ListItem key={group.id} value={group.id}>
-                                    <Button onClick={() => handleOpenGroup(group.name, group.id, group.admin)}>{group.name}</Button>
+                                    <Button onClick={async () => handleOpenGroup(group.name, group.id, group.admin)}>{group.name}</Button>
                                 </ListItem>
                             ))}
                             <ListItem>
