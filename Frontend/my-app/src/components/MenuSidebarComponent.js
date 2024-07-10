@@ -15,11 +15,11 @@ import ListCreateComponent from "./ListCreateComponent";
     TODO: Create buttons for each event list + the event list creating popup
 */
 
-const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
+const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest, requestUpdateGroupLists, requestUpdateEvents }) => {
     // Username and email
     const location = useLocation();
     const { username, email } = location.state || "";
-    
+
     // Group Management
     const [groups, setGroups] = useState([]);
     const [selectedGroupID, setSelectedGroupID] = useState();
@@ -36,7 +36,8 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
     const [openCreateList, setOpenCreateList] = useState(false);
 
     // Rendering
-    const [loading, setLoading] = useState(true);
+    const [loadingGroups, setLoadingGroups] = useState(true);
+    const [loadingLists, setLoadingLists] = useState(true);
     const [groupsChangeTracker, setGroupsChangeTracker] = useState(0);
     const [listsChangeTracker, setListsChangeTracker] = useState(0);
 
@@ -49,7 +50,7 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
                 const groupData = await fetchGroupsByUser(selectedUserID)
                     .then(groupData => {
                         setGroups(groupData.data);  // update state with fetched groups
-                        setLoading(false);
+                        setLoadingGroups(false);
                     });
             } catch (error) {
                 console.error("Failed to fetch groups: " + error);
@@ -65,7 +66,7 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
                 const eventListData = await fetchOwnedEventListsByUser(selectedUserID)
                     .then(eventListData => {
                         setEventLists(eventListData.data);  // update state with fetched groups
-                        setLoading(false);
+                        setLoadingLists(false);
                     });
             } catch (error) {
                 console.error("Failed to fetch event lists: " + error);
@@ -74,14 +75,6 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
 
         getEventLists();    // call the async function
     }, [listsChangeTracker]); // Empty dependency array means this effect runs only once
-
-    if (loading) {
-        return (
-            <div className="LoadingContainer">
-                <CircularProgress />
-            </div>
-        );
-    }
 
     const updateGroups = () => {
         setGroupsChangeTracker(prev => prev + 1);
@@ -132,11 +125,11 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
     }
 
     // Add members
-    const handleAddMembers = async (selectedMembers) => {
+    const handleAddMembers = (selectedMembers) => {
         for (const member of selectedMembers) {
-            await createGroupMembers(member, selectedGroupID);
+            createGroupMembers(member, selectedGroupID);
+            updateGroups();
         }
-        updateGroups();
     }
 
     // Add lists
@@ -145,12 +138,14 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
             await createGroupLists(selectedGroupID, list);
         }
         updateGroups();
+        requestUpdateGroupLists();
     }
 
     // Delete Group
     const handleDeleteGroup = async () => {
         await deleteGroups(selectedGroupID);
         updateGroups();
+        requestUpdateEvents();
     }
 
     // List Popup
@@ -173,8 +168,8 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
         setOpenCreateList(false);
     }
 
-    const handleCreateList = (listName) => {
-        createEventLists({
+    const handleCreateList = async (listName) => {
+        await createEventLists({
             name: listName,
             admin: selectedUserID
         })
@@ -191,17 +186,26 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
         updateLists();
     }
 
-    const handleDeleteList = () => {
+    const handleDeleteList = async () => {
         setOpenList(false);
-        deleteEventLists(selectedList.id);
+        await deleteEventLists(selectedList.id);
         updateLists();
+        requestUpdateEvents();
     }
 
     const handleLeaveGroup = async (memberID) => {
         setOpenGroup(false);
         await deleteMembers(memberID);
         updateGroups();
+        requestUpdateEvents();
     }
+
+    const handleKickMember = (memberID) => {
+        deleteMembers(memberID);
+        updateGroups();
+        requestUpdateEvents();
+    }
+
 
     return (
         <>
@@ -214,15 +218,16 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
                 <List>
                     <ListItem>
                         <List>
-                            <ListItem><PersonIcon /><b>{username}</b></ListItem>
+                            <ListItem><PersonIcon />&nbsp;<b>{username}</b></ListItem>
                             <ListItem>{email}</ListItem>
                         </List>
                     </ListItem>
                     <Divider />
-                    <ListItem><GroupsIcon /><b>Groups</b></ListItem>
+                    <ListItem><GroupsIcon />&nbsp;<b>Groups</b></ListItem>
                     <Divider variant="middle" />
                     <ListItem>
                         <List>
+                            {loadingGroups && <CircularProgress />}
                             {groups.map(group => (
                                 <ListItem key={group.id} value={group.id}>
                                     <Button onClick={() => handleOpenGroup(group.name, group.id, group.admin)}>{group.name}</Button>
@@ -234,10 +239,11 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
                         </List>
                     </ListItem>
                     <Divider />
-                    <ListItem><ListIcon /><b>Event lists</b></ListItem>
+                    <ListItem><ListIcon /><b>&nbsp;Event lists</b></ListItem>
                     <Divider variant="middle" />
                     <ListItem>
                         <List>
+                            {loadingLists && <CircularProgress/>}
                             {eventLists.map(eventList => (
                                 <ListItem key={eventList.id} value={eventList.id}>
                                     <Button onClick={() => handleOpenList(eventList)}>{eventList.name}</Button>
@@ -264,6 +270,7 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
                 requestAddLists={handleAddLists}
                 requestEdit={handleEditGroup}
                 requestDelete={handleDeleteGroup}
+                requestKick={handleKickMember}
                 selectedUserID={selectedUserID}
                 groupName={selectedGroupName}
                 groupID={selectedGroupID}

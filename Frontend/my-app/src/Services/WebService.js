@@ -26,7 +26,7 @@ export const fetchEventListsInGroupsByUser = async (userID) => {
 };
 
 export const fetchOwnedEventListsByUser = async (userID) => {
-    return await axios.get("http://localhost:8000/users/" + userID + "/owned_eventlists");
+    return await axios.get("http://localhost:8000/users/" + userID + "/owned_eventlists/");
 };
 
 export const fetchNotificationsByUser = async (userID) => {
@@ -48,7 +48,7 @@ export const createUsers = async (username, email) => {
     console.log("email: " + email);
 
     try {
-        await axios.post(
+        const response = await axios.post(
             "http://127.0.0.1:8000/users/",
             {
                 name: username,
@@ -56,11 +56,11 @@ export const createUsers = async (username, email) => {
             }
         );
         // Return the response data or a success message to be displayed to the user
-        return 0; // or return "User created successfully!";
+        return response.data.id; // or return "User created successfully!";
     } catch (error) {
         console.error("An error occurred:", error);
         // Return an error message to be displayed to the user
-        return 1;
+        return null;
     }
 };
 
@@ -96,15 +96,17 @@ export const createGroups = async (group) => {
     console.log("admin: " + group.admin);
 
     try {
-        await axios.post(
+        const response = await axios.post(
             "http://127.0.0.1:8000/groups/",
             {
                 name: group.name,
                 admin: group.admin
             }
         );
+        return response.data.id;
     } catch (error) {
         console.error("An error occurred:", error);
+        return null;
     }
 }
 
@@ -114,15 +116,17 @@ export const createEventLists = async (eventList) => {
     console.log("admin: " + eventList.admin);
 
     try {
-        await axios.post(
+        const response = await axios.post(
             "http://127.0.0.1:8000/eventlists/",
             {
                 name: eventList.name,
                 admin: eventList.admin
             }
         );
+        return response.data.id;
     } catch (error) {
         console.error("An error occurred:", error);
+        return null;
     }
 }
 
@@ -150,15 +154,17 @@ export const createGroupLists = async (groupID, listID) => {
     console.log("list: " + listID);
 
     try {
-        await axios.post(
+        const response = await axios.post(
             "http://127.0.0.1:8000/group_eventlists/",
             {
                 group: groupID,
                 event_list: listID
             }
         );
+        return response.data.id;
     } catch (error) {
         console.error("An error occurred:", error);
+        return null;
     }
 }
 
@@ -253,6 +259,15 @@ export const deleteMembers = async (memberID) => {
     console.log("Sending web request for deleting member");
     try {
         await axios.delete("http://127.0.0.1:8000/user_groups/" + memberID + "/");
+    } catch (error) {
+        console.error("An error occurred:", error.response);
+    }
+}
+
+export const deleteNotifications = async (notificationID) => {
+    console.log("Sending web request for deleting notification");
+    try {
+        await axios.delete("http://127.0.0.1:8000/notifications/" + notificationID + "/");
     } catch (error) {
         console.error("An error occurred:", error.response);
     }

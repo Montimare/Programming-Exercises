@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, List, ListItem, ListItemText, MenuItem, Select, TextField } from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, List, ListItem, ListItemText, MenuItem, Select, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { fetchUsers } from "../Services/WebService";
 
@@ -18,6 +18,7 @@ const GroupCreateComponent = ({ open, handleClose, requestCreate }) => {
             <DialogTitle>
                 Create new group
             </DialogTitle>
+            <Divider/>
             <DialogContent>
                 <TextField
                     label={"Enter group name..."}

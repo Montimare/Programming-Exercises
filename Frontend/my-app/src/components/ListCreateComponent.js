@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, TextField } from "@mui/material";
 import { useState } from "react";
 
 const ListCreateComponent = ({ open, handleClose, requestCreate }) => {
@@ -15,6 +15,7 @@ const ListCreateComponent = ({ open, handleClose, requestCreate }) => {
             onClose={handleClose}
         >
             <DialogTitle>Create a new list</DialogTitle>
+            <Divider/>
             <DialogContent>
                 <TextField
                     label={"Enter list name..."}

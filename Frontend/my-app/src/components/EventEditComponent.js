@@ -10,7 +10,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import List from "@mui/material/List";
 
-const EventEditComponent = ({ ownedEventLists, open, setOpen, sendEventData, requestDelete, event, listID }) => {
+const EventEditComponent = ({ groupEventLists, open, setOpen, sendEventData, requestDelete, event, listID }) => {
     const [text, setText] = useState(event.title);
     const [startDate, setStartDate] = useState(dayjs(event.start).format("YYYY-MM-DD"));
     const [startTime, setStartTime] = useState(dayjs(event.start).format("HH:mm:ssZ"));
@@ -18,6 +18,8 @@ const EventEditComponent = ({ ownedEventLists, open, setOpen, sendEventData, req
     const [endTime, setEndTime] = useState(dayjs(event.end).format("HH:mm:ssZ"));
     const [selectedList, setSelectedList] = useState(listID);
     const [openDeletePopup, setOpenDeletePopup] = useState(false);
+
+    const isButtonEnabled = startTime !== null && endTime !== null && selectedList !== null && !dayjs(startDate).isAfter(dayjs(endDate)) && !dayjs(startTime, 'HH:mm').isAfter(dayjs(endTime, 'HH:mm'));
 
     const handleClose = () => {
         setOpen(false);
@@ -105,7 +107,7 @@ const EventEditComponent = ({ ownedEventLists, open, setOpen, sendEventData, req
                                     onChange={(event) => setSelectedList(event.target.value)}
                                     label={"Choose event list..."}
                                 >
-                                    {ownedEventLists.map(eventListItem => (
+                                    {groupEventLists.filter(eventListItem => eventListItem.groups.length > 0).map(eventListItem => (
                                         <MenuItem key={eventListItem.id} value={eventListItem.id}>
                                             {eventListItem.name}
                                         </MenuItem>
@@ -118,7 +120,7 @@ const EventEditComponent = ({ ownedEventLists, open, setOpen, sendEventData, req
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button variant="text" color="error" onClick={handleOpenDelete}>Delete</Button>
-                    <Button variant="contained" onClick={handleSave} autoFocus>Apply</Button>
+                    <Button disabled={!isButtonEnabled} variant="contained" onClick={handleSave} autoFocus>Apply</Button>
                 </DialogActions>
             </Dialog>
             {openDeletePopup && (
@@ -134,8 +136,8 @@ const EventEditComponent = ({ ownedEventLists, open, setOpen, sendEventData, req
                         If this event is deleted, it cannot be recovered.
                     </DialogContent>
                     <DialogActions>
-                        <Button variant="text" onClick={handleDelete}>Yes</Button>
                         <Button onClick={handleCloseDelete}>No</Button>
+                        <Button variant="text" onClick={handleDelete}>Yes</Button>
                     </DialogActions>
                 </Dialog>
             )}

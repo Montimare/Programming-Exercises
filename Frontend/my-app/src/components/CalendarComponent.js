@@ -16,8 +16,9 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button"
 import MenuSidebarComponent from './MenuSidebarComponent';
 import { useLocation, useParams } from "react-router-dom";
-import { createEvents, deleteEvents, editEvents, fetchEventsByUser, fetchOwnedEventListsByUser, fetchNotificationsByUser } from "../Services/WebService";
+import { createEvents, deleteEvents, editEvents, fetchEventsByUser, fetchOwnedEventListsByUser, fetchNotificationsByUser, fetchEventListsInGroupsByUser, deleteNotifications } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Divider } from '@mui/material';
 
 /*
     CalendarComponent
@@ -46,6 +47,7 @@ const CalendarComponent = () => {
 
     // All events fetched from Django's API
     const [allUserEvents, setAllUserEvents] = useState([]);
+    const [groupEventLists, setGroupEventLists] = useState();
     const [ownedEventLists, setOwnedEventLists] = useState();
 
     // Event-related resources
@@ -57,7 +59,8 @@ const CalendarComponent = () => {
 
     // Rendering
     const [eventsChangeTracker, setEventsChangeTracker] = useState(0);
-    const [eventListChangeTracker, setEventListChangeTracker] = useState(0);
+    const [ownedEventListChangeTracker, setOwnedEventListChangeTracker] = useState(0);
+    const [groupEventListChangeTracker, setGroupEventListChangeTracker] = useState(0);
     const [loading, setLoading] = useState(true);
     const [openAddEvent, setOpenAddEvent] = useState(false);
     const [openEditEvent, setOpenEditEvent] = useState(false);
@@ -92,6 +95,23 @@ const CalendarComponent = () => {
         const getUserEventLists = async () => {
             try {
                 const eventListData = await fetchOwnedEventListsByUser(selectedUserID)
+                    .then(groupListData => {
+                        setGroupEventLists(groupListData.data); // Update state with fetched user events
+                        setLoading(false);
+                    }); // Assuming fetchEventsByUser returns a promise
+            } catch (error) {
+                console.error("Failed to fetch events for this user:", error);
+            }
+        };
+
+        getUserEventLists(); // Call the async function
+    }, [ownedEventListChangeTracker]); // Empty dependency array means this effect runs only once
+
+    useEffect(() => {
+        // Define an async function inside useEffect
+        const getGroupEventLists = async () => {
+            try {
+                const eventListData = await fetchEventListsInGroupsByUser(selectedUserID)
                     .then(eventListData => {
                         setOwnedEventLists(eventListData.data); // Update state with fetched user events
                         setLoading(false);
@@ -101,15 +121,19 @@ const CalendarComponent = () => {
             }
         };
 
-        getUserEventLists(); // Call the async function
-    }, [eventListChangeTracker]); // Empty dependency array means this effect runs only once
+        getGroupEventLists(); // Call the async function
+    }, [groupEventListChangeTracker]); // Empty dependency array means this effect runs only once
 
     const updateEvents = () => {
         setEventsChangeTracker(prev => prev + 1);
     }
 
     const updateOwnedEventLists = () => {
-        setEventListChangeTracker(prev => prev + 1);
+        setOwnedEventListChangeTracker(prev => prev + 1);
+    }
+
+    const updateGroupEventLists = () => {
+        setGroupEventListChangeTracker(prev => prev + 1);
     }
 
     useEffect(() => { // Fetch notifications.
@@ -145,14 +169,13 @@ const CalendarComponent = () => {
                 notificationTime.setTime(notificationTime.getTime()); // Adjust for timezone offset
                 const notificationTimeInBerlin = new Date(notificationTime.getTime());
 
-                console.log(notificationTimeInBerlin);
-                console.log(currentTimeInBerlin);
+                // console.log(notificationTimeInBerlin);
+                // console.log(currentTimeInBerlin);
                 if (notificationTimeInBerlin <= currentTimeInBerlin) {
                     setNotificationDisplay(notification.event);
                     setIsNotificationDataOpen(true);
-                    console.log("Notification displayed");
-                } else {
-                    console.log("No notifications to display");
+                    // console.log("Notification displayed");
+                    deleteNotifications(notification.id);
                 }
             });
         };
@@ -165,6 +188,7 @@ const CalendarComponent = () => {
 
     const handleDateClick = (info) => {
         setClickedDate(info.date);
+        updateGroupEventLists();
         setOpenAddEvent(true);
     }
 
@@ -175,6 +199,7 @@ const CalendarComponent = () => {
         if (foundDjangoEvent) {
             setEvent(info.event);
             setListID(foundDjangoEvent.list);
+            updateGroupEventLists();
             setOpenEditEvent(true);
         } else {
             console.error("Event not found");
@@ -305,7 +330,7 @@ const CalendarComponent = () => {
                     {openAddEvent && (
                         <EventAddComponent
                             selectedUserID={selectedUserID}
-                            ownedEventLists={ownedEventLists}
+                            groupEventLists={groupEventLists}
                             open={openAddEvent}
                             setOpen={setOpenAddEvent}
                             clickedDate={clickedDate}
@@ -315,7 +340,7 @@ const CalendarComponent = () => {
                     {openEditEvent && (
                         <EventEditComponent
                             selectedUserID={selectedUserID}
-                            ownedEventLists={ownedEventLists}
+                            groupEventLists={groupEventLists}
                             open={openEditEvent}
                             setOpen={setOpenEditEvent}
                             sendEventData={handleEditEvent}
@@ -330,6 +355,8 @@ const CalendarComponent = () => {
                         <MenuSidebarComponent
                             selectedUserID={selectedUserID}
                             sendUpdateListRequest={updateOwnedEventLists}
+                            requestUpdateGroupLists={updateGroupEventLists}
+                            requestUpdateEvents={updateEvents}
                         />
                     </Drawer>
                 )}
@@ -338,6 +365,7 @@ const CalendarComponent = () => {
                     <DialogTitle>
                         Notification
                     </DialogTitle>
+                    <Divider/>
                     <DialogContent>
                         {notificationDisplay + " is starting now!"}
                     </DialogContent>
@@ -348,7 +376,9 @@ const CalendarComponent = () => {
 
             </div>
             <footer className="CalendarFooter">
-                © 2024 ProgExTRAORDINAIRE
+                <b>© 2024 ProgExTRAORDINAIRE</b><br/>
+                Marc Roemer, Klejdi Galushi, Felix Schneider<br/><br/>
+                <b>Student project for Programming Exercises - Sabba</b>
             </footer>
         </>
     );

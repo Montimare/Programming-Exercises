@@ -1,5 +1,6 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemText, TextField } from "@mui/material";
 import { useState } from "react";
+import EditIcon from '@mui/icons-material/Edit';
 
 const ListPopupComponent = ({ open, selectedList, selectedListName, handleClose, requestEdit, requestDelete, username, email }) => {
     const [openEdit, setOpenEdit] = useState(false);
@@ -43,7 +44,11 @@ const ListPopupComponent = ({ open, selectedList, selectedListName, handleClose,
             >
                 <DialogTitle>
                     {selectedListName}
+                    <IconButton onClick={handleOpenEdit}>
+                        <EditIcon />
+                    </IconButton>
                 </DialogTitle>
+                <Divider/>
                 <DialogContent>
                     <List>
                         <ListItem>Admin</ListItem>
@@ -58,7 +63,6 @@ const ListPopupComponent = ({ open, selectedList, selectedListName, handleClose,
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleOpenEdit}>Edit</Button>
                     <Button color="error" onClick={handleOpenDelete}>Delete</Button>
                 </DialogActions>
             </Dialog>
@@ -68,6 +72,7 @@ const ListPopupComponent = ({ open, selectedList, selectedListName, handleClose,
                     onClose={handleCloseEdit}
                 >
                     <DialogTitle>Edit list name</DialogTitle>
+                    <Divider/>
                     <DialogContent>
                         <TextField
                             label={"Enter list name..."}
@@ -89,13 +94,14 @@ const ListPopupComponent = ({ open, selectedList, selectedListName, handleClose,
                     <DialogTitle>
                         Delete "{selectedList.name}"?
                     </DialogTitle>
+                    <Divider/>
                     <DialogContent>
-                        Are you sure you want to delete this list?
-                        If this event is deleted, it cannot be recovered.
+                        Are you sure you want to delete this list?<br/>
+                        If this list is deleted, all events associated with it will also be erased with no chance of recovery.
                     </DialogContent>
                     <DialogActions>
-                        <Button variant="text" onClick={handleDelete}>Yes</Button>
                         <Button onClick={handleCloseDelete}>No</Button>
+                        <Button variant="text" onClick={handleDelete}>Yes</Button>
                     </DialogActions>
                 </Dialog>
             )}

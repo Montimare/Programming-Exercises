@@ -10,13 +10,15 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import List from "@mui/material/List";
 
-const EventAddComponent = ({ ownedEventLists, open, setOpen, sendEventData, clickedDate }) => {
+const EventAddComponent = ({ groupEventLists, open, setOpen, sendEventData, clickedDate }) => {
     const [text, setText] = useState("My Event");
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [startDate, setStartDate] = useState(dayjs(clickedDate).format("YYYY-MM-DD"));
     const [endDate, setEndDate] = useState(dayjs(clickedDate).format("YYYY-MM-DD"));
-    const [selectedList, setSelectedList] = useState();
+    const [selectedList, setSelectedList] = useState(null);
+
+    const isButtonEnabled = startTime !== null && endTime !== null && selectedList !== null && !dayjs(startDate).isAfter(dayjs(endDate)) && !dayjs(startTime, 'HH:mm').isAfter(dayjs(endTime, 'HH:mm'));
 
     const handleClose = () => {
         setOpen(false);
@@ -66,7 +68,9 @@ const EventAddComponent = ({ ownedEventLists, open, setOpen, sendEventData, clic
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose start time..."
+                                value={dayjs(startTime)}
                                 onChange={(newValue) => setStartTime(newValue.format("HH:mm:ssZ"))}
+                                renderInput={(params) => <TextField {...params} error={!startTime} helperText={!startTime ? "Start time is required" : ""} />}
                             />
                         </LocalizationProvider>
                     </ListItem>
@@ -81,7 +85,9 @@ const EventAddComponent = ({ ownedEventLists, open, setOpen, sendEventData, clic
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
                                 label="Choose end time..."
+                                value={dayjs(endTime)}
                                 onChange={(newValue) => setEndTime(newValue.format("HH:mm:ssZ"))}
+                                renderInput={(params) => <TextField {...params} error={!endTime} helperText={!endTime ? "End time is required" : ""} />}
                             />
                         </LocalizationProvider>
                     </ListItem>
@@ -89,11 +95,11 @@ const EventAddComponent = ({ ownedEventLists, open, setOpen, sendEventData, clic
                         <FormControl sx={{ minWidth: 200 }}>
                             <InputLabel>Choose event list...</InputLabel>
                             <Select
-                                value={selectedList || ''}
+                                value={selectedList || ""}
                                 onChange={(event) => setSelectedList(event.target.value)}
                                 label={"Choose event list..."}
                             >
-                                {ownedEventLists.map(eventListItem => (
+                                {groupEventLists.filter(eventListItem => eventListItem.groups.length > 0).map(eventListItem => (
                                     <MenuItem key={eventListItem.id} value={eventListItem.id}>
                                         {eventListItem.name}
                                     </MenuItem>
@@ -105,7 +111,7 @@ const EventAddComponent = ({ ownedEventLists, open, setOpen, sendEventData, clic
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button variant="contained" onClick={handleSave} autoFocus>OK</Button>
+                <Button disabled={!isButtonEnabled} variant="contained" onClick={handleSave} autoFocus>OK</Button>
             </DialogActions>
         </Dialog>
     );

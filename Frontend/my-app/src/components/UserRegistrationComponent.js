@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogContent, DialogTitle, DialogActions, Divider, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { createUsers } from "../Services/WebService";
+import { createEventLists, createGroupLists, createGroups, createUsers } from "../Services/WebService";
 import "./UserRegistrationComponent.css"
 import { useState } from "react";
 
@@ -10,17 +10,31 @@ const UserRegistrationComponent = () => {
     const [dialogVisiblity, setDialogVisiblity] = useState(false);
     const navigate = useNavigate();
 
+    // Email validation regex
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,5})+$/;
+
+    const isButtonEnabled = username && username.trim() !== '' && email && email.trim() !== '' && emailRegex.test(email);
+
     const handleClose = () => {
         setDialogVisiblity(false);
     };
 
     const handleConfirmRegistration = async () => {
         try {
-            let tmp = await createUsers(username, email);
-            console.log(tmp);
-            if (tmp) {
+            let createdUserID = await createUsers(username, email);
+            console.log(createdUserID);
+            if (createdUserID === null) {
                 setDialogVisiblity(true);
             } else {
+                let createdGroupID = await createGroups({
+                    name: username,
+                    admin: createdUserID
+                })
+                let createdEventListID = await createEventLists({
+                    name: username,
+                    admin: createdUserID
+                })
+                await createGroupLists(createdGroupID, createdEventListID);
                 navigate('/');
             }
         } catch (error) {
@@ -62,7 +76,7 @@ const UserRegistrationComponent = () => {
                     </div>
                 </div>
                 <div className="ButtonContainer">
-                    <Button variant="contained" onClick={handleConfirmRegistration}>Confirm</Button>
+                    <Button disabled={!isButtonEnabled} variant="contained" onClick={handleConfirmRegistration}>Confirm</Button>
                 </div>
             </div>
         </div>
