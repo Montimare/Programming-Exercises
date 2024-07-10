@@ -45,13 +45,11 @@ const CalendarComponent = () => {
     const username = location.state?.username || "";
 
     // All events fetched from Django's API
-    const [allUserEvents, setAllUserEvents] = useState();
+    const [allUserEvents, setAllUserEvents] = useState([]);
     const [ownedEventLists, setOwnedEventLists] = useState();
 
     // Event-related resources
     const [event, setEvent] = useState([]);
-    const [eventList, setEventList] = useState([]);
-    const [eventID, setEventID] = useState();
     const [listID, setListID] = useState();
 
     // Default for start and end date when clicking on an empty grid
@@ -59,6 +57,7 @@ const CalendarComponent = () => {
 
     // Rendering
     const [eventsChangeTracker, setEventsChangeTracker] = useState(0);
+    const [eventListChangeTracker, setEventListChangeTracker] = useState(0);
     const [loading, setLoading] = useState(true);
     const [openAddEvent, setOpenAddEvent] = useState(false);
     const [openEditEvent, setOpenEditEvent] = useState(false);
@@ -68,8 +67,6 @@ const CalendarComponent = () => {
     const [notificationData, setNotificationData] = useState();
     const [notificationDisplay, setNotificationDisplay] = useState();
     const [isNotificationDataOpen, setIsNotificationDataOpen] = useState(false);
-
-
 
     useEffect(() => { }, [event]);
 
@@ -105,10 +102,14 @@ const CalendarComponent = () => {
         };
 
         getUserEventLists(); // Call the async function
-    }, []); // Empty dependency array means this effect runs only once
+    }, [eventListChangeTracker]); // Empty dependency array means this effect runs only once
 
-    const updateEventList = () => {
+    const updateEvents = () => {
         setEventsChangeTracker(prev => prev + 1);
+    }
+
+    const updateOwnedEventLists = () => {
+        setEventListChangeTracker(prev => prev + 1);
     }
 
     useEffect(() => { // Fetch notifications.
@@ -167,23 +168,6 @@ const CalendarComponent = () => {
         setOpenAddEvent(true);
     }
 
-    const findEventInEventList = (fcEvent) => {
-        // Attempt to find a matching event in the eventList
-        const matchingEvent = eventList.find(event =>
-            event.title === fcEvent.title &&
-            event.start === fcEvent.start &&
-            event.end === fcEvent.end
-        );
-        console.log(matchingEvent);
-        if (matchingEvent) {
-            setEventID(matchingEvent.id);
-            setListID(matchingEvent.list);
-            return fcEvent;
-        }
-        // If no match is found, return null
-        return null;
-    }
-
     const handleEventClick = (info) => {
         info.event.setEnd(info.event.end === null ? info.event.start : info.event.end);
         // Finds corresponding event in Django API's database to get list ID
@@ -232,7 +216,7 @@ const CalendarComponent = () => {
 
         await createEvents(newEvent);
         calendarAPI.addEvent(newEvent);
-        updateEventList();
+        updateEvents();
 
         console.log("EVENT LIST: ");
         console.log(allUserEvents);
@@ -249,7 +233,7 @@ const CalendarComponent = () => {
             event.setStart(formattedStart);
             event.setEnd(formattedEnd);
             editEvents(event, event.id, selectedListID);
-            updateEventList();
+            updateEvents();
 
             console.log("EVENT LIST: ");
             console.log(allUserEvents);
@@ -263,7 +247,7 @@ const CalendarComponent = () => {
         let foundDjangoEvent = allUserEvents.find(djangoEvent => djangoEvent.id == info.event.id);
         if (foundDjangoEvent) {
             editEvents(info.event, info.event.id, foundDjangoEvent.list);
-            updateEventList();
+            updateEvents();
         } else {
             console.error("Event not found");
         }
@@ -273,7 +257,7 @@ const CalendarComponent = () => {
         if (event) {
             event.remove();
             deleteEvents(event.id);
-            updateEventList();
+            updateEvents();
         } else {
             alert("Event not found!");
         }
@@ -345,6 +329,7 @@ const CalendarComponent = () => {
                     <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
                         <MenuSidebarComponent
                             selectedUserID={selectedUserID}
+                            sendUpdateListRequest={updateOwnedEventLists}
                         />
                     </Drawer>
                 )}

@@ -9,9 +9,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import List from "@mui/material/List";
-import CircularProgress from "@mui/material/CircularProgress";
 
-const EventAddComponent = ({ selectedUserID, ownedEventLists, open, setOpen, sendEventData, clickedDate }) => {
+const EventAddComponent = ({ ownedEventLists, open, setOpen, sendEventData, clickedDate }) => {
     const [text, setText] = useState("My Event");
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);

@@ -15,7 +15,7 @@ import ListCreateComponent from "./ListCreateComponent";
     TODO: Create buttons for each event list + the event list creating popup
 */
 
-const MenuSidebarComponent = ({ selectedUserID }) => {
+const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest }) => {
     // Username and email
     const location = useLocation();
     const { username, email } = location.state || "";
@@ -89,6 +89,7 @@ const MenuSidebarComponent = ({ selectedUserID }) => {
 
     const updateLists = () => {
         setListsChangeTracker(prev => prev + 1);
+        sendUpdateListRequest();
     }
 
     // Group Popup

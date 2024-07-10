@@ -9,10 +9,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import List from "@mui/material/List";
-import { fetchOwnedEventListsByUser } from "../Services/WebService";
-import CircularProgress from "@mui/material/CircularProgress";
 
-const EventEditComponent = ({ selectedUserID, ownedEventLists, open, setOpen, sendEventData, requestDelete, event, listID }) => {
+const EventEditComponent = ({ ownedEventLists, open, setOpen, sendEventData, requestDelete, event, listID }) => {
     const [text, setText] = useState(event.title);
     const [startDate, setStartDate] = useState(dayjs(event.start).format("YYYY-MM-DD"));
     const [startTime, setStartTime] = useState(dayjs(event.start).format("HH:mm:ssZ"));
