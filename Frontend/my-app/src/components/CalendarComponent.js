@@ -4,15 +4,21 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import EventPopupComponent from "./EventPopupComponent";
+import EventAddComponent from "./EventAddComponent";
 import EventEditComponent from './EventEditComponent';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer"
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button"
 import MenuSidebarComponent from './MenuSidebarComponent';
 import { useLocation, useParams } from "react-router-dom";
-import { createEvents, editEvents, fetchEventsByUser } from "../Services/WebService";
+import { createEvents, deleteEvents, editEvents, fetchEventsByUser, fetchOwnedEventListsByUser, fetchNotificationsByUser, fetchEventListsInGroupsByUser, deleteNotifications } from "../Services/WebService";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Divider } from '@mui/material';
 
 /*
     CalendarComponent
@@ -31,73 +37,39 @@ import CircularProgress from "@mui/material/CircularProgress";
     Axios - https://axios-http.com/docs/intro
 */
 
-// Temporarily storing event list in frontend
-const eventList = [
-    {
-        title: 'Learning Session',
-        start: '2024-05-08',
-        end: '2024-05-12'
-    },
-    {
-        title: 'Learning Session 2',
-        start: '2024-05-08'
-    },
-    {
-        title: 'Learning Session 3',
-        start: '2024-05-08'
-    },
-    {
-        title: 'Learning Session 4',
-        start: '2024-05-08'
-    },
-    {
-        title: 'Thing I Need To Do',
-        start: '2024-05-09',
-        end: '2024-05-10'
-    },
-    {
-        title: 'Hello',
-        start: '2024-05-11T12:30:00',
-        end: '2024-05-12T14:30:00'
-    },
-    {
-        title: 'Hi',
-        start: '2024-05-11T12:30:00'
-    },
-    {
-        title: 'Prog',
-        start: '2024-05-11T12:30:00'
-    },
-    {
-        title: 'ProgEx',
-        start: '2024-05-11T12:30:00'
-    }
-]
-
 const CalendarComponent = () => {
     const calendarRef = useRef(null);
 
-    // User data
+    // User data fetched from the user selection
     const [selectedUserID, setSelectedUserID] = useState(useParams().id);
     const location = useLocation();
     const username = location.state?.username || "";
 
-    // Event add and modify popup openers
-    const [openAddEvent, setOpenAddEvent] = useState(false);
-    const [openEditEvent, setOpenEditEvent] = useState(false);
+    // All events fetched from Django's API
+    const [allUserEvents, setAllUserEvents] = useState([]);
+    const [groupEventLists, setGroupEventLists] = useState();
+    const [ownedEventLists, setOwnedEventLists] = useState();
 
-    // Menu sidebar opener
-    const [openDrawer, setOpenDrawer] = useState(false);
-
-    // Event-related
+    // Event-related resources
     const [event, setEvent] = useState([]);
-    const [eventID, setEventID] = useState();
     const [listID, setListID] = useState();
-    const [eventList, setEventList] = useState();
+
+    // Default for start and end date when clicking on an empty grid
     const [clickedDate, setClickedDate] = useState(false);
 
-    // Loading screen
+    // Rendering
+    const [eventsChangeTracker, setEventsChangeTracker] = useState(0);
+    const [ownedEventListChangeTracker, setOwnedEventListChangeTracker] = useState(0);
+    const [groupEventListChangeTracker, setGroupEventListChangeTracker] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [openAddEvent, setOpenAddEvent] = useState(false);
+    const [openEditEvent, setOpenEditEvent] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState(false);
+
+    // Notification data
+    const [notificationData, setNotificationData] = useState();
+    const [notificationDisplay, setNotificationDisplay] = useState();
+    const [isNotificationDataOpen, setIsNotificationDataOpen] = useState(false);
 
     useEffect(() => { }, [event]);
 
@@ -107,43 +79,131 @@ const CalendarComponent = () => {
             try {
                 const userEventData = await fetchEventsByUser(selectedUserID)
                     .then(userEventData => {
-                        setEventList(userEventData.data); // Update state with fetched user events
+                        setAllUserEvents(userEventData.data); // Update state with fetched user events
                         setLoading(false);
-                    }); // Assuming fetchUsers returns a promise
+                    }); // Assuming fetchEventsByUser returns a promise
             } catch (error) {
-                console.error("Failed to fetch users:", error);
+                console.error("Failed to fetch events for this user:", error);
             }
         };
 
         getUserEvents(); // Call the async function
-    }, []); // Empty dependency array means this effect runs only once
+    }, [eventsChangeTracker]); // This effect runs every time the tracker is updated
+
+    useEffect(() => {
+        // Define an async function inside useEffect
+        const getUserEventLists = async () => {
+            try {
+                const eventListData = await fetchOwnedEventListsByUser(selectedUserID)
+                    .then(groupListData => {
+                        setGroupEventLists(groupListData.data); // Update state with fetched user events
+                        setLoading(false);
+                    }); // Assuming fetchEventsByUser returns a promise
+            } catch (error) {
+                console.error("Failed to fetch events for this user:", error);
+            }
+        };
+
+        getUserEventLists(); // Call the async function
+    }, [ownedEventListChangeTracker]); // Empty dependency array means this effect runs only once
+
+    useEffect(() => {
+        // Define an async function inside useEffect
+        const getGroupEventLists = async () => {
+            try {
+                const eventListData = await fetchEventListsInGroupsByUser(selectedUserID)
+                    .then(eventListData => {
+                        setOwnedEventLists(eventListData.data); // Update state with fetched user events
+                        setLoading(false);
+                    }); // Assuming fetchEventsByUser returns a promise
+            } catch (error) {
+                console.error("Failed to fetch events for this user:", error);
+            }
+        };
+
+        getGroupEventLists(); // Call the async function
+    }, [groupEventListChangeTracker]); // Empty dependency array means this effect runs only once
+
+    const updateEvents = () => {
+        setEventsChangeTracker(prev => prev + 1);
+    }
+
+    const updateOwnedEventLists = () => {
+        setOwnedEventListChangeTracker(prev => prev + 1);
+    }
+
+    const updateGroupEventLists = () => {
+        setGroupEventListChangeTracker(prev => prev + 1);
+    }
+
+    useEffect(() => { // Fetch notifications.
+
+        const notificationFetcher = async () => {
+            try {
+                const notificationDataRaw = await fetchNotificationsByUser(selectedUserID)
+                setNotificationData(notificationDataRaw.data);
+            } catch (error) {
+                console.log("Failed to fetch notifications:", error);
+            }
+        };
+
+        notificationFetcher();
+        const fetchInterval = setInterval(notificationFetcher, 600000); // do every 10 minutes
+
+        return () => clearInterval(fetchInterval); // prevent memory leaks
+    }, []);
+
+    useEffect(() => { // Display notifications.
+        if (!notificationData) return;
+        console.log(notificationData);
+
+        const notificationLogic = async () => {
+            const currentTime = new Date();
+            currentTime.setTime(currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000); // Adjust for timezone offset
+            const berlinOffset = 2 * 60 * 60 * 1000; // CEST (Central European Summer Time) UTC +2 hours
+            const currentTimeInBerlin = new Date(currentTime.getTime() + berlinOffset);
+
+
+            notificationData.forEach(notification => {
+                const notificationTime = new Date(notification.time); // Assuming 'notification.time' is in a standard format
+                notificationTime.setTime(notificationTime.getTime()); // Adjust for timezone offset
+                const notificationTimeInBerlin = new Date(notificationTime.getTime());
+
+                // console.log(notificationTimeInBerlin);
+                // console.log(currentTimeInBerlin);
+                if (notificationTimeInBerlin <= currentTimeInBerlin) {
+                    setNotificationDisplay(notification.event);
+                    setIsNotificationDataOpen(true);
+                    // console.log("Notification displayed");
+                    deleteNotifications(notification.id);
+                }
+            });
+        };
+
+        notificationLogic();
+        const notificationInterval = setInterval(notificationLogic, 60000); // do every minute
+
+        return () => clearInterval(notificationInterval); // prevent memory leaks
+    }, [notificationData]);
 
     const handleDateClick = (info) => {
         setClickedDate(info.date);
+        updateGroupEventLists();
         setOpenAddEvent(true);
-    }
-
-    const findEventInEventList = (fcEvent) => {
-        // Attempt to find a matching event in the eventList
-        const matchingEvent = eventList.find(event =>
-            event.title === fcEvent.title &&
-            event.start === fcEvent.start &&
-            event.end === fcEvent.end
-        );
-        console.log(matchingEvent);
-        if (matchingEvent) {
-            setEventID(matchingEvent.id);
-            setListID(matchingEvent.list);
-            return fcEvent;
-        }
-        // If no match is found, return null
-        return null;
     }
 
     const handleEventClick = (info) => {
         info.event.setEnd(info.event.end === null ? info.event.start : info.event.end);
-        setEvent(findEventInEventList(info.event)); // Call the function with the fcEvent parameter
-        setOpenEditEvent(true);
+        // Finds corresponding event in Django API's database to get list ID
+        let foundDjangoEvent = allUserEvents.find(djangoEvent => djangoEvent.id == info.event.id);
+        if (foundDjangoEvent) {
+            setEvent(info.event);
+            setListID(foundDjangoEvent.list);
+            updateGroupEventLists();
+            setOpenEditEvent(true);
+        } else {
+            console.error("Event not found");
+        }
     }
 
     const handleAddEvent = async (text, startTime, endTime, startDate, endDate, list) => {
@@ -179,34 +239,50 @@ const CalendarComponent = () => {
             };
         }
 
-        calendarAPI.addEvent(newEvent);
         await createEvents(newEvent);
+        calendarAPI.addEvent(newEvent);
+        updateEvents();
 
         console.log("EVENT LIST: ");
-        console.log(eventList);
+        console.log(allUserEvents);
+
+        console.log("FULLCALENDAR EVENT LIST:");
+        console.log(calendarAPI.getEvents());
     }
 
-    const handleEditEvent = (text, startTime, endTime, startDate, endDate) => {
-        // TODO: Add error handling when start or end time are undefined
+    const handleEditEvent = (text, startTime, endTime, startDate, endDate, selectedListID) => {
         if (event) {
             let formattedStart = startDate.toString() + "T" + startTime.toString();
             let formattedEnd = endDate.toString() + "T" + endTime.toString();
             event.setProp('title', text);
             event.setStart(formattedStart);
             event.setEnd(formattedEnd);
-            editEvents(event, eventID, listID);
-
+            editEvents(event, event.id, selectedListID);
+            updateEvents();
 
             console.log("EVENT LIST: ");
-            console.log(eventList);
+            console.log(allUserEvents);
         } else {
             alert("Event not found!");
+        }
+    }
+
+    const handleEventDrop = (info) => {
+        info.event.setEnd(info.event.end === null ? info.event.start : info.event.end);
+        let foundDjangoEvent = allUserEvents.find(djangoEvent => djangoEvent.id == info.event.id);
+        if (foundDjangoEvent) {
+            editEvents(info.event, info.event.id, foundDjangoEvent.list);
+            updateEvents();
+        } else {
+            console.error("Event not found");
         }
     }
 
     const handleDeleteEvent = () => {
         if (event) {
             event.remove();
+            deleteEvents(event.id);
+            updateEvents();
         } else {
             alert("Event not found!");
         }
@@ -217,7 +293,11 @@ const CalendarComponent = () => {
     }
 
     if (loading) {
-        return <CircularProgress />
+        return (
+            <div className="LoadingContainer">
+                <CircularProgress />
+            </div>
+        );
     }
 
     return (
@@ -229,9 +309,9 @@ const CalendarComponent = () => {
                     </IconButton>
                     TeamCalendar  <CalendarMonthIcon />
                 </h1>
-                <div className="UserText">Welcome, User!</div>
+                <div className="UserText">Welcome, {username}!</div>
             </header>
-            <body className="CalendarBody">
+            <div className="CalendarBody">
                 <div className="CalendarOverview">
                     <FullCalendar
                         plugins={[dayGridPlugin, interactionPlugin]}
@@ -241,14 +321,16 @@ const CalendarComponent = () => {
                         dayMaxEventRows={true}
                         editable={true}
                         selectable={true}
-                        events={eventList}
+                        events={allUserEvents}
                         ref={calendarRef}
                         eventClick={handleEventClick}
+                        eventDrop={handleEventDrop}
                         dateClick={handleDateClick}
                     />
                     {openAddEvent && (
-                        <EventPopupComponent
+                        <EventAddComponent
                             selectedUserID={selectedUserID}
+                            groupEventLists={groupEventLists}
                             open={openAddEvent}
                             setOpen={setOpenAddEvent}
                             clickedDate={clickedDate}
@@ -258,6 +340,7 @@ const CalendarComponent = () => {
                     {openEditEvent && (
                         <EventEditComponent
                             selectedUserID={selectedUserID}
+                            groupEventLists={groupEventLists}
                             open={openEditEvent}
                             setOpen={setOpenEditEvent}
                             sendEventData={handleEditEvent}
@@ -271,12 +354,31 @@ const CalendarComponent = () => {
                     <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
                         <MenuSidebarComponent
                             selectedUserID={selectedUserID}
+                            sendUpdateListRequest={updateOwnedEventLists}
+                            requestUpdateGroupLists={updateGroupEventLists}
+                            requestUpdateEvents={updateEvents}
                         />
                     </Drawer>
                 )}
-            </body>
+
+                <Dialog open={isNotificationDataOpen}> {/* Notification Dialog */}
+                    <DialogTitle>
+                        Notification
+                    </DialogTitle>
+                    <Divider/>
+                    <DialogContent>
+                        {notificationDisplay + " is starting now!"}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setIsNotificationDataOpen(false)}>Close</Button>
+                    </DialogActions>
+                </Dialog>
+
+            </div>
             <footer className="CalendarFooter">
-                © 2024 ProgExTRAORDINAIRE
+                <b>© 2024 ProgExTRAORDINAIRE</b><br/>
+                Marc Roemer, Klejdi Galushi, Felix Schneider<br/><br/>
+                <b>Student project for Programming Exercises - Sabba</b>
             </footer>
         </>
     );

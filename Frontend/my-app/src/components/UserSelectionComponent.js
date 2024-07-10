@@ -1,14 +1,20 @@
-import { Button, CircularProgress, Divider, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Button, CircularProgress, Divider, FormControl, InputLabel, ListItemText, MenuItem, Select } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchUsers } from "../Services/WebService";
 import { useEffect, useState } from "react";
 import "./UserSelectionComponent.css"
+
+/*
+    TODO: Fix the look for the user selection page
+    TODO: Maybe add a background???
+*/
 
 const UserSelectionComponent = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedUserID, setSelectedUserID] = useState("");
     const navigate = useNavigate();
+    const [disabled, setDisabled] = useState(true);
 
     useEffect(() => {
         // Define an async function inside useEffect
@@ -28,12 +34,26 @@ const UserSelectionComponent = () => {
     }, []); // Empty dependency array means this effect runs only once
 
     if (loading) {
-        return <CircularProgress />
+        return (
+            <div className="LoadingContainer">
+                <CircularProgress />
+            </div>
+        );
     }
 
     const handleUserSelection = (event) => {
         setSelectedUserID(event.target.value);
-    }
+        setDisabled(false);
+    };
+
+    const handleSelectClick = () => {
+        const userDetails = users.find(user => user.id === selectedUserID);
+        if (userDetails) {
+            navigate('/calendar/' + selectedUserID, { state: { username: userDetails.name, email: userDetails.email } });
+        } else {
+            console.error("User details not found!");
+        }
+    };
 
     return (
         <div className="UserSelectionPage">
@@ -43,21 +63,28 @@ const UserSelectionComponent = () => {
                 <div className="SelectContainer">
                     <FormControl sx={{ marginTop: "20px", minWidth: 300, justifyContent: "center" }}>
                         <InputLabel>Choose user...</InputLabel>
-                        <Select 
+                        <Select
                             label="Choose user..."
                             value={selectedUserID}
                             onChange={handleUserSelection}
                         >
                             {users.map(user => (
-                                <MenuItem key={user.id} value={user.id}>{user.name} ({user.email})</MenuItem>
+                                <MenuItem key={user.id} value={user.id}>
+                                    <ListItemText primary={user.name} secondary={user.email} />
+                                </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
                 </div>
                 <div className="SelectButtonContainer">
-                    <Link to={'/calendar/' + selectedUserID}>
-                        <Button variant="contained" size="large">Select</Button>
-                    </Link>
+                    <Button
+                        disabled={disabled}
+                        variant="contained"
+                        size="large"
+                        onClick={handleSelectClick}
+                    >
+                        Select
+                    </Button>
                 </div>
                 <Divider />
                 <div className="RegisterOptionContainer">

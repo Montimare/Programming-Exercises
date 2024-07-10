@@ -46,6 +46,13 @@ class UserViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveMode
         serializer = GroupSerializer(groups, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get'])
+    def owned_eventlists(self, request, pk=None):
+        user = self.get_object()
+        eventlists = EventList.objects.filter(admin=user)
+        serializer = EventListSerializer(eventlists, many=True)
+        return Response(serializer.data)
+
 
 class GroupViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = Group.objects.all()
@@ -65,6 +72,16 @@ class GroupViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveMod
 class EventViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = EventSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        event = serializer.save()
+
+        notification = Notification(event=event, time=event.start)
+        notification.save()
+
+        return Response(serializer.data)
 
 
 class EventListViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):

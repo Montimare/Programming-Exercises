@@ -23,7 +23,7 @@
 }
 
 .UserSelectionBox {
-    height: 280px;
+    height: 310px;
     width: 350px;
     border: 2px solid gray;
 }
@@ -38,4 +38,10 @@
     justify-content: center;
     margin-top: 20px;
     font-size: small;
+}
+
+.LoadingContainer {
+    display: flex;
+    margin-top: 50vh;
+    justify-content: center;
 }

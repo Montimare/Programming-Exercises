@@ -1,3 +1,9 @@
+# How to start our project on the internet
+
+- Open [http://montilab.duckdns.org:3000/](http://montilab.duckdns.org:3000/)
+
+> Note: Website may be temporarily down for maintenance that is not connected to this Project.
+
 # How to start our project locally
 
 ## Linux
