@@ -10,35 +10,35 @@ import axios from "axios";
 
 // GET functions
 export const fetchUsers = async () => {
-    return await axios.get("http://montilab.duckdns.org:8000/users/");
+    return await axios.get("http://localhost:8000/users/");
 };
 
 export const fetchEvents = async () => {
-    return await axios.get("http://montilab.duckdns.org:8000/events/");
+    return await axios.get("http://localhost:8000/events/");
 };
 
 export const fetchEventsByUser = async (userID) => {
-    return await axios.get("http://montilab.duckdns.org:8000/users/" + userID + "/events/");
+    return await axios.get("http://localhost:8000/users/" + userID + "/events/");
 };
 
 export const fetchEventListsInGroupsByUser = async (userID) => {
-    return await axios.get("http://montilab.duckdns.org:8000/users/" + userID + "/eventlists/");
+    return await axios.get("http://localhost:8000/users/" + userID + "/eventlists/");
 };
 
 export const fetchOwnedEventListsByUser = async (userID) => {
-    return await axios.get("http://montilab.duckdns.org:8000/users/" + userID + "/owned_eventlists/");
+    return await axios.get("http://localhost:8000/users/" + userID + "/owned_eventlists/");
 };
 
 export const fetchNotificationsByUser = async (userID) => {
-    return await axios.get("http://montilab.duckdns.org:8000/users/" + userID + "/notifications/");
+    return await axios.get("http://localhost:8000/users/" + userID + "/notifications/");
 };
 
 export const fetchGroupsByUser = async (userID) => {
-    return await axios.get("http://montilab.duckdns.org:8000/users/" + userID + "/groups/");
+    return await axios.get("http://localhost:8000/users/" + userID + "/groups/");
 }
 
 export const fetchGroupMembers = async () => {
-    return await axios.get("http://montilab.duckdns.org:8000/user_groups/");
+    return await axios.get("http://localhost:8000/user_groups/");
 }
 
 // POST Functions
@@ -49,7 +49,7 @@ export const createUsers = async (username, email) => {
 
     try {
         const response = await axios.post(
-            "http://montilab.duckdns.org:8000/users/",
+            "http://localhost:8000/users/",
             {
                 name: username,
                 email: email
@@ -73,7 +73,7 @@ export const createEvents = async (event) => {
 
     try {
         await axios.post(
-            "http://montilab.duckdns.org:8000/events/",
+            "http://localhost:8000/events/",
             {
                 title: event.title,
                 start: event.start,
@@ -97,7 +97,7 @@ export const createGroups = async (group) => {
 
     try {
         const response = await axios.post(
-            "http://montilab.duckdns.org:8000/groups/",
+            "http://localhost:8000/groups/",
             {
                 name: group.name,
                 admin: group.admin
@@ -117,7 +117,7 @@ export const createEventLists = async (eventList) => {
 
     try {
         const response = await axios.post(
-            "http://montilab.duckdns.org:8000/eventlists/",
+            "http://localhost:8000/eventlists/",
             {
                 name: eventList.name,
                 admin: eventList.admin
@@ -137,7 +137,7 @@ export const createGroupMembers = async (userID, groupID) => {
 
     try {
         await axios.post(
-            "http://montilab.duckdns.org:8000/user_groups/",
+            "http://localhost:8000/user_groups/",
             {
                 user: userID,
                 group: groupID
@@ -155,7 +155,7 @@ export const createGroupLists = async (groupID, listID) => {
 
     try {
         const response = await axios.post(
-            "http://montilab.duckdns.org:8000/group_eventlists/",
+            "http://localhost:8000/group_eventlists/",
             {
                 group: groupID,
                 event_list: listID
@@ -178,7 +178,7 @@ export const editEvents = async (event, eventID, listID) => {
         console.log("end: " + event.end);
         console.log("list: " + listID);
         await axios.put(
-            "http://montilab.duckdns.org:8000/events/" + eventID + "/",
+            "http://localhost:8000/events/" + eventID + "/",
             {
                 id: eventID,
                 title: event.title,
@@ -198,7 +198,7 @@ export const editGroups = async (group) => {
         console.log("id: " + group.id)
         console.log("name: " + group.name);
         await axios.put(
-            "http://montilab.duckdns.org:8000/groups/" + group.id + "/",
+            "http://localhost:8000/groups/" + group.id + "/",
             {
                 name: group.name,
                 admin: group.admin
@@ -215,7 +215,7 @@ export const editEventLists = async (eventList) => {
         console.log("name: " + eventList.name);
         console.log("admin: " + eventList.admin);
         await axios.put(
-            "http://montilab.duckdns.org:8000/eventlists/" + eventList.id + "/",
+            "http://localhost:8000/eventlists/" + eventList.id + "/",
             {
                 id: eventList.id,
                 name: eventList.name,
@@ -231,7 +231,7 @@ export const editEventLists = async (eventList) => {
 export const deleteEvents = async (eventID) => {
     console.log("Sending web request for deleting event");
     try {
-        await axios.delete("http://montilab.duckdns.org:8000/events/" + eventID + "/");
+        await axios.delete("http://localhost:8000/events/" + eventID + "/");
     } catch (error) {
         console.error("An error occurred:", error.response);
     }
@@ -240,7 +240,7 @@ export const deleteEvents = async (eventID) => {
 export const deleteGroups = async (groupID) => {
     console.log("Sending web request for deleting group");
     try {
-        await axios.delete("http://montilab.duckdns.org:8000/groups/" + groupID + "/");
+        await axios.delete("http://localhost:8000/groups/" + groupID + "/");
     } catch (error) {
         console.error("An error occurred:", error.response);
     }
@@ -249,7 +249,7 @@ export const deleteGroups = async (groupID) => {
 export const deleteEventLists = async (eventListID) => {
     console.log("Sending web request for deleting event list");
     try {
-        await axios.delete("http://montilab.duckdns.org:8000/eventlists/" + eventListID + "/");
+        await axios.delete("http://localhost:8000/eventlists/" + eventListID + "/");
     } catch (error) {
         console.error("An error occurred:", error.response);
     }
@@ -258,7 +258,7 @@ export const deleteEventLists = async (eventListID) => {
 export const deleteMembers = async (memberID) => {
     console.log("Sending web request for deleting member");
     try {
-        await axios.delete("http://montilab.duckdns.org:8000/user_groups/" + memberID + "/");
+        await axios.delete("http://localhost:8000/user_groups/" + memberID + "/");
     } catch (error) {
         console.error("An error occurred:", error.response);
     }
@@ -267,7 +267,7 @@ export const deleteMembers = async (memberID) => {
 export const deleteNotifications = async (notificationID) => {
     console.log("Sending web request for deleting notification");
     try {
-        await axios.delete("http://montilab.duckdns.org:8000/notifications/" + notificationID + "/");
+        await axios.delete("http://localhost:8000/notifications/" + notificationID + "/");
     } catch (error) {
         console.error("An error occurred:", error.response);
     }
