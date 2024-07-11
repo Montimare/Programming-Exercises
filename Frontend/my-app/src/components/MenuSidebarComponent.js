@@ -231,7 +231,7 @@ const MenuSidebarComponent = ({ selectedUserID, sendUpdateListRequest, requestUp
                             {loadingGroups && <CircularProgress />}
                             {groups.map(group => (
                                 <ListItem key={group.id} value={group.id}>
-                                    <Button onClick={async () => handleOpenGroup(group.name, group.id, group.admin)}>{group.name}</Button>
+                                    <Button onClick={async () => await handleOpenGroup(group.name, group.id, group.admin)}>{group.name}</Button>
                                 </ListItem>
                             ))}
                             <ListItem>

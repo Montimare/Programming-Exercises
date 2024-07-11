@@ -44,7 +44,7 @@ export const fetchGroupMembers = async () => {
 // POST Functions
 export const createUsers = async (username, email) => {
     console.log("Sending web request for user");
-    console.log("username:" + username);
+    console.log("username:" + username);    
     console.log("email: " + email);
 
     try {
